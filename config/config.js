@@ -1,6 +1,7 @@
 require('dotenv').config()
 module.exports =
 {
+  "secret" : "p1NgU1nJ4nT4nM4nT4pJ1w4",
   "development": {
     "username": process.env.PG_USERNAME || '',
     "password": process.env.PG_PASSWORD || '',
