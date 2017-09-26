@@ -4,6 +4,11 @@ let models = require('../models')
 
 module.exports = {
   register: function(req, res, next) {
+    var result = {
+      success : false,
+      status : "ERROR",
+      user : null
+    }
     models.User.create({
       name: req.body.name,
       email: req.body.email,
@@ -11,9 +16,13 @@ module.exports = {
       identityNumber: req.body.identityNumber,
       password: req.body.password
     }).then(user => {
-      res.json(user)
+      result.success = true
+      result.status = "OK"
+      result.user = user
+      res.json(result)
     }).catch(err => {
       console.log('Error when trying to register : ', err);
+      res.json(result)
     })
   },
   login: function(req,res,next){
