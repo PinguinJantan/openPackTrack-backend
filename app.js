@@ -41,7 +41,6 @@ router.use(function(req, res, next){
 
   if(head.length == 2){
     var scheme = head[0]
-
     if(/^Bearer$/i.test(scheme)){
       token = head[1]
       jwt.verify(token, app.get('superSecret'), function (err, decoded) {
