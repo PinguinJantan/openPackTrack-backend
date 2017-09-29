@@ -38,6 +38,45 @@ function saltHashPassword(userpassword) {
 module.exports = {
   register: function(req, res, next) {
     passwordData = saltHashPassword(req.body.password)
+    var result = {
+      success : false,
+      status : "ERROR",
+      user : null
+    }
+
+    // models.User.findOrCreate(
+    //   {
+    //     where: {
+    //       $or: [
+    //         {username: req.body.username},
+    //         {email: req.body.email}
+    //     ]}
+    //     ,
+    //     defaults: {
+    //       name: req.body.name,
+    //       email: req.body.email,
+    //       username: req.body.username,
+    //       identityNumber: req.body.identityNumber,
+    //       password: passwordData.hash,
+    //       salt: passwordData.salt
+    //     }
+    //   }
+    // ).spread((user, isCreated) => {
+    //   console.log(isCreated);
+    //   if (isCreated) {
+    //     result.success = true
+    //     result.status = "OK"
+    //     result.user = user
+    //     res.json(result)
+    //   }
+    //   else {
+    //     result.message = "already exist"
+    //     res.json(result)
+    //   }
+    // }).catch(err => {
+    //   res.json("error cuk" + err)
+    // })
+
     models.User.create({
       name: req.body.name,
       email: req.body.email,
@@ -46,25 +85,28 @@ module.exports = {
       password: passwordData.hash,
       salt: passwordData.salt
     }).then(user => {
-      res.json(user)
+      result.success = true
+      result.status = "OK"
+      result.user = user
+      res.json(result)
     }).catch(err => {
       console.log('Error when trying to register : ', err);
-      res.json({
-        success: false,
-        message: err
-      })
+      res.json(result)
     })
   },
   login: function(req,res,next){
     models.User.findOne({
-      username: req.body.username
+      where: {
+        username: req.body.username
+      },
     }).then(user => {
+      console.log(user);
       if(!user){
         res.json({success: false, message: 'Authentication failed. User not found.'})
       }else if (user) {
         let reqPasswordData = hashPassword(req.body.password, user.salt);
         if(user.password != reqPasswordData){
-          res.json({success: false, message: 'Authentication failed. Wrong password.'})
+          res.json({success: false, message: 'Authentication failed. Wrong password.', user: user})
         }else {
           var secret = req.app.get('superSecret')
           var token = jwt.sign({ expiresInMinutes: 1440 },secret);
@@ -77,7 +119,7 @@ module.exports = {
         }
       }
     }).catch(err => {
-      console.log('Error when trying to register : ', err);
+      console.log('Error when trying to login : ', err);
       res.json({
         success: false,
         message: err
