@@ -11,6 +11,7 @@ var index = require('./routes/index');
 var users = require('./routes/users');
 var auth = require('./routes/auth');
 var config = require('./config/config');
+var cors = require('cors')
 
 require('dotenv').config()
 
@@ -18,6 +19,7 @@ var app = express();
 var router = express.Router()
 
 // view engine setup
+
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
@@ -32,6 +34,10 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 console.log('pada NODE_ENV : ', process.env.NODE_ENV);
+
+//use cors
+app.use(cors())
+
 
 //verify token
 router.use(function(req, res, next){
