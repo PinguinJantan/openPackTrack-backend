@@ -36,6 +36,7 @@ function saltHashPassword(userpassword) {
 }
 
 module.exports = {
+  // mendaftarkan pengguna baru
   register: function(req, res, next) {
     passwordData = saltHashPassword(req.body.password)
     var result = {
@@ -91,9 +92,14 @@ module.exports = {
       res.json(result)
     }).catch(err => {
       console.log('Error when trying to register : ', err);
+      if (err.errors) {
+        result.errors = err.errors
+      }
       res.json(result)
     })
   },
+
+  // masuk ke sistem sebagai suatu user
   login: function(req,res,next){
     models.User.findOne({
       where: {
