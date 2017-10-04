@@ -1,0 +1,25 @@
+language: node_js
+node_js:
+- "6"
+branches:
+  only:
+  - master
+before_install:
+- npm install apidoc -g
+install:
+- npm install
+before_script:
+- git config --global user.name 'Pinguin Jantan via Travis CI'
+- git config --global user.email 'mailpakgasing@gmail.com'
+script:
+- apidoc -i . -o doc/ -e node_modules
+after_success:
+- if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then mkdir .deploy_doc; fi
+- if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then cd .deploy_doc; fi
+- if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then git init; fi
+- if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then git remote add origin $DEPLOY_REPO; fi
+- if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then cp -r ../doc/* .; fi
+- if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then git add -A .; fi
+- if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then git commit -m 'Site updated'; fi
+- if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then git checkout -b gh-pages; fi
+- if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then git push --force --quiet origin gh-pages; fi
