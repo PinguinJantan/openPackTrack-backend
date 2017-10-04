@@ -20,6 +20,6 @@ after_success:
 - if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then git remote add origin $DEPLOY_REPO; fi
 - if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then cp -r ../doc/* .; fi
 - if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then git add -A .; fi
-- if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then git commit -m 'Site updated'; fi
+- if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then git commit -m 'Site updated by Pinguin Jantan via Travis CI'; fi
 - if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then git checkout -b gh-pages; fi
 - if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then git push --force --quiet origin gh-pages; fi
