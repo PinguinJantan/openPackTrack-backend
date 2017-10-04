@@ -6,7 +6,7 @@ let authController = require('../controllers/authController')
 /* GET users listing. */
 
 /**
-  * @api {post} /register Registrasi
+  * @api {post} auth/register Registrasi
   * @apiGroup Auth
   * @apiParamExample {json} Request-Example:
   *     {
@@ -48,7 +48,7 @@ let authController = require('../controllers/authController')
 **/
 router.post('/register', authController.register);
 /**
-  * @api {post} /login Login
+  * @api {post} auth/login Login
   * @apiGroup Auth
   * @apiSuccess {string} username username pengguna
   * @apiSuccess {string} password password pengguna
