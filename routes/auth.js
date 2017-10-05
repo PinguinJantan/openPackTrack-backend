@@ -16,11 +16,14 @@ let authController = require('../controllers/authController')
   *       "email" : "jhondoe@example.co.id",
   *       "identityNumber" : "113211019"
   *     }
-  * @apiSuccess {string} name nama pengguna
-  * @apiSuccess {string} username username pengguna
-  * @apiSuccess {string} password password pengguna
-  * @apiSuccess {string} email email pengguna
-  * @apiSuccess {string} identityNumber nomer induk pengguna
+  * @apiSuccess {Boolean} success true jika berhasil
+  * @apiSuccess {string} status "OK" jika berhasil
+  * @apiSuccess {Array} user array dari user
+  * @apiParam {string} name nama pengguna
+  * @apiParam {string} username username pengguna
+  * @apiParam {string} password password pengguna
+  * @apiParam {string} email email pengguna
+  * @apiParam {string} identityNumber nomer induk pengguna
   * @apiSuccessExample {json} Success
   *     HTTP/1.1 200 OK
   *    {
@@ -50,13 +53,16 @@ router.post('/register', authController.register);
 /**
   * @api {post} auth/login Login
   * @apiGroup Auth
-  * @apiSuccess {string} username username pengguna
-  * @apiSuccess {string} password password pengguna
   * @apiParamExample {json} Request-Example
   *     {
   *       "username" : "jhondoe",
   *       "password" : "secret"
   *     }
+  * @apiParam {string} username username pengguna
+  * @apiParam {string} password password pengguna
+  * @apiSuccess {Boolean} success true jika berhasil
+  * @apiSuccess {string} message pesan dari server
+  * @apiSuccess {string} token token setelah berhasil login
   * @apiSuccessExample {json} Success
   *     HTTP/1.1 200 OK
   *    {
