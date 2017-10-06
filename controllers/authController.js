@@ -115,7 +115,7 @@ module.exports = {
           res.json({success: false, message: 'Authentication failed. Wrong password.', user: user})
         }else {
           var secret = req.app.get('superSecret')
-          var token = jwt.sign({ expiresInMinutes: 1440 },secret);
+          var token = jwt.sign({username: user.username }, secret, { expiresIn: '1d'});
           console.log(token);
           res.json({
             success: true,
