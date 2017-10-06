@@ -2,7 +2,6 @@
 module.exports = function(sequelize, DataTypes) {
   var Items = sequelize.define('Items', {
     sku: DataTypes.STRING,
-    barcode: DataTypes.STRING,
     categoryId: DataTypes.INTEGER,
     name: DataTypes.STRING,
     color: DataTypes.STRING,
