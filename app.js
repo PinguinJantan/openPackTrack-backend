@@ -5,6 +5,8 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var jwt = require('jsonwebtoken');
+var acl = require('acl');
+var redis = require('redis');
 
 
 var index = require('./routes/index');
@@ -16,6 +18,9 @@ var config = require('./config/config');
 var cors = require('cors')
 
 require('dotenv').config()
+
+redisClient = redis.createClient({password: process.env.REDIS_PASSWORD});
+acl = new acl(new acl.redisBackend(redisClient, process.env.REDIS_PREFIX));
 
 var app = express();
 var router = express.Router()
