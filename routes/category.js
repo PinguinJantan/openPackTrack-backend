@@ -6,8 +6,8 @@ let categoryController = require('../controllers/categoryController')
 
 /* GET users listing. */
 /**
-  * @api {post} api/item/create Create
-  * @apiGroup item
+  * @api {post} api/category/create Create
+  * @apiGroup category
   * @apiHeader {String} token token untuk login user
   * @apiHeaderExample {json} Header-Example:
   *     {
@@ -15,39 +15,24 @@ let categoryController = require('../controllers/categoryController')
   *     }
   * @apiParamExample {json} Request-Example:
   *  {
-  *      "sku": "FGJ01FOCUB",
-  *      "categoryId": 4,
-  *      "name": "castelo",
-  *      "color": "Blue/Silver",
-  *      "size": "49",
-  *      "genre": "M"
+  *      "name": "running"
   *  }
   * @apiSuccess {Boolean} success true jika berhasil
   * @apiSuccess {string} status "OK" jika berhasil
-  * @apiSuccess {Array} item array dari item
-  * @apiParam {string} sku nomor sku item
-  * @apiParam {integer} categoryId id kategori item
-  * @apiParam {string} name nama item
-  * @apiParam {string} color warna item
-  * @apiParam {string} size ukuran item
-  * @apiParam {string} genre genre item (M,W,JR)
+  * @apiSuccess {Array} category array dari category
+  * @apiParam {string} name nama category
   * @apiSuccessExample {json} success
   *     HTTP/1.1 200 OK
-  *    {
-  *      "success": true,
-  *      "status": "OK",
-  *      "item": {
-  *          "id": 2,
-  *          "sku": "FGJ01FOCUB\n",
-  *          "categoryId": 4,
-  *          "name": "castelo",
-  *          "color": "Blue/Silver\n",
-  *          "size": "49",
-  *          "genre": "M",
-  *          "updatedAt": "2017-10-05T13:03:50.747Z",
-  *          "createdAt": "2017-10-05T13:03:50.747Z"
-  *          }
-  *      }
+  *     {
+  *       "success": true,
+  *       "status": "OK",
+  *       "category": {
+  *           "id": 22,
+  *           "name": "running",
+  *           "updatedAt": "2017-10-06T09:15:17.193Z",
+  *           "createdAt": "2017-10-06T09:15:17.193Z"
+  *     },
+  *       "message": "Create success"
   * @apiErrorExample {json} Internal Server Error
   *     HTTP/1.1 500 Internal Server Error
   *     {
@@ -58,8 +43,8 @@ let categoryController = require('../controllers/categoryController')
 **/
 router.post('/create',categoryController.create)
 /**
-* @api {get} api/item/all List item
-* @apiGroup item
+* @api {get} api/category/all List category
+* @apiGroup category
 * @apiHeader {String} token token untuk login user
 * @apiHeaderExample {json} Header-Example:
 *     {
@@ -68,27 +53,22 @@ router.post('/create',categoryController.create)
 * @apiSuccessExample {json} Success
 *     HTTP/1.1 200 OK
 *    {
-*        "id": 1,
-*        "sku": "CUBFGJ01FO",
-*        "categoryId": 4,
-*        "name": "castelo",
-*        "color": "Blue/Red",
-*        "size": "46",
-*        "genre": "JR",
-*        "createdAt": "2017-10-03T13:03:26.774Z",
-*        "updatedAt": "2017-10-03T13:03:26.774Z"
-*    },
-*    {
-*        "id": 2,
-*        "sku": "FGJ01FOCUB",
-*        "categoryId": 4,
-*        "name": "castelo",
-*        "color": "Blue/Silver",
-*        "size": "49",
-*        "genre": "M",
-*        "createdAt": "2017-10-05T13:03:50.747Z",
-*        "updatedAt": "2017-10-05T13:03:50.747Z"
-*    }
+*    "success": true,
+*    "status": "OK",
+*    "category": [
+*        {
+*            "id": 4,
+*            "name": "Tae Kwon Do",
+*            "createdAt": "2017-10-03T12:02:22.377Z",
+*            "updatedAt": "2017-10-03T12:02:22.377Z"
+*        },
+*        {
+*            "id": 5,
+*            "name": "Badminton",
+*            "createdAt": "2017-10-03T12:02:22.377Z",
+*            "updatedAt": "2017-10-03T12:02:22.377Z"
+*        }
+*    "message": ""
 * @apiErrorExample {json} Internal Server Error
 *     HTTP/1.1 500 Internal Server Error
 *     {
