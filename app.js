@@ -44,7 +44,7 @@ app.use(cors())
 //verify token
 router.use(function(req, res, next){
 
-  var head = req.headers.authorization.split(' ')
+  var head = req.headers.authorization ? req.headers.authorization.split(' ') : ''
   var token = null
 
   if(head.length == 2){
