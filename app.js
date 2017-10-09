@@ -9,7 +9,8 @@ var jwt = require('jsonwebtoken');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
-var items = require('./routes/item');
+var item = require('./routes/item');
+var category = require('./routes/category')
 var auth = require('./routes/auth');
 var config = require('./config/config');
 var cors = require('cors')
@@ -72,7 +73,8 @@ router.use(function(req, res, next){
 app.use('/api',router);
 app.use('/', index);
 app.use('/api/users', users);
-app.use('/api/item', items);
+app.use('/api/item', item);
+app.use('/api/category', category);
 app.use('/auth', auth);
 
 // catch 404 and forward to error handler
