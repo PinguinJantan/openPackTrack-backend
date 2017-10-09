@@ -6,6 +6,7 @@ Open Source Product Tracking
 - npm : minimal v. 3.1
 - PostgreSQL : v. 9.5
 - redis-server : v. 4.x
+- sequelize-cli
 
 
 ### How to install
@@ -14,7 +15,8 @@ Open Source Product Tracking
 2. enter the project folder ```$ cd openPackTrack-backend```
 3. duplicate _.env.example_ to _.env_ : ```$ cp .env.example .env```
 4. setup environment variable
-5. install dependencies ```$ npm install```
+5. migrate database : ```$ sequelize db:migrate```
+6. install dependencies ```$ npm install```
 
 ### Run project
 ```$ npm run dev```
