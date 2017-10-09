@@ -41,10 +41,10 @@ router.use(aclMiddleware.isAllowedToAccess('items'))
   *      "status": "OK",
   *      "item": {
   *          "id": 2,
-  *          "sku": "FGJ01FOCUB\n",
+  *          "sku": "FGJ01FOCUB",
   *          "categoryId": 4,
   *          "name": "castelo",
-  *          "color": "Blue/Silver\n",
+  *          "color": "Blue/Silver",
   *          "size": "49",
   *          "genre": "M",
   *          "updatedAt": "2017-10-05T13:03:50.747Z",

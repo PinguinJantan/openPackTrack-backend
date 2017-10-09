@@ -41,7 +41,7 @@ module.exports = {
       result.items = items
       res.json(items)
     }).catch(err=>{
-      console.log('Error when trying to create new item : ', err);
+      console.log('Error when trying to show all item : ', err);
       if (err.errors) {
         result.errors = err.errors
       }
