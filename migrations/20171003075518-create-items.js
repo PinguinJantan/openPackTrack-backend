@@ -11,7 +11,7 @@ module.exports = {
       sku: {
         type: Sequelize.STRING
       },
-      barcode: {
+      barcode : {
         type: Sequelize.STRING,
         unique: true
       },

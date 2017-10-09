@@ -9,7 +9,6 @@ module.exports = {
     }
     models.Items.create({
       sku: req.body.sku,
-      barcode: req.body.barcode,
       categoryId: req.body.categoryId,
       name: req.body.name,
       color: req.body.color,
