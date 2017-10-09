@@ -27,4 +27,6 @@ Open Source Product Tracking
 ### Generate api documentation
 for local development purpose only. Remember, don't commit generated docs.
 
+install [apidocjs](http://apidocjs.com/#install) first
+
 ```$ apidoc -i . -o doc/ -e node_modules```
