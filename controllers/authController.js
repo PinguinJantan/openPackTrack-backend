@@ -112,7 +112,7 @@ module.exports = {
       }else if (user) {
         let reqPasswordData = hashPassword(req.body.password, user.salt);
         if(user.password != reqPasswordData){
-          res.json({success: false, message: 'Authentication failed. Wrong password.', user: user})
+          res.json({success: false, message: 'Authentication failed. Wrong password.'})
         }else {
           var secret = req.app.get('superSecret')
           var token = jwt.sign({ expiresInMinutes: 1440 },secret);
