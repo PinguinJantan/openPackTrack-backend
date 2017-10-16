@@ -8,13 +8,13 @@ module.exports = {
       category : null,
       message: ""
     }
-    models.Categories.create({
+    models.Category.create({
       name: req.body.name
-    }).then(categories =>{
+    }).then(category =>{
       result.success = true
       result.status = "OK"
       result.message = "Create success"
-      result.category = categories
+      result.category = category
       res.json(result)
     }).catch(err=>{
       console.log('Error when trying to create new item : ', err);
@@ -31,14 +31,14 @@ module.exports = {
       category : null,
       message: ""
     }
-    models.Categories.findAll()
-    .then(categories=>{
+    models.Category.findAll()
+    .then(category=>{
       result.success = true
       result.status = "OK"
-      result.category = categories
+      result.category = category
       res.json(result)
     }).catch(err=>{
-      console.log('Error when trying to show all categories : ', err);
+      console.log('Error when trying to show all category : ', err);
       if (err.errors) {
         result.message = err.errors
       }
