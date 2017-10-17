@@ -11,6 +11,10 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate: function(models) {
         // associations can be defined here
+        Inner.hasOne(models.Item,{foreignKey: 'itemId'})
+        Inner.belongsTo(models.Carton,{foreignKey: 'cartonId'})
+        Inner.hasOne(models.InnerGrade,{foreignKey: 'gradeId'})
+        Inner.belongsTo(models.InnerSource,{foreignKey: 'sourceId'})
       }
     }
   });
