@@ -15,6 +15,7 @@ module.exports = function(sequelize, DataTypes) {
         Inner.belongsTo(models.Carton,{foreignKey: 'cartonId'})
         Inner.hasOne(models.InnerGrade,{foreignKey: 'gradeId'})
         Inner.belongsTo(models.InnerSource,{foreignKey: 'sourceId'})
+        Inner.hasMany(models.Retur,{foreignKey: 'innerId'})
       }
     }
   });
