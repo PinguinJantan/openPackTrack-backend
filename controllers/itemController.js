@@ -7,17 +7,17 @@ module.exports = {
       status: "ERROR",
       item: null
     }
-    models.Items.create({
+    models.Item.create({
       sku: req.body.sku,
       categoryId: req.body.categoryId,
       name: req.body.name,
       color: req.body.color,
       size: req.body.size,
       genre: req.body.genre
-    }).then(items=>{
+    }).then(item=>{
       result.success = true
       result.status = "OK"
-      result.item = items
+      result.item = item
       res.json(result)
     }).catch(err => {
       console.log('Error when trying to create new item : ', err);
@@ -32,14 +32,14 @@ module.exports = {
     var result = {
       success: false,
       status: "ERROR",
-      items: null
+      item: null
     }
-    models.Items.findAll()
-    .then(items=>{
+    models.Item.findAll()
+    .then(item=>{
       result.success = true
       result.status = "OK"
-      result.items = items
-      res.json(items)
+      result.item = item
+      res.json(item)
     }).catch(err=>{
       console.log('Error when trying to show all item : ', err);
       if (err.errors) {
