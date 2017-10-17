@@ -10,7 +10,7 @@ var redis = require('redis');
 
 
 var index = require('./routes/index');
-var users = require('./routes/users');
+// var users = require('./routes/users');
 var item = require('./routes/item');
 var category = require('./routes/category')
 var auth = require('./routes/auth');
@@ -85,7 +85,7 @@ router.use(function(req, res, next){
 
 app.use('/api',router);
 app.use('/', index);
-app.use('/api/users', users);
+// app.use('/api/users', users);
 app.use('/api/item', item);
 app.use('/api/category', category);
 app.use('/auth', auth);
