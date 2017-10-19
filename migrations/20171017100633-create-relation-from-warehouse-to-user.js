@@ -9,13 +9,16 @@ module.exports = {
       Example:
       return queryInterface.createTable('users', { id: Sequelize.INTEGER });
     */
-    return queryInterface.removeColumn(
-      'Items',
-      'barcode',
-      {
-        type: Sequelize.STRING
-      }
-    );
+    return queryInterface.addColumn(
+  'Users',
+  'warehouseId',
+  {
+    type: Sequelize.INTEGER,
+    references: {
+     model: 'Warehouses',
+     key: 'id'
+   }
+ })
   },
 
   down: function (queryInterface, Sequelize) {
@@ -26,12 +29,6 @@ module.exports = {
       Example:
       return queryInterface.dropTable('users');
     */
-    return queryInterface.addColumn(
-      'Items',
-      'barcode',
-      {
-        type: Sequelize.STRING
-      }
-    )
+    return queryInterface.removeColumn('Users','warehouseId')
   }
 };
