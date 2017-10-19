@@ -5,9 +5,8 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var jwt = require('jsonwebtoken');
-var acl = require('acl');
-var redis = require('redis');
-
+var nodeAcl = require('acl');
+var mongoose = require('mongoose');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
@@ -19,8 +18,16 @@ var cors = require('cors')
 
 require('dotenv').config()
 
-var redisClient = redis.createClient({password: process.env.REDIS_PASSWORD});
-var acl = new acl(new acl.redisBackend(redisClient, process.env.REDIS_PREFIX));
+mongoose.connect(process.env.MONGO_URL, { useMongoClient: true }, err=>{
+  var acl = new nodeAcl(new nodeAcl.mongodbBackend(mongoose.connection.db, ''));
+  app.set('acl', acl)
+  // sementara tak taruh sini seeder acl-nya :D (mnirfan)
+  acl.allow('admin', 'items', ['GET', 'POST', 'DELETE'])
+  acl.allow('admin', 'users', ['GET', 'POST', 'DELETE'])
+  acl.allow('basic', 'items', ['GET'])
+  acl.addUserRoles('irfan', 'admin')
+  acl.addUserRoles('arnaz', 'basic')
+})
 
 var app = express();
 var router = express.Router()
@@ -31,14 +38,13 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 app.set('superSecret',config.secret)
-app.set('acl', acl)
 
-// sementara tak taruh sini seeder acl-nya :D (mnirfan)
-acl.allow('admin', 'items', ['GET', 'POST', 'DELETE'])
-acl.allow('admin', 'users', ['GET', 'POST', 'DELETE'])
-acl.allow('basic', 'items', ['GET'])
-acl.addUserRoles('irfan', 'admin')
-acl.addUserRoles('arnaz', 'basic')
+
+// acl.whatResources('lolaa', (err, res)=>{
+//   console.log("debuggg");
+//   console.log(res);
+//   console.log(err);
+// })
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));

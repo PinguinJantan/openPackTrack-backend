@@ -11,6 +11,8 @@ router.get('/', function(req, res, next) {
   res.send('respond with a resource');
 });
 
-router.get('/all', userController.all)
+router.get('/all', userController.usersWithRoles)
+router.post('/role/create', userController.addRole)
+
 
 module.exports = router;
