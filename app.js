@@ -9,7 +9,7 @@ var nodeAcl = require('acl');
 var mongoose = require('mongoose');
 
 var index = require('./routes/index');
-// var users = require('./routes/users');
+var users = require('./routes/users');
 var item = require('./routes/item');
 var category = require('./routes/category')
 var auth = require('./routes/auth');
@@ -22,9 +22,10 @@ mongoose.connect(process.env.MONGO_URL, { useMongoClient: true }, err=>{
   var acl = new nodeAcl(new nodeAcl.mongodbBackend(mongoose.connection.db, ''));
   app.set('acl', acl)
   // sementara tak taruh sini seeder acl-nya :D (mnirfan)
-  acl.allow('admin', 'items', ['GET', 'POST', 'DELETE'])
-  acl.allow('admin', 'users', ['GET', 'POST', 'DELETE'])
-  acl.allow('basic', 'items', ['GET'])
+  acl.allow('admin', 'item', ['GET', 'POST', 'DELETE'])
+  acl.allow('admin', 'category', ['GET', 'POST', 'DELETE'])
+  acl.allow('admin', 'user', ['GET', 'POST', 'DELETE'])
+  acl.allow('basic', 'item', ['GET'])
   acl.addUserRoles('irfan', 'admin')
   acl.addUserRoles('arnaz', 'basic')
 })
@@ -38,14 +39,6 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 app.set('superSecret',config.secret)
-app.set('acl', acl)
-
-// sementara tak taruh sini seeder acl-nya :D (mnirfan)
-acl.allow('admin', 'items', ['GET', 'POST', 'DELETE'])
-acl.allow('admin', 'users', ['GET', 'POST', 'DELETE'])
-acl.allow('basic', 'items', ['GET'])
-acl.addUserRoles('irfan', 'admin')
-acl.addUserRoles('arnaz', 'basic')
 
 
 // acl.whatResources('lolaa', (err, res)=>{
@@ -99,7 +92,7 @@ router.use(function(req, res, next){
 
 app.use('/api',router);
 app.use('/', index);
-// app.use('/api/users', users);
+app.use('/api/user', users);
 app.use('/api/item', item);
 app.use('/api/category', category);
 app.use('/auth', auth);

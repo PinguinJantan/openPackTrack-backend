@@ -4,7 +4,7 @@ var router = express.Router();
 let userController = require('../controllers/userController')
 let aclMiddleware = require('../acl/aclMiddleware');
 
-router.use(aclMiddleware.isAllowedToAccess('users'))
+router.use(aclMiddleware.isAllowedToAccess('user'))
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
