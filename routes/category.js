@@ -2,6 +2,9 @@ var express = require('express');
 var router = express.Router();
 
 let categoryController = require('../controllers/categoryController')
+let aclMiddleware = require('../acl/aclMiddleware');
+
+router.use(aclMiddleware.isAllowedToAccess('category'))
 
 
 /* GET users listing. */
