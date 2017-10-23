@@ -13,6 +13,7 @@ router.get('/', function(req, res, next) {
 
 router.get('/all', userController.usersWithRoles)
 router.post('/role/create', userController.addRole)
+router.post('/role/assign', userController.addRoleToUser)
 
 
 module.exports = router;
