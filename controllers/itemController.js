@@ -34,7 +34,10 @@ module.exports = {
       status: "ERROR",
       item: null
     }
-    models.Item.findAll()
+    models.Item.findAll({
+      include: [{model: models.Category} ]
+      }
+    )
     .then(item=>{
       result.success = true
       result.status = "OK"
