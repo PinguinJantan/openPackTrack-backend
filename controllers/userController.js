@@ -30,11 +30,41 @@ module.exports = {
     })
   },
 
+  // Detail data user
+  userDetail: function(req, res, next){
+    models.User.find({
+      where: {
+        username: req.params.username
+      }
+    })
+    .then(user=>{
+      if (user) {
+        // let acl = req.app.get('acl')
+        res.json({
+          success: true,
+          user: {
+            id: user.id,
+            name: user.name,
+            username: user.username,
+            email: user.email,
+            identityNumber: user.identityNumber,
+          }
+        })
+      }
+      else {
+        res.json({
+          success: false,
+          message: "User " + req.params.username + " not found"
+        })
+      }
+    })
+  },
+
   // tambah role
   addRole: function(req, res, next){
     let acl = req.app.get('acl')
     if (req.body.rolename && req.body.permissions) {
-      acl.whatResources(req.body.rolename, (err, resources)=>{
+      acl.whatResources(req.body.rolename.toUpperCase(), (err, resources)=>{
         console.log(resources);
         if (!Object.keys(resources).length) {
           console.log("yes, the role not exist yet");
