@@ -119,6 +119,8 @@ module.exports = {
           console.log(token);
           res.json({
             success: true,
+            name: user.name,
+            username: user.username,
             message: 'Login success boskuh',
             token : token
           })
