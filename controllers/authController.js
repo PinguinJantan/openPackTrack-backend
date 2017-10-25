@@ -106,7 +106,7 @@ module.exports = {
         username: req.body.username
       },
     }).then(user => {
-      console.log(user);
+      // console.log(user);
       if(!user){
         res.json({success: false, message: 'Authentication failed. User not found.'})
       }else if (user) {
@@ -115,7 +115,7 @@ module.exports = {
           res.json({success: false, message: 'Authentication failed. Wrong password.'})
         }else {
           var secret = req.app.get('superSecret')
-          var token = jwt.sign({username: user.username }, secret, { expiresIn: '1d'});
+          var token = jwt.sign({userId: user.id }, secret, { expiresIn: '1d'});
           console.log(token);
           res.json({
             success: true,

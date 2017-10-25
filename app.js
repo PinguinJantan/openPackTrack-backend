@@ -21,13 +21,14 @@ require('dotenv').config()
 mongoose.connect(process.env.MONGO_URL, { useMongoClient: true }, err=>{
   var acl = new nodeAcl(new nodeAcl.mongodbBackend(mongoose.connection.db, ''));
   app.set('acl', acl)
+  app.set('mongo', mongoose.connection.db)
   // sementara tak taruh sini seeder acl-nya :D (mnirfan)
   acl.allow('admin', 'item', ['GET', 'POST', 'DELETE'])
   acl.allow('admin', 'category', ['GET', 'POST', 'DELETE'])
   acl.allow('admin', 'user', ['GET', 'POST', 'DELETE'])
   acl.allow('basic', 'item', ['GET'])
-  acl.addUserRoles('irfan', 'admin')
-  acl.addUserRoles('arnaz', 'basic')
+  acl.addUserRoles('9', 'admin') // irfan
+  acl.addUserRoles('21', 'basic') //arnaz
 })
 
 var app = express();
