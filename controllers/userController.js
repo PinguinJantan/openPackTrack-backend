@@ -39,16 +39,21 @@ module.exports = {
     })
     .then(user=>{
       if (user) {
-        // let acl = req.app.get('acl')
-        res.json({
-          success: true,
-          user: {
-            id: user.id,
-            name: user.name,
-            username: user.username,
-            email: user.email,
-            identityNumber: user.identityNumber,
+        let mongo = req.app.get('mongo')
+        mongo.collection("users").find({key: user.id.toString()}).toArray((err, userRoles)=>{
+          console.log(userRoles);
+          let someone = {
+            success: true,
+            user: {
+              id: user.id,
+              name: user.name,
+              username: user.username,
+              email: user.email,
+              identityNumber: user.identityNumber,
+              roles: Object.keys(userRoles[0]).slice(2)
+            }
           }
+          res.json(someone)
         })
       }
       else {
