@@ -41,8 +41,7 @@ module.exports = {
     passwordData = saltHashPassword(req.body.password)
     var result = {
       success : false,
-      status : "ERROR",
-      user : null
+      status : "ERROR"
     }
 
     // models.User.findOrCreate(
@@ -88,7 +87,14 @@ module.exports = {
     }).then(user => {
       result.success = true
       result.status = "OK"
-      result.user = user
+      result.id = user.id
+      result.username = user.username
+      result.name = user.name
+      result.identityNumber = user.identityNumber
+      result.password = user.password
+      result.updatedAt = user.updatedAt
+      result.createdAt = user.createdAt
+      result.warehouseId = user.warehouseId
       res.json(result)
     }).catch(err => {
       console.log('Error when trying to register : ', err);
