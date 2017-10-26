@@ -8,13 +8,12 @@ module.exports = function(sequelize, DataTypes) {
     size: DataTypes.STRING,
     genre: DataTypes.STRING
   }, {
-    classMethods: {
-      associate: function(models) {
-        // associations can be defined here
-        Item.belongsTo(models.Category,{foreignKey: 'categoryId'})
-        Item.belongsTo(models.Inner,{foreignKey: 'itemId'})
-      }
-    }
+
+    
   });
+  Item.associate = function (models) {
+    Item.belongsTo(models.Category,{foreignKey: 'categoryId'})
+    // Item.belongsTo(models.Inner,{foreignKey: 'itemId'})
+  }
   return Item;
 };
