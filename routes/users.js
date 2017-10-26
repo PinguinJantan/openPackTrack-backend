@@ -15,6 +15,7 @@ router.get('/all', userController.usersWithRoles)
 router.post('/role/create', userController.addRole)
 router.post('/role/assign', userController.addRoleToUser)
 router.get('/:username', userController.userDetail)
+router.get('/role/:roleName', userController.roleDetail)
 
 
 module.exports = router;

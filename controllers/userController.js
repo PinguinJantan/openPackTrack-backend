@@ -134,6 +134,45 @@ module.exports = {
     }
   },
 
+  // detail role
+  roleDetail: function(req, res, next){
+    let acl = req.app.get('acl')
+    let result = {
+      success: false,
+    }
+    acl.whatResources(req.params.roleName, (err, resources)=>{
+      if (err) {
+        res.json({
+          success: false,
+          message: err
+        })
+      }
+      else if (Object.keys(resources).length === 0) {
+        res.json({
+          success: false,
+          message: "Role " + req.params.roleName + " not found"
+        })
+      }
+      else {
+        let resourcesArray = []
+        for (var key in resources) {
+          console.log(key);
+          resourcesArray.push({
+            name: key,
+            permission: resources[key]
+          })
+        }
+        res.json({
+          success: true,
+          role: {
+            name: req.params.roleName,
+            resources: resourcesArray
+          }
+        })
+      }
+    })
+  },
+
   // assign role ke user
   addRoleToUser: function(req, res, next){
     let acl = req.app.get('acl')
