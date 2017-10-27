@@ -41,42 +41,19 @@ module.exports = {
     passwordData = saltHashPassword(req.body.password)
     var result = {
       success : false,
-      status : "ERROR"
+      status : "ERROR",
+      user:{
+        id: null,
+        username: null,
+        name: null,
+        identityNumber: null,
+        email: null,
+        password : null,
+        updatedAt: null,
+        createdAt : null,
+        warehouseId: null
+      }
     }
-
-    // models.User.findOrCreate(
-    //   {
-    //     where: {
-    //       $or: [
-    //         {username: req.body.username},
-    //         {email: req.body.email}
-    //     ]}
-    //     ,
-    //     defaults: {
-    //       name: req.body.name,
-    //       email: req.body.email,
-    //       username: req.body.username,
-    //       identityNumber: req.body.identityNumber,
-    //       password: passwordData.hash,
-    //       salt: passwordData.salt
-    //     }
-    //   }
-    // ).spread((user, isCreated) => {
-    //   console.log(isCreated);
-    //   if (isCreated) {
-    //     result.success = true
-    //     result.status = "OK"
-    //     result.user = user
-    //     res.json(result)
-    //   }
-    //   else {
-    //     result.message = "already exist"
-    //     res.json(result)
-    //   }
-    // }).catch(err => {
-    //   res.json("error cuk" + err)
-    // })
-
     models.User.create({
       name: req.body.name,
       email: req.body.email,
@@ -87,14 +64,15 @@ module.exports = {
     }).then(user => {
       result.success = true
       result.status = "OK"
-      result.id = user.id
-      result.username = user.username
-      result.name = user.name
-      result.identityNumber = user.identityNumber
-      result.password = user.password
-      result.updatedAt = user.updatedAt
-      result.createdAt = user.createdAt
-      result.warehouseId = user.warehouseId
+      result.user.id = user.id
+      result.user.username = user.username
+      result.user.name = user.name
+      result.user.identityNumber = user.identityNumber
+      result.user.email = user.email
+      result.user.password = user.password
+      result.user.updatedAt = user.updatedAt
+      result.user.createdAt = user.createdAt
+      result.user.warehouseId = user.warehouseId
       res.json(result)
     }).catch(err => {
       console.log('Error when trying to register : ', err);
@@ -107,6 +85,16 @@ module.exports = {
 
   // masuk ke sistem sebagai suatu user
   login: function(req,res,next){
+    var result = {
+      success: false,
+      status: "ERROR",
+      message: "",
+      user: {
+        name: null,
+        username: null,
+        token: null
+      }
+    }
     models.User.findOne({
       where: {
         username: req.body.username
@@ -114,30 +102,36 @@ module.exports = {
     }).then(user => {
       console.log(user);
       if(!user){
-        res.json({success: false, message: 'Authentication failed. User not found.'})
+        result.success = false
+        result.status = "ERROR"
+        result.message = 'Authentication failed. User not found.'
+        res.json(result)
       }else if (user) {
         let reqPasswordData = hashPassword(req.body.password, user.salt);
         if(user.password != reqPasswordData){
-          res.json({success: false, message: 'Authentication failed. Wrong password.'})
+          result.success = false
+          result.status = "ERROR"
+          result.message = 'Authentication failed. Wrong password.'
+          res.json(result)
         }else {
           var secret = req.app.get('superSecret')
           var token = jwt.sign({username: user.username }, secret, { expiresIn: '1d'});
           console.log(token);
-          res.json({
-            success: true,
-            name: user.name,
-            username: user.username,
-            message: 'Login success boskuh',
-            token : token
-          })
+          result.success = true
+          result.status = "OK"
+          result.message = 'Login success boskuh'
+          result.user.name = user.name
+          result.user.username = user.username
+          result.user.token = token
+          res.json(result)
         }
       }
     }).catch(err => {
       console.log('Error when trying to login : ', err);
-      res.json({
-        success: false,
-        message: err
-      })
+      result.success = false
+      result.status = "ERROR"
+      result.message = err
+      res.json(result)
     })
   }
 }
