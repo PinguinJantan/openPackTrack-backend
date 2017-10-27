@@ -13,7 +13,7 @@ module.exports = {
       name: req.body.name,
       color: req.body.color,
       size: req.body.size,
-      genre: req.body.genre
+      gender: req.body.gender
     }).then(item=>{
       result.success = true
       result.status = "OK"

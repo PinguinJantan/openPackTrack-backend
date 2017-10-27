@@ -23,7 +23,7 @@ router.use(aclMiddleware.isAllowedToAccess('items'))
   *      "name": "castelo",
   *      "color": "Blue/Silver",
   *      "size": "49",
-  *      "genre": "M"
+  *      "gender": "M"
   *  }
   * @apiSuccess {Boolean} success true jika berhasil
   * @apiSuccess {string} status "OK" jika berhasil
@@ -33,7 +33,7 @@ router.use(aclMiddleware.isAllowedToAccess('items'))
   * @apiParam {string} name nama item
   * @apiParam {string} color warna item
   * @apiParam {string} size ukuran item
-  * @apiParam {string} genre genre item (M,W,JR)
+  * @apiParam {string} gender gender item (M,W,JR)
   * @apiSuccessExample {json} success
   *     HTTP/1.1 200 OK
   *    {
@@ -46,7 +46,7 @@ router.use(aclMiddleware.isAllowedToAccess('items'))
   *          "name": "castelo",
   *          "color": "Blue/Silver",
   *          "size": "49",
-  *          "genre": "M",
+  *          "gender": "M",
   *          "updatedAt": "2017-10-05T13:03:50.747Z",
   *          "createdAt": "2017-10-05T13:03:50.747Z"
   *          }
@@ -77,7 +77,7 @@ router.post('/create',itemController.create)
 *        "name": "muller",
 *        "color": "merah pink",
 *        "size": "48",
-*        "genre": "running",
+*        "gender": "running",
 *        "createdAt": "2017-10-23T03:37:16.542Z",
 *        "updatedAt": "2017-10-23T03:37:16.542Z",
 *        "Category": {
@@ -94,7 +94,7 @@ router.post('/create',itemController.create)
 *        "name": "castelo",
 *        "color": "merah biru",
 *        "size": "48",
-*        "genre": "asd",
+*        "gender": "asd",
 *        "createdAt": "2017-10-26T13:20:19.416Z",
 *        "updatedAt": "2017-10-26T13:20:19.416Z",
 *        "Category": {

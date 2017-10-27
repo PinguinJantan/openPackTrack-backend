@@ -6,11 +6,8 @@ module.exports = function(sequelize, DataTypes) {
     name: DataTypes.STRING,
     color: DataTypes.STRING,
     size: DataTypes.STRING,
-    genre: DataTypes.STRING
-  }, {
-
-    
-  });
+    gender: DataTypes.STRING
+  }, {});
   Item.associate = function (models) {
     Item.belongsTo(models.Category,{foreignKey: 'categoryId'})
     // Item.belongsTo(models.Inner,{foreignKey: 'itemId'})
