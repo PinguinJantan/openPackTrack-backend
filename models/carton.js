@@ -12,5 +12,8 @@ module.exports = function(sequelize, DataTypes) {
       }
     }
   });
+  Carton.associate = function (models) {
+    Carton.belongsTo(models.Warehouse,{foreignKey: 'warehouseId'})
+  }
   return Carton;
 };

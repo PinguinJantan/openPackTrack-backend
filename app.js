@@ -14,6 +14,11 @@ var index = require('./routes/index');
 var item = require('./routes/item');
 var category = require('./routes/category')
 var auth = require('./routes/auth');
+var inner = require('./routes/inner');
+var warehouse = require('./routes/warehouse');
+var carton = require('./routes/carton');
+var innerGrade = require('./routes/innergrade');
+var innerSource = require('./routes/innersource');
 var config = require('./config/config');
 var cors = require('cors')
 
@@ -88,6 +93,11 @@ app.use('/', index);
 // app.use('/api/users', users);
 app.use('/api/item', item);
 app.use('/api/category', category);
+app.use('/api/inner', inner);
+app.use('/api/innergrade', innerGrade);
+app.use('/api/innersource', innerSource);
+app.use('/api/warehouse', warehouse);
+app.use('/api/carton', carton);
 app.use('/auth', auth);
 
 // catch 404 and forward to error handler
