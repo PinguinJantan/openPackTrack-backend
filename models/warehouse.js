@@ -11,5 +11,8 @@ module.exports = function(sequelize, DataTypes) {
       }
     }
   });
+  Warehouse.associate = function (models) {
+    Warehouse.hasMany(models.Carton,{foreignKey: 'warehouseId'})
+  }
   return Warehouse;
 };
