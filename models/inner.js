@@ -4,7 +4,7 @@ module.exports = function(sequelize, DataTypes) {
     barcode: DataTypes.STRING,
     itemId: DataTypes.INTEGER,
     cartonId: DataTypes.INTEGER,
-    inInStok: DataTypes.BOOLEAN,
+    isInStok: DataTypes.BOOLEAN,
     gradeId: DataTypes.INTEGER,
     sourceId: DataTypes.INTEGER
   }, {
