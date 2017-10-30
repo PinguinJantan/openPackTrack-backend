@@ -2,7 +2,7 @@
 module.exports = function(sequelize, DataTypes) {
   var Carton = sequelize.define('Carton', {
     barcode: DataTypes.STRING,
-    werehouseId: DataTypes.INTEGER
+    warehouseId: DataTypes.INTEGER
   }, {
     classMethods: {
       associate: function(models) {
