@@ -100,7 +100,7 @@ module.exports = {
         username: req.body.username
       },
     }).then(user => {
-      console.log(user);
+      // console.log(user);
       if(!user){
         result.success = false
         result.status = "ERROR"
@@ -115,7 +115,7 @@ module.exports = {
           res.json(result)
         }else {
           var secret = req.app.get('superSecret')
-          var token = jwt.sign({username: user.username }, secret, { expiresIn: '1d'});
+          var token = jwt.sign({userId: user.id }, secret, { expiresIn: '1d'});
           console.log(token);
           result.success = true
           result.status = "OK"
