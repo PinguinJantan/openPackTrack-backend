@@ -20,10 +20,39 @@ module.exports = {
       result.success = true
       result.status = "OK"
       result.inner = inner
-      res.json(inner)
+      res.json(result)
     }).catch(err=>{
       console.log('Error when trying to create new inner : ', err)
       if (err.errors) {
+        result.errors = err.errors
+      }
+      res.json(result)
+    })
+  },
+  all: function (req,res) {
+    var result={
+      success: false,
+      status: "ERROR",
+      inner: null
+    }
+    models.Inner.findAll({
+      include: [{model: models.Carton,
+                 include: [{model: models.Warehouse,
+                            include: [{model: models.User}]}]},
+                 {model: models.Item,
+                 include:[{model: models.Category}]},
+                 {model: models.InnerGrade},
+                 {model: models.InnerSource}
+               ]
+    })
+    .then(inner=>{
+      result.success= true
+      result.status= "OK"
+      result.inner= inner
+      res.json(result)
+    }).catch(err=>{
+      console.log("Error when trying show all inner: ", err);
+      if(err.errors){
         result.errors = err.errors
       }
       res.json(result)

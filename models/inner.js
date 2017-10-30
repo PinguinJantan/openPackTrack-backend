@@ -19,5 +19,12 @@ module.exports = function(sequelize, DataTypes) {
       }
     }
   });
+  Inner.associate = function (models) {
+    Inner.belongsTo(models.Item,{foreignKey: 'itemId'})
+    Inner.belongsTo(models.Carton,{foreignKey: 'cartonId'})
+    Inner.belongsTo(models.InnerGrade,{foreignKey: 'gradeId'})
+    Inner.belongsTo(models.InnerSource,{foreignKey: 'sourceId'})
+    Inner.hasMany(models.Retur,{foreignKey: 'innerId'})
+  }
   return Inner;
 };

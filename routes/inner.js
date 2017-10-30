@@ -9,8 +9,8 @@ router.use(aclMiddleware.isAllowedToAccess('items'))
 
 /* GET users listing. */
 /**
-  * @api {post} api/item/create Create
-  * @apiGroup item
+  * @api {post} api/inner/create Create
+  * @apiGroup inner
   * @apiHeader {String} token token untuk login user
   * @apiHeaderExample {json} Header-Example:
   *     {
@@ -18,51 +18,49 @@ router.use(aclMiddleware.isAllowedToAccess('items'))
   *     }
   * @apiParamExample {json} Request-Example:
   *  {
-  *      "sku": "FGJ01FOCUB",
-  *      "categoryId": 4,
-  *      "name": "castelo",
-  *      "color": "Blue/Silver",
-  *      "size": "49",
-  *      "gender": "M"
+  *      "barcode": "1212kj2",
+  *      "categoryId": 7,
+  *      "isInStok": 1,
+  *      "gradeId": "1",
+  *      "sourceId": "2",
   *  }
   * @apiSuccess {Boolean} success true jika berhasil
   * @apiSuccess {string} status "OK" jika berhasil
-  * @apiSuccess {Array} item array dari item
-  * @apiParam {string} sku nomor sku item
-  * @apiParam {integer} categoryId id kategori item
-  * @apiParam {string} name nama item
-  * @apiParam {string} color warna item
-  * @apiParam {string} size ukuran item
-  * @apiParam {string} gender gender item (M,W,JR)
+  * @apiSuccess {Array} inner array dari inner
+  * @apiParam {string} barcode barcode inner
+  * @apiParam {integer} categoryId id kategori inner
+  * @apiParam {Boolean} isInStok status stok inner
+  * @apiParam {integer} gradeId id grade inner
+  * @apiParam {string} sourceId id source inner
   * @apiSuccessExample {json} success
   *     HTTP/1.1 200 OK
   *    {
   *      "success": true,
   *      "status": "OK",
-  *      "item": {
-  *          "id": 2,
-  *          "sku": "FGJ01FOCUB",
-  *          "categoryId": 4,
-  *          "name": "castelo",
-  *          "color": "Blue/Silver",
-  *          "size": "49",
-  *          "gender": "M",
-  *          "updatedAt": "2017-10-05T13:03:50.747Z",
-  *          "createdAt": "2017-10-05T13:03:50.747Z"
-  *          }
+  *      "inner": {
+  *          "id": 44,
+  *          "barcode": "1212kj2",
+  *          "itemId": 3,
+  *          "cartonId": 7,
+  *          "isInStok": true,
+  *          "gradeId": 1,
+  *          "sourceId": 3,
+  *          "updatedAt": "2017-10-30T12:49:01.130Z",
+  *          "createdAt": "2017-10-30T12:49:01.130Z"
+  *        }
   *      }
   * @apiErrorExample {json} Internal Server Error
   *     HTTP/1.1 500 Internal Server Error
   *     {
   *       success: false,
   *       status: "ERROR",
-  *       item: null
+  *       inner: null
   *      }
 **/
 router.post('/create',innerController.create)
 /**
-* @api {get} api/item/all List item
-* @apiGroup item
+* @api {get} api/inner/all List inner
+* @apiGroup inner
 * @apiHeader {String} token token untuk login user
 * @apiHeaderExample {json} Header-Example:
 *     {
@@ -71,47 +69,155 @@ router.post('/create',innerController.create)
 * @apiSuccessExample {json} Success
 *     HTTP/1.1 200 OK
 *     {
-*        "id": 1,
-*        "sku": "123134",
-*        "categoryId": 4,
-*        "name": "muller",
-*        "color": "merah pink",
-*        "size": "48",
-*        "gender": "running",
-*        "createdAt": "2017-10-23T03:37:16.542Z",
-*        "updatedAt": "2017-10-23T03:37:16.542Z",
-*        "Category": {
-*            "id": 4,
-*            "name": "Casual",
-*            "createdAt": "2017-10-23T03:32:47.423Z",
-*            "updatedAt": "2017-10-23T03:32:47.423Z"
-*        }
-*    },
-*    {
-*        "id": 3,
-*        "sku": "123136",
-*        "categoryId": 5,
-*        "name": "castelo",
-*        "color": "merah biru",
-*        "size": "48",
-*        "gender": "asd",
-*        "createdAt": "2017-10-26T13:20:19.416Z",
-*        "updatedAt": "2017-10-26T13:20:19.416Z",
-*        "Category": {
-*            "id": 5,
-*            "name": "Hiking",
-*            "createdAt": "2017-10-23T03:32:47.423Z",
-*            "updatedAt": "2017-10-23T03:32:47.423Z"
-*        }
-*    }
+    "success": true,
+    "status": "OK",
+    "inner": [
+        {
+            "id": 39,
+            "barcode": "1212kj2",
+            "itemId": 3,
+            "cartonId": 7,
+            "isInStok": true,
+            "gradeId": 1,
+            "sourceId": 3,
+            "createdAt": "2017-10-30T10:15:23.232Z",
+            "updatedAt": "2017-10-30T10:15:23.232Z",
+            "Carton": {
+                "id": 7,
+                "barcode": "1212kj2",
+                "warehouseId": 1,
+                "createdAt": "2017-10-27T10:31:04.431Z",
+                "updatedAt": "2017-10-27T10:31:04.431Z",
+                "Warehouse": {
+                    "id": 1,
+                    "name": "warehouse a",
+                    "address": "jl lorem ipsum bla bla bla",
+                    "createdAt": "2017-10-27T10:04:43.681Z",
+                    "updatedAt": "2017-10-27T10:04:43.681Z",
+                    "Users": [
+                        {
+                            "id": 6,
+                            "name": "irfan",
+                            "username": "irfan",
+                            "password": "24775f5b6ec07ec7863edca4405c29d4dade8c39392cb142c55796d5725783f444e207010622966d2945def2477e76fb796801b54cb465b7590728ee6d422ca8",
+                            "email": "jhndoe@example.co.id",
+                            "identityNumber": "11321102",
+                            "salt": "35cad5f47acd6d43",
+                            "createdAt": "2017-10-27T07:12:18.295Z",
+                            "updatedAt": "2017-10-27T07:12:18.295Z",
+                            "warehouseId": 1
+                        }
+                    ]
+                }
+            },
+            "Item": {
+                "id": 3,
+                "sku": "122223",
+                "categoryId": 1,
+                "name": "CRV B",
+                "color": "Hitam/ Hitam",
+                "size": "47",
+                "gender": "M",
+                "createdAt": "2017-10-26T15:45:16.625Z",
+                "updatedAt": "2017-10-26T15:45:16.625Z",
+                "Category": {
+                    "id": 1,
+                    "name": "Tae Kwon Do",
+                    "createdAt": "2017-10-26T15:45:16.611Z",
+                    "updatedAt": "2017-10-26T15:45:16.611Z"
+                }
+            },
+            "InnerGrade": {
+                "id": 1,
+                "name": "A",
+                "createdAt": "2017-10-28T17:37:29.118Z",
+                "updatedAt": "2017-10-28T17:37:29.118Z"
+            },
+            "InnerSource": {
+                "id": 3,
+                "name": "Factory B",
+                "createdAt": "2017-10-30T09:57:50.808Z",
+                "updatedAt": "2017-10-30T09:57:50.808Z"
+            }
+        },
+        {
+            "id": 44,
+            "barcode": "1212kj2",
+            "itemId": 3,
+            "cartonId": 7,
+            "isInStok": true,
+            "gradeId": 1,
+            "sourceId": 3,
+            "createdAt": "2017-10-30T12:49:01.130Z",
+            "updatedAt": "2017-10-30T12:49:01.130Z",
+            "Carton": {
+                "id": 7,
+                "barcode": "1212kj2",
+                "warehouseId": 1,
+                "createdAt": "2017-10-27T10:31:04.431Z",
+                "updatedAt": "2017-10-27T10:31:04.431Z",
+                "Warehouse": {
+                    "id": 1,
+                    "name": "warehouse a",
+                    "address": "jl lorem ipsum bla bla bla",
+                    "createdAt": "2017-10-27T10:04:43.681Z",
+                    "updatedAt": "2017-10-27T10:04:43.681Z",
+                    "Users": [
+                        {
+                            "id": 6,
+                            "name": "irfan",
+                            "username": "irfan",
+                            "password": "24775f5b6ec07ec7863edca4405c29d4dade8c39392cb142c55796d5725783f444e207010622966d2945def2477e76fb796801b54cb465b7590728ee6d422ca8",
+                            "email": "jhndoe@example.co.id",
+                            "identityNumber": "11321102",
+                            "salt": "35cad5f47acd6d43",
+                            "createdAt": "2017-10-27T07:12:18.295Z",
+                            "updatedAt": "2017-10-27T07:12:18.295Z",
+                            "warehouseId": 1
+                        }
+                    ]
+                }
+            },
+            "Item": {
+                "id": 3,
+                "sku": "122223",
+                "categoryId": 1,
+                "name": "CRV B",
+                "color": "Hitam/ Hitam",
+                "size": "47",
+                "gender": "M",
+                "createdAt": "2017-10-26T15:45:16.625Z",
+                "updatedAt": "2017-10-26T15:45:16.625Z",
+                "Category": {
+                    "id": 1,
+                    "name": "Tae Kwon Do",
+                    "createdAt": "2017-10-26T15:45:16.611Z",
+                    "updatedAt": "2017-10-26T15:45:16.611Z"
+                }
+            },
+            "InnerGrade": {
+                "id": 1,
+                "name": "A",
+                "createdAt": "2017-10-28T17:37:29.118Z",
+                "updatedAt": "2017-10-28T17:37:29.118Z"
+            },
+            "InnerSource": {
+                "id": 3,
+                "name": "Factory B",
+                "createdAt": "2017-10-30T09:57:50.808Z",
+                "updatedAt": "2017-10-30T09:57:50.808Z"
+            }
+        }
+    ]
+}
 * @apiErrorExample {json} Internal Server Error
 *     HTTP/1.1 500 Internal Server Error
 *     {
 *       success: false,
 *       status: "ERROR",
-*       item: null
+*       inner: null
 *      }
 **/
-// router.get('/all',innerController.all)
+ router.get('/all',innerController.all)
 
 module.exports = router;

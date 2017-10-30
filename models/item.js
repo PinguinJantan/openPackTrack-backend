@@ -10,7 +10,7 @@ module.exports = function(sequelize, DataTypes) {
   }, {});
   Item.associate = function (models) {
     Item.belongsTo(models.Category,{foreignKey: 'categoryId'})
-    // Item.belongsTo(models.Inner,{foreignKey: 'itemId'})
+    Item.hasOne(models.Inner,{foreignKey: 'itemId'})
   }
   return Item;
 };

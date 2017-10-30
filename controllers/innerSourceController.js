@@ -21,5 +21,25 @@ module.exports = {
       }
       res.json(result)
     })
+  },
+  all: function (req,res) {
+    var result= {
+      success: false,
+      status: "ERROR",
+      innerSource: null
+    }
+    models.InnerSource.findAll()
+    .then(innerSource=>{
+      result.success= true
+      result.status= "OK"
+      result.innerSource = innerSource
+      res.json(result)
+    }).catch(err=>{
+      console.log("Error when trying show all innerGrade : ",err);
+      if(err.errors){
+        result.error = err.error
+      }
+      res.json(result)
+    })
   }
 }
