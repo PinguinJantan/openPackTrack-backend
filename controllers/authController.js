@@ -48,7 +48,6 @@ module.exports = {
         name: null,
         identityNumber: null,
         email: null,
-        password : null,
         updatedAt: null,
         createdAt : null,
         warehouseId: null
@@ -69,7 +68,6 @@ module.exports = {
       result.user.name = user.name
       result.user.identityNumber = user.identityNumber
       result.user.email = user.email
-      result.user.password = user.password
       result.user.updatedAt = user.updatedAt
       result.user.createdAt = user.createdAt
       result.user.warehouseId = user.warehouseId
