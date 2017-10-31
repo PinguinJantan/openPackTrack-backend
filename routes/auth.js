@@ -35,7 +35,6 @@ let authController = require('../controllers/authController')
   *        "name": "jhon doe",
   *        "identityNumber": "113211019",
   *        "email" : "jhondoe@example.co.id",
-  *        "password": "24775f5b6ec07ec7863edca4405c29d4dade8c39392cb142c55796d5725783f444e207010622966d2945def2477e76fb796801b54cb465b7590728ee6d422ca8",
   *        "updatedAt": "2017-10-27T07:12:18.295Z",
   *        "createdAt": "2017-10-27T07:12:18.295Z"
   *      }
