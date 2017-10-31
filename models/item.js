@@ -6,15 +6,11 @@ module.exports = function(sequelize, DataTypes) {
     name: DataTypes.STRING,
     color: DataTypes.STRING,
     size: DataTypes.STRING,
-    genre: DataTypes.STRING
-  }, {
-    classMethods: {
-      associate: function(models) {
-        // associations can be defined here
-        Item.hasOne(models.Category,{foreignKey: 'categoryId'})
-        Item.belongsTo(models.Inner,{foreignKey: 'itemId'})
-      }
-    }
-  });
+    gender: DataTypes.STRING
+  }, {});
+  Item.associate = function (models) {
+    Item.belongsTo(models.Category,{foreignKey: 'categoryId'})
+    Item.hasOne(models.Inner,{foreignKey: 'itemId'})
+  }
   return Item;
 };

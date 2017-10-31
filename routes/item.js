@@ -23,7 +23,7 @@ router.use(aclMiddleware.isAllowedToAccess('item'))
   *      "name": "castelo",
   *      "color": "Blue/Silver",
   *      "size": "49",
-  *      "genre": "M"
+  *      "gender": "M"
   *  }
   * @apiSuccess {Boolean} success true jika berhasil
   * @apiSuccess {string} status "OK" jika berhasil
@@ -33,7 +33,7 @@ router.use(aclMiddleware.isAllowedToAccess('item'))
   * @apiParam {string} name nama item
   * @apiParam {string} color warna item
   * @apiParam {string} size ukuran item
-  * @apiParam {string} genre genre item (M,W,JR)
+  * @apiParam {string} gender gender item (M,W,JR)
   * @apiSuccessExample {json} success
   *     HTTP/1.1 200 OK
   *    {
@@ -46,7 +46,7 @@ router.use(aclMiddleware.isAllowedToAccess('item'))
   *          "name": "castelo",
   *          "color": "Blue/Silver",
   *          "size": "49",
-  *          "genre": "M",
+  *          "gender": "M",
   *          "updatedAt": "2017-10-05T13:03:50.747Z",
   *          "createdAt": "2017-10-05T13:03:50.747Z"
   *          }
@@ -70,27 +70,39 @@ router.post('/create',itemController.create)
 *     }
 * @apiSuccessExample {json} Success
 *     HTTP/1.1 200 OK
-*    {
+*     {
 *        "id": 1,
-*        "sku": "CUBFGJ01FO",
+*        "sku": "123134",
 *        "categoryId": 4,
-*        "name": "castelo",
-*        "color": "Blue/Red",
-*        "size": "46",
-*        "genre": "JR",
-*        "createdAt": "2017-10-03T13:03:26.774Z",
-*        "updatedAt": "2017-10-03T13:03:26.774Z"
+*        "name": "muller",
+*        "color": "merah pink",
+*        "size": "48",
+*        "gender": "running",
+*        "createdAt": "2017-10-23T03:37:16.542Z",
+*        "updatedAt": "2017-10-23T03:37:16.542Z",
+*        "Category": {
+*            "id": 4,
+*            "name": "Casual",
+*            "createdAt": "2017-10-23T03:32:47.423Z",
+*            "updatedAt": "2017-10-23T03:32:47.423Z"
+*        }
 *    },
 *    {
-*        "id": 2,
-*        "sku": "FGJ01FOCUB",
-*        "categoryId": 4,
+*        "id": 3,
+*        "sku": "123136",
+*        "categoryId": 5,
 *        "name": "castelo",
-*        "color": "Blue/Silver",
-*        "size": "49",
-*        "genre": "M",
-*        "createdAt": "2017-10-05T13:03:50.747Z",
-*        "updatedAt": "2017-10-05T13:03:50.747Z"
+*        "color": "merah biru",
+*        "size": "48",
+*        "gender": "asd",
+*        "createdAt": "2017-10-26T13:20:19.416Z",
+*        "updatedAt": "2017-10-26T13:20:19.416Z",
+*        "Category": {
+*            "id": 5,
+*            "name": "Hiking",
+*            "createdAt": "2017-10-23T03:32:47.423Z",
+*            "updatedAt": "2017-10-23T03:32:47.423Z"
+*        }
 *    }
 * @apiErrorExample {json} Internal Server Error
 *     HTTP/1.1 500 Internal Server Error

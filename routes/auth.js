@@ -26,18 +26,17 @@ let authController = require('../controllers/authController')
   * @apiParam {string} identityNumber nomer induk pengguna
   * @apiSuccessExample {json} Success
   *     HTTP/1.1 200 OK
-  *    {
-  *      success: true,
-  *      status: "OK"
-  *      user:  {
-  *         id: 12,
-  *         name: 'jhon doe',
-  *         email: 'jhondoe@example.co.id',
-  *         username: 'jhon',
-  *         identityNumber: '113211019',
-  *         password: 'secret',
-  *         updatedAt: 2017-09-26T09:22:56.631Z,
-  *         createdAt: 2017-09-26T09:22:56.631Z
+  *   {
+  *    "success": true,
+  *    "status": "OK",
+  *    "user": {
+  *        "id": 6,
+  *        "username": "jhondoe",
+  *        "name": "jhon doe",
+  *        "identityNumber": "113211019",
+  *        "email" : "jhondoe@example.co.id",
+  *        "updatedAt": "2017-10-27T07:12:18.295Z",
+  *        "createdAt": "2017-10-27T07:12:18.295Z"
   *      }
   *    }
   * @apiErrorExample {json} Internal Server Error
@@ -65,15 +64,21 @@ router.post('/register', authController.register);
   * @apiSuccess {string} token token setelah berhasil login
   * @apiSuccessExample {json} Success
   *     HTTP/1.1 200 OK
-  *    {
-  *       success: true,
-  *       message: 'Login success boskuh',
-  *       token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVzSW5NaW51dGVzIjoxNDQwLCJpYXQiOjE1MDY0MTgwNzJ9.LKBsytXXmH_hu7Qa4w69v-ELojmjMmieViI2VDqUG8U'
-  *    }
+  *   {
+  *    "success": true,
+  *    "status": "OK",
+  *    "message": "Login success boskuh",
+  *    "user": {
+  *      "name": "jhondoe",
+  *      "username": "jhondoe",
+  *      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImlyZmFuIiwiaWF0IjoxNTA5MDg4NDIzLCJleHAiOjE1MDkxNzQ4MjN9.PtvYELiK4Uyaw2phiyxOrBQJTC8BNNPVVgT1zinCk8g"
+  *       }
+  *     }
   * @apiErrorExample {json} Wrong password
   *     HTTP/1.1/ 200 OK
   *     {
   *       success: false,
+  *       "status": "ERROR",
   *       message: "Authentication failed. Wrong password."
   *     }
 **/
