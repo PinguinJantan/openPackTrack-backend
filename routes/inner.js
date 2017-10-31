@@ -93,21 +93,7 @@ router.post('/create',innerController.create)
                     "name": "warehouse a",
                     "address": "jl lorem ipsum bla bla bla",
                     "createdAt": "2017-10-27T10:04:43.681Z",
-                    "updatedAt": "2017-10-27T10:04:43.681Z",
-                    "Users": [
-                        {
-                            "id": 6,
-                            "name": "irfan",
-                            "username": "irfan",
-                            "password": "24775f5b6ec07ec7863edca4405c29d4dade8c39392cb142c55796d5725783f444e207010622966d2945def2477e76fb796801b54cb465b7590728ee6d422ca8",
-                            "email": "jhndoe@example.co.id",
-                            "identityNumber": "11321102",
-                            "salt": "35cad5f47acd6d43",
-                            "createdAt": "2017-10-27T07:12:18.295Z",
-                            "updatedAt": "2017-10-27T07:12:18.295Z",
-                            "warehouseId": 1
-                        }
-                    ]
+                    "updatedAt": "2017-10-27T10:04:43.681Z"
                 }
             },
             "Item": {
@@ -161,21 +147,7 @@ router.post('/create',innerController.create)
                     "name": "warehouse a",
                     "address": "jl lorem ipsum bla bla bla",
                     "createdAt": "2017-10-27T10:04:43.681Z",
-                    "updatedAt": "2017-10-27T10:04:43.681Z",
-                    "Users": [
-                        {
-                            "id": 6,
-                            "name": "irfan",
-                            "username": "irfan",
-                            "password": "24775f5b6ec07ec7863edca4405c29d4dade8c39392cb142c55796d5725783f444e207010622966d2945def2477e76fb796801b54cb465b7590728ee6d422ca8",
-                            "email": "jhndoe@example.co.id",
-                            "identityNumber": "11321102",
-                            "salt": "35cad5f47acd6d43",
-                            "createdAt": "2017-10-27T07:12:18.295Z",
-                            "updatedAt": "2017-10-27T07:12:18.295Z",
-                            "warehouseId": 1
-                        }
-                    ]
+                    "updatedAt": "2017-10-27T10:04:43.681Z"
                 }
             },
             "Item": {

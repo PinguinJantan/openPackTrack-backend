@@ -37,8 +37,7 @@ module.exports = {
     }
     models.Inner.findAll({
       include: [{model: models.Carton,
-                 include: [{model: models.Warehouse,
-                            include: [{model: models.User}]}]},
+                 include: [{model: models.Warehouse}]},
                  {model: models.Item,
                  include:[{model: models.Category}]},
                  {model: models.InnerGrade},
