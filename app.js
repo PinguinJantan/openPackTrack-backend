@@ -11,9 +11,11 @@ var mongoose = require('mongoose');
 var index = require('./routes/index');
 var users = require('./routes/users');
 var item = require('./routes/item');
+var output = require('./routes/output');
 var category = require('./routes/category')
 var retur = require('./routes/retur')
 var auth = require('./routes/auth');
+var deliveryOrder = require('./routes/deliveryorder');
 var inner = require('./routes/inner');
 var warehouse = require('./routes/warehouse');
 var carton = require('./routes/carton');
@@ -108,6 +110,8 @@ app.use('/api/innersource', innerSource);
 app.use('/api/warehouse', warehouse);
 app.use('/api/carton', carton);
 app.use('/api/retur', retur);
+app.use('/api/output', output);
+app.use('/api/deliveryorder', deliveryOrder);
 app.use('/auth', auth);
 
 // catch 404 and forward to error handler
