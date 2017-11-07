@@ -41,7 +41,8 @@ module.exports = {
                  {model: models.Item,
                  include:[{model: models.Category}]},
                  {model: models.InnerGrade},
-                 {model: models.InnerSource}
+                 {model: models.InnerSource},
+                 {model: models.Output}
                ]
     })
     .then(inner=>{

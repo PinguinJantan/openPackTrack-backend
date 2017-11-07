@@ -7,17 +7,7 @@ module.exports = function(sequelize, DataTypes) {
     isInStok: DataTypes.BOOLEAN,
     gradeId: DataTypes.INTEGER,
     sourceId: DataTypes.INTEGER
-  }, {
-    classMethods: {
-      associate: function(models) {
-        // associations can be defined here
-        Inner.hasOne(models.Item,{foreignKey: 'itemId'})
-        Inner.belongsTo(models.Carton,{foreignKey: 'cartonId'})
-        Inner.hasOne(models.InnerGrade,{foreignKey: 'gradeId'})
-        Inner.belongsTo(models.InnerSource,{foreignKey: 'sourceId'})
-      }
-    }
-  });
+  }, {});
   Inner.associate = function (models) {
     Inner.belongsTo(models.Item,{foreignKey: 'itemId'})
     Inner.belongsTo(models.Carton,{foreignKey: 'cartonId'})
@@ -25,6 +15,7 @@ module.exports = function(sequelize, DataTypes) {
     Inner.belongsTo(models.InnerSource,{foreignKey: 'sourceId'})
     Inner.hasMany(models.Retur,{foreignKey: 'innerId'})
     Inner.hasMany(models.Retur,{foreignKey: 'innerId'})
+    Inner.hasMany(models.Output,{foreignKey: 'innerId'})
 
   }
   return Inner;
