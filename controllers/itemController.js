@@ -42,7 +42,7 @@ module.exports = {
       result.success = true
       result.status = "OK"
       result.item = item
-      res.json(item)
+      res.json(result)
     }).catch(err=>{
       console.log('Error when trying to show all item : ', err);
       if (err.errors) {
