@@ -4,12 +4,10 @@ module.exports = function(sequelize, DataTypes) {
     quantity: DataTypes.INTEGER,
     innerId: DataTypes.INTEGER,
     deliveryOrderId: DataTypes.INTEGER
-  }, {
-    classMethods: {
-      associate: function(models) {
-        // associations can be defined here
-      }
-    }
-  });
+  }, {});
+  InnerDeliveryOrder.associate = function(models){
+    InnerDeliveryOrder.belongsTo(models.Inner,{foreignKey: 'innerId'})
+    InnerDeliveryOrder.belongsTo(models.DeliveryOrder,{foreignKey: 'deliveryOrderId'})
+  }
   return InnerDeliveryOrder;
 };
