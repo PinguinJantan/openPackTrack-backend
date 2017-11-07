@@ -10,7 +10,7 @@ router.use(aclMiddleware.isAllowedToAccess('item'))
 /* GET users listing. */
 /**
   * @api {post} api/output/create Create
-  * @apiGroup output
+  * @apiGroup Output
   * @apiHeader {String} token token untuk login user
   * @apiHeaderExample {json} Header-Example:
   *     {
@@ -18,38 +18,26 @@ router.use(aclMiddleware.isAllowedToAccess('item'))
   *     }
   * @apiParamExample {json} Request-Example:
   *  {
-  *      "sku": "FGJ01FOCUB",
-  *      "categoryId": 4,
-  *      "name": "castelo",
-  *      "color": "Blue/Silver",
-  *      "size": "49",
-  *      "gender": "M"
+  *      "deliveryOrderId": 1,
+  *      "innerId": 7
   *  }
   * @apiSuccess {Boolean} success true jika berhasil
   * @apiSuccess {string} status "OK" jika berhasil
   * @apiSuccess {Array} output array dari output
-  * @apiParam {string} sku nomor sku output
-  * @apiParam {integer} categoryId id kategori output
-  * @apiParam {string} name nama output
-  * @apiParam {string} color warna output
-  * @apiParam {string} size ukuran output
-  * @apiParam {string} gender gender output (M,W,JR)
+  * @apiParam {integer} deliveryOrderId id deliveryOrder
+  * @apiParam {integer} innerId id inner
   * @apiSuccessExample {json} success
   *     HTTP/1.1 200 OK
   *    {
-  *      "success": true,
-  *      "status": "OK",
-  *      "output": {
-  *          "id": 2,
-  *          "sku": "FGJ01FOCUB",
-  *          "categoryId": 4,
-  *          "name": "castelo",
-  *          "color": "Blue/Silver",
-  *          "size": "49",
-  *          "gender": "M",
-  *          "updatedAt": "2017-10-05T13:03:50.747Z",
-  *          "createdAt": "2017-10-05T13:03:50.747Z"
-  *          }
+  *        "success": true,
+  *        "status": "OK",
+  *        "output": {
+  *              "id": 5,
+  *              "deliveryOrderId": 1,
+  *              "innerId": 7,
+  *              "updatedAt": "2017-11-07T09:49:14.925Z",
+  *              "createdAt": "2017-11-07T09:49:14.925Z"
+  *            }
   *      }
   * @apiErrorExample {json} Internal Server Error
   *     HTTP/1.1 500 Internal Server Error
@@ -62,7 +50,7 @@ router.use(aclMiddleware.isAllowedToAccess('item'))
 router.post('/create',outputController.create)
 /**
 * @api {get} api/output/all List output
-* @apiGroup output
+* @apiGroup Output
 * @apiHeader {String} token token untuk login user
 * @apiHeaderExample {json} Header-Example:
 *     {
@@ -71,38 +59,34 @@ router.post('/create',outputController.create)
 * @apiSuccessExample {json} Success
 *     HTTP/1.1 200 OK
 *     {
-*        "id": 1,
-*        "sku": "123134",
-*        "categoryId": 4,
-*        "name": "muller",
-*        "color": "merah pink",
-*        "size": "48",
-*        "gender": "running",
-*        "createdAt": "2017-10-23T03:37:16.542Z",
-*        "updatedAt": "2017-10-23T03:37:16.542Z",
-*        "Category": {
-*            "id": 4,
-*            "name": "Casual",
-*            "createdAt": "2017-10-23T03:32:47.423Z",
-*            "updatedAt": "2017-10-23T03:32:47.423Z"
-*        }
-*    },
-*    {
-*        "id": 3,
-*        "sku": "123136",
-*        "categoryId": 5,
-*        "name": "castelo",
-*        "color": "merah biru",
-*        "size": "48",
-*        "gender": "asd",
-*        "createdAt": "2017-10-26T13:20:19.416Z",
-*        "updatedAt": "2017-10-26T13:20:19.416Z",
-*        "Category": {
+*    "success": true,
+*    "status": "OK",
+*    "output": [
+*        {
 *            "id": 5,
-*            "name": "Hiking",
-*            "createdAt": "2017-10-23T03:32:47.423Z",
-*            "updatedAt": "2017-10-23T03:32:47.423Z"
-*        }
+*            "deliveryOrderId": 1,
+*            "innerId": 7,
+*            "createdAt": "2017-11-07T09:49:14.925Z",
+*            "updatedAt": "2017-11-07T09:49:14.925Z",
+*            "Inner": {
+*                "id": 7,
+*                "barcode": "1212kj2",
+*                "itemId": 3,
+*                "cartonId": 3,
+*                "isInStok": true,
+*                "gradeId": 3,
+*                "sourceId": 1,
+*                "createdAt": "2017-11-04T07:34:03.555Z",
+*                "updatedAt": "2017-11-04T07:34:03.555Z"
+*              },
+*            "DeliveryOrder": {
+*                "id": 1,
+*                "number": "312312312",
+*                "createdAt": "2017-11-06T12:20:39.116Z",
+*                "updatedAt": "2017-11-06T12:20:39.116Z"
+*              }
+*          }
+*      ]
 *    }
 * @apiErrorExample {json} Internal Server Error
 *     HTTP/1.1 500 Internal Server Error
