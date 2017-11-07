@@ -4,13 +4,13 @@ var router = express.Router();
 let innerController = require('../controllers/innerController')
 let aclMiddleware = require('../acl/aclMiddleware');
 
-router.use(aclMiddleware.isAllowedToAccess('items'))
+router.use(aclMiddleware.isAllowedToAccess('item'))
 
 
 /* GET users listing. */
 /**
   * @api {post} api/inner/create Create
-  * @apiGroup inner
+  * @apiGroup Inner
   * @apiHeader {String} token token untuk login user
   * @apiHeaderExample {json} Header-Example:
   *     {
@@ -60,7 +60,7 @@ router.use(aclMiddleware.isAllowedToAccess('items'))
 router.post('/create',innerController.create)
 /**
 * @api {get} api/inner/all List inner
-* @apiGroup inner
+* @apiGroup Inner
 * @apiHeader {String} token token untuk login user
 * @apiHeaderExample {json} Header-Example:
 *     {
