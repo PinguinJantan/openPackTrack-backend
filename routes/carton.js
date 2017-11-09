@@ -10,7 +10,7 @@ router.use(aclMiddleware.isAllowedToAccess('item'))
 /* GET users listing. */
 /**
   * @api {post} api/carton/create Create
-  * @apiGroup carton
+  * @apiGroup Carton
   * @apiHeader {String} token token untuk login user
   * @apiHeaderExample {json} Header-Example:
   *     {
@@ -46,7 +46,7 @@ router.use(aclMiddleware.isAllowedToAccess('item'))
 router.post('/create',cartonController.create)
 /**
   * @api {get} api/carton/all List carton
-  * @apiGroup carton
+  * @apiGroup Carton
   * @apiHeader {String} token token untuk login user
   * @apiHeaderExample {json} Header-Example:
   *     {

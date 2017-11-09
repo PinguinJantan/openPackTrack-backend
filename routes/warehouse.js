@@ -10,7 +10,7 @@ router.use(aclMiddleware.isAllowedToAccess('items'))
 /* GET users listing. */
 /**
   * @api {post} api/warehouse/create Create
-  * @apiGroup warehouse
+  * @apiGroup Warehouse
   * @apiHeader {String} token token untuk login user
   * @apiHeaderExample {json} Header-Example:
   *     {
@@ -48,7 +48,7 @@ router.use(aclMiddleware.isAllowedToAccess('items'))
 router.post('/create',warehouseController.create)
 /**
 * @api {get} api/warehouse/all List warehouse
-* @apiGroup warehouse
+* @apiGroup Warehouse
 * @apiHeader {String} token token untuk login user
 * @apiHeaderExample {json} Header-Example:
 *     {

@@ -10,7 +10,7 @@ router.use(aclMiddleware.isAllowedToAccess('items'))
 /* GET users listing. */
 /**
   * @api {post} api/innergrade/create Create
-  * @apiGroup innerGrade
+  * @apiGroup Inner Grade
   * @apiHeader {String} token token untuk login user
   * @apiHeaderExample {json} Header-Example:
   *     {
@@ -45,7 +45,7 @@ router.use(aclMiddleware.isAllowedToAccess('items'))
 router.post('/create',innerGradeController.create)
 /**
 * @api {get} api/innergrade/all List innerGrade
-* @apiGroup innerGrade
+* @apiGroup Inner Grade
 * @apiHeader {String} token token untuk login user
 * @apiHeaderExample {json} Header-Example:
 *     {

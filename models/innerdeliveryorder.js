@@ -1,6 +1,6 @@
 'use strict';
 module.exports = function(sequelize, DataTypes) {
-  var ItemDeliveryOrder = sequelize.define('ItemDeliveryOrder', {
+  var InnerDeliveryOrder = sequelize.define('InnerDeliveryOrder', {
     quantity: DataTypes.INTEGER,
     innerId: DataTypes.INTEGER,
     deliveryOrderId: DataTypes.INTEGER
@@ -11,5 +11,5 @@ module.exports = function(sequelize, DataTypes) {
       }
     }
   });
-  return ItemDeliveryOrder;
+  return InnerDeliveryOrder;
 };

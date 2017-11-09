@@ -10,7 +10,7 @@ router.use(aclMiddleware.isAllowedToAccess('category'))
 /* GET users listing. */
 /**
   * @api {post} api/category/create Create
-  * @apiGroup category
+  * @apiGroup Category
   * @apiHeader {String} token token untuk login user
   * @apiHeaderExample {json} Header-Example:
   *     {
@@ -47,7 +47,7 @@ router.use(aclMiddleware.isAllowedToAccess('category'))
 router.post('/create',categoryController.create)
 /**
 * @api {get} api/category/all List category
-* @apiGroup category
+* @apiGroup Category
 * @apiHeader {String} token token untuk login user
 * @apiHeaderExample {json} Header-Example:
 *     {
