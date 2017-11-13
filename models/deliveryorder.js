@@ -2,12 +2,9 @@
 module.exports = function(sequelize, DataTypes) {
   var DeliveryOrder = sequelize.define('DeliveryOrder', {
     number: DataTypes.STRING
-  }, {
-    classMethods: {
-      associate: function(models) {
-        // associations can be defined here
-      }
-    }
-  });
+  }, {});
+  DeliveryOrder.associate= function(models){
+    DeliveryOrder.hasMany(models.Output,{foreignKey: 'deliveryOrderId'})
+  }
   return DeliveryOrder;
 };

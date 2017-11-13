@@ -1,16 +1,16 @@
 var express = require('express');
 var router = express.Router();
 
-let categoryController = require('../controllers/categoryController')
+let innerSourceController = require('../controllers/innerSourceController')
 let aclMiddleware = require('../acl/aclMiddleware');
 
-router.use(aclMiddleware.isAllowedToAccess('category'))
+router.use(aclMiddleware.isAllowedToAccess('items'))
 
 
 /* GET users listing. */
 /**
-  * @api {post} api/category/create Create
-  * @apiGroup Category
+  * @api {post} api/item/create Create
+  * @apiGroup Inner Source
   * @apiHeader {String} token token untuk login user
   * @apiHeaderExample {json} Header-Example:
   *     {
@@ -18,24 +18,20 @@ router.use(aclMiddleware.isAllowedToAccess('category'))
   *     }
   * @apiParamExample {json} Request-Example:
   *  {
-  *      "name": "running"
+  *      "name": "factory",
   *  }
   * @apiSuccess {Boolean} success true jika berhasil
   * @apiSuccess {string} status "OK" jika berhasil
-  * @apiSuccess {Array} category array dari category
-  * @apiParam {string} name nama category
+  * @apiSuccess {Array} innerSource array dari innerSource
+  * @apiParam {string} name nama innerSource
   * @apiSuccessExample {json} success
   *     HTTP/1.1 200 OK
-  *     {
-  *       "success": true,
-  *       "status": "OK",
-  *       "category": {
-  *           "id": 22,
-  *           "name": "running",
-  *           "updatedAt": "2017-10-06T09:15:17.193Z",
-  *           "createdAt": "2017-10-06T09:15:17.193Z"
-  *     },
-  *       "message": "Create success"
+  *    {
+  *       "id": 2,
+  *       "name": "Factory A",
+  *       "updatedAt": "2017-10-30T09:56:01.672Z",
+  *       "createdAt": "2017-10-30T09:56:01.672Z"
+  *      }
   * @apiErrorExample {json} Internal Server Error
   *     HTTP/1.1 500 Internal Server Error
   *     {
@@ -44,10 +40,10 @@ router.use(aclMiddleware.isAllowedToAccess('category'))
   *       item: null
   *      }
 **/
-router.post('/create',categoryController.create)
+router.post('/create',innerSourceController.create)
 /**
-* @api {get} api/category/all List category
-* @apiGroup Category
+* @api {get} api/innersource/all List innerSource
+* @apiGroup Inner Source
 * @apiHeader {String} token token untuk login user
 * @apiHeaderExample {json} Header-Example:
 *     {
@@ -55,23 +51,24 @@ router.post('/create',categoryController.create)
 *     }
 * @apiSuccessExample {json} Success
 *     HTTP/1.1 200 OK
-*    {
-*    "success": true,
-*    "status": "OK",
-*    "category": [
+*     {
+*        "success": true,
+*        "status": "OK",
+*        "innerSource": [
 *        {
-*            "id": 4,
-*            "name": "Tae Kwon Do",
-*            "createdAt": "2017-10-03T12:02:22.377Z",
-*            "updatedAt": "2017-10-03T12:02:22.377Z"
+*            "id": 2,
+*            "name": "Factory A",
+*            "createdAt": "2017-10-30T09:56:01.672Z",
+*            "updatedAt": "2017-10-30T09:56:01.672Z"
 *        },
 *        {
-*            "id": 5,
-*            "name": "Badminton",
-*            "createdAt": "2017-10-03T12:02:22.377Z",
-*            "updatedAt": "2017-10-03T12:02:22.377Z"
+*            "id": 3,
+*            "name": "Factory B",
+*            "createdAt": "2017-10-30T09:57:50.808Z",
+*            "updatedAt": "2017-10-30T09:57:50.808Z"
 *        }
-*    "message": ""
+*      ]
+*    }
 * @apiErrorExample {json} Internal Server Error
 *     HTTP/1.1 500 Internal Server Error
 *     {
@@ -80,6 +77,6 @@ router.post('/create',categoryController.create)
 *       item: null
 *      }
 **/
-router.get('/all',categoryController.all)
+ router.get('/all',innerSourceController.all)
 
 module.exports = router;

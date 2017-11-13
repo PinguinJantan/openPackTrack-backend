@@ -18,5 +18,8 @@ module.exports = function(sequelize, DataTypes) {
       }
     }
   });
+  User.associate = function (models) {
+    User.belongsTo(models.Warehouse,{foreignKey: 'warehouseId'})
+  }
   return User;
 };

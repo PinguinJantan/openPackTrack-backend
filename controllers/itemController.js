@@ -13,7 +13,7 @@ module.exports = {
       name: req.body.name,
       color: req.body.color,
       size: req.body.size,
-      genre: req.body.genre
+      gender: req.body.gender
     }).then(item=>{
       result.success = true
       result.status = "OK"
@@ -34,12 +34,15 @@ module.exports = {
       status: "ERROR",
       item: null
     }
-    models.Item.findAll()
+    models.Item.findAll({
+      include: [{model: models.Category} ]
+      }
+    )
     .then(item=>{
       result.success = true
       result.status = "OK"
       result.item = item
-      res.json(item)
+      res.json(result)
     }).catch(err=>{
       console.log('Error when trying to show all item : ', err);
       if (err.errors) {

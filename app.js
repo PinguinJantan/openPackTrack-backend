@@ -11,8 +11,16 @@ var mongoose = require('mongoose');
 var index = require('./routes/index');
 var users = require('./routes/users');
 var item = require('./routes/item');
+var output = require('./routes/output');
 var category = require('./routes/category')
+var retur = require('./routes/retur')
 var auth = require('./routes/auth');
+var deliveryOrder = require('./routes/deliveryorder');
+var inner = require('./routes/inner');
+var warehouse = require('./routes/warehouse');
+var carton = require('./routes/carton');
+var innerGrade = require('./routes/innergrade');
+var innerSource = require('./routes/innersource');
 var config = require('./config/config');
 var cors = require('cors')
 
@@ -27,7 +35,7 @@ mongoose.connect(process.env.MONGO_URL, { useMongoClient: true }, err=>{
   acl.allow('admin', 'category', ['GET', 'POST', 'DELETE'])
   acl.allow('admin', 'user', ['GET', 'POST', 'DELETE'])
   acl.allow('basic', 'item', ['GET'])
-  acl.addUserRoles('9', 'admin') // irfan
+  acl.addUserRoles('1', 'admin') // irfan
   acl.addUserRoles('21', 'basic') //arnaz
 })
 
@@ -96,6 +104,14 @@ app.use('/', index);
 app.use('/api/user', users);
 app.use('/api/item', item);
 app.use('/api/category', category);
+app.use('/api/inner', inner);
+app.use('/api/innergrade', innerGrade);
+app.use('/api/innersource', innerSource);
+app.use('/api/warehouse', warehouse);
+app.use('/api/carton', carton);
+app.use('/api/retur', retur);
+app.use('/api/output', output);
+app.use('/api/deliveryorder', deliveryOrder);
 app.use('/auth', auth);
 
 // catch 404 and forward to error handler
