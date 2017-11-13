@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "dev": "nodemon ./bin/www"
+    "dev": "nodemon ./bin/www",
+    "seed-acl": "node acl/aclSeeder.js"
   },
   "dependencies": {
     "acl": "^0.4.11",
