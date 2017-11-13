@@ -36,6 +36,7 @@ mongoose.connect(process.env.MONGO_URL, { useMongoClient: true }, err=>{
   acl.allow('admin', 'user', ['GET', 'POST', 'DELETE'])
   acl.allow('basic', 'item', ['GET'])
   acl.addUserRoles('1', 'admin') // irfan
+  acl.addUserRoles('9', 'admin') // irfan
   acl.addUserRoles('21', 'basic') //arnaz
 })
 
