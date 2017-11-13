@@ -5,6 +5,7 @@ module.exports = function(sequelize, DataTypes) {
   }, {});
   DeliveryOrder.associate= function(models){
     DeliveryOrder.hasMany(models.Output,{foreignKey: 'deliveryOrderId'})
+    DeliveryOrder.hasMany(models.InnerDeliveryOrder,{foreignKey: 'deliveryOrderId'})
   }
   return DeliveryOrder;
 };

@@ -12,7 +12,7 @@ before_script:
 - git config --global user.name 'Pinguin Jantan via Travis CI'
 - git config --global user.email 'mailpakgasing@gmail.com'
 script:
-- apidoc -i . -o doc/ -e node_modules
+- apidoc -i routes -o doc 
 after_success:
 - if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then mkdir .deploy_doc; fi
 - if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then cd .deploy_doc; fi
