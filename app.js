@@ -17,6 +17,7 @@ var retur = require('./routes/retur')
 var auth = require('./routes/auth');
 var deliveryOrder = require('./routes/deliveryorder');
 var inner = require('./routes/inner');
+var innerDeliveryOrder = require('./routes/innerDeliveryOrder');
 var warehouse = require('./routes/warehouse');
 var carton = require('./routes/carton');
 var innerGrade = require('./routes/innergrade');
@@ -108,6 +109,7 @@ app.use('/api/inner', inner);
 app.use('/api/innergrade', innerGrade);
 app.use('/api/innersource', innerSource);
 app.use('/api/warehouse', warehouse);
+app.use('/api/innerDeliveryOrder', innerDeliveryOrder);
 app.use('/api/carton', carton);
 app.use('/api/retur', retur);
 app.use('/api/output', output);
