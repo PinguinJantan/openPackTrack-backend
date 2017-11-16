@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 var jwt = require('jsonwebtoken');
 var nodeAcl = require('acl');
 var mongoose = require('mongoose');
+const paginate = require('express-paginate');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
@@ -70,6 +71,13 @@ console.log('pada NODE_ENV : ', process.env.NODE_ENV);
 
 //use cors
 app.use(cors())
+
+app.use(paginate.middleware(10,50))
+app.use(function(req, res, next) {
+  // set default or minimum is 10 (as it was prior to v0.2.0)
+  if (req.query.limit <= 10) req.query.limit = 10;
+  next();
+});
 
 
 //verify token

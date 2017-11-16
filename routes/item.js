@@ -114,4 +114,10 @@ router.post('/create',itemController.create)
 **/
 router.get('/all',itemController.all)
 
+router.get('/paginated', itemController.paginatedAll)
+
+router.get('/:sku', itemController.detail)
+
+router.post('/:update', itemController.update)
+
 module.exports = router;
