@@ -11,6 +11,7 @@ var mongoose = require('mongoose');
 var index = require('./routes/index');
 var users = require('./routes/users');
 var item = require('./routes/item');
+var report = require('./routes/report');
 var output = require('./routes/output');
 var category = require('./routes/category')
 var retur = require('./routes/retur')
@@ -105,6 +106,7 @@ app.use('/api',router);
 app.use('/', index);
 app.use('/api/user', users);
 app.use('/api/item', item);
+app.use('/api/report', report);
 app.use('/api/category', category);
 app.use('/api/inner', inner);
 app.use('/api/innergrade', innerGrade);
