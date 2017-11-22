@@ -44,4 +44,5 @@ router.use(aclMiddleware.isAllowedToAccess('item'))
   *      }
 **/
 router.post('/opname',reportController.bulkCreateOpname)
+router.get('/print',reportController.report)
 module.exports = router;

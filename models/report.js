@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     innerId: DataTypes.INTEGER
   }, {});
   Report.associate= function(models){
-    Report.hasOne(models.Inner,{foreignKey: 'innerId'})
+    Report.belongsTo(models.Inner,{foreignKey: 'innerId'})
   }
   return Report;
 };

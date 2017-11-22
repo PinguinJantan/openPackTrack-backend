@@ -5,7 +5,7 @@ module.exports = {
     var result = {
       success: false,
       status: "ERROR",
-      msg: "SOMETHING WRONG!!!"
+      msg: "SOMETHING WENT WRONG!!!"
     }
     models.Carton.findOne({
       where: {
@@ -17,51 +17,81 @@ module.exports = {
       }]
     }).then(carton => {
       if (carton != null) {
-        let inputInnerids = carton.Inners.map(inner => {
-          return {
-            innerId: inner.id
-          }
-        })
-        const Op = Sequelize.Op
-        let arrayInnerids = carton.Inners.map(inner => inner.id)
-        console.log(arrayInnerids);
-        models.Report.findAll({
-          attributes: ['innerId'],
-          where: {
-            innerId: {
-              [Op.any]: arrayInnerids
+        if (carton.Inners.length != 0) {
+          let inputInnerids = carton.Inners.map(inner => {
+            return {
+              innerId: inner.id
             }
-          }
-        }).then(report => {
-          if (report.length == 0) {
-            models.Report.bulkCreate(inputInnerids)
-              .then(() => {
-                result.success = true
-                result.status = "OK"
-                result.msg = "opname success"
-                res.json(result)
-              }).catch(err => {
-                console.log(err);
-                res.json(result)
-              })
-          } else {
-            result.msg = "Input Duplicate Inner"
+          })
+          const Op = Sequelize.Op
+          let arrayInnerids = carton.Inners.map(inner => inner.id)
+          console.log(arrayInnerids);
+          models.Report.findAll({
+            attributes: ['innerId'],
+            where: {
+              innerId: {
+                [Op.any]: arrayInnerids
+              }
+            }
+          }).then(report => {
+            if (report.length == 0) {
+              models.Report.bulkCreate(inputInnerids)
+                .then(() => {
+                  result.success = true
+                  result.status = "OK"
+                  result.msg = "opname success"
+                  res.json(result)
+                }).catch(err => {
+                  console.log(err);
+                  res.json(result)
+                })
+            } else {
+              result.msg = "Input Duplicate Inner"
+              res.json(result)
+            }
+          }).catch(err => {
+            console.log(err);
             res.json(result)
-          }
-        }).catch(err => {
-          console.log(err);
+          })
+        } else {
+          result.success = true
+          result.status = "EMPTY"
+          result.msg = "Carton Null"
           res.json(result)
-        })
+        }
       } else {
         result.success = true
         result.status = "EMPTY"
-        result.msg = "carton null"
+        result.msg = "Carton not Found"
         res.json(result)
       }
     }).catch(err => {
       console.log(err);
       res.json(result)
     })
+  },
+  report: function(req, res) {
+    var result = {
+      success: false,
+      status: "ERROR",
+      msg: "SOMETHING WENT WRONG!!!",
+      report: null
+    }
+    models.Report.findAll({
+        include: [{
+          model: models.Inner
+        }]
+      })
+      .then(report => {
+        result.success = true
+        result.status = "OK"
+        result.msg = ""
+        result.report = report
+        res.json(result)
+      }).catch(err => {
+        console.log(err);
+        res.json(result)
+      })
   }
 
 }
