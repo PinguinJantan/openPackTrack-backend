@@ -207,6 +207,55 @@ module.exports = {
 
       })
     }
+  },
+
+  //import
+  // {
+  //   "fieldname": "ItemCSV",
+  //   "originalname": "g4798.png",
+  //   "encoding": "7bit",
+  //   "mimetype": "image/png",
+  //   "destination": "/tmp/",
+  //   "filename": "90c65d3089e8cb095970ecc25ba4015c",
+  //   "path": "/tmp/90c65d3089e8cb095970ecc25ba4015c",
+  //   "size": 60296
+  // }
+  import: function(req, res, next){
+    var result = {
+      success: false,
+      status: "ERROR"
+    }
+
+    if (req.file) {
+      let fs = require('fs');
+      let papa = require('papaparse');
+      let content = fs.readFileSync(req.file.path, {encoding: 'binary'})
+      papa.parse(content, {
+        header: true,
+        dynamicTyping: true,
+        skipEmptyLines: true,
+        complete: function(csvResults){
+          res.json(csvResults)
+
+          //delete file
+          fs.unlink(req.file.path, err=>{
+            if (err && err.code == 'ENOENT') {
+              console.log("file ", req.file.pat, "doesn't exist");
+            }
+            if (err) {
+              console.log("error: ", err);
+            }
+            else {
+              console.log("temporary file deleted");
+            }
+          })
+        }
+      })
+    }
+    else {
+      result.message = "No file provided"
+      res.json(result)
+    }
   }
 
 }
