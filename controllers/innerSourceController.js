@@ -13,7 +13,7 @@ module.exports = {
       result.success = true
       result.status = "OK"
       result.innerSource = innerSource
-      res.json(innerSource)
+      res.json(result)
     }).catch(err=>{
       console.log('Error when trying to create new innerSource : ', err)
       if (err.errors) {
