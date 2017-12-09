@@ -39,9 +39,9 @@ module.exports = {
     models.Sku.findAll({
       attributes: ["id", "code", "name"],
       include: [
-        {model: models.Category, attributes: ["id", "name"]},
-        {model: models.Color, attributes: ["id", "name"]},
-        {model: models.Gender, attributes: ["id", "name"]}
+        {model: models.Category, attributes: ["id", "name"], as: 'category'},
+        {model: models.Color, attributes: ["id", "name"], as: 'color'},
+        {model: models.Gender, attributes: ["id", "name"], as: 'gender'}
       ],
       limit: req.query.limit,
       offset: req.skip,
