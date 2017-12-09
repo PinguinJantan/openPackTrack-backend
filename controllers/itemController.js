@@ -11,12 +11,9 @@ module.exports = {
       item: null
     }
     models.Item.create({
-      sku: req.body.sku,
-      categoryId: req.body.categoryId,
-      name: req.body.name,
-      color: req.body.color,
-      size: req.body.size,
-      gender: req.body.gender
+      code: req.body.code,
+      sizeId: req.body.sizeId,
+      skuId: req.body.skuId
     }).then(item=>{
       result.success = true
       result.status = "OK"
@@ -40,13 +37,31 @@ module.exports = {
       item: null
     }
     models.Item.findAll({
-      include: [{model: models.Category} ]
-      }
+      include: [
+        { model: models.Sku,
+          as: 'sku',
+          attributes: {
+            exclude: ["createdAt", "updatedAt"]
+          },
+          include: [
+            { model: models.Category, as: 'category'},
+            { model: models.Gender, as: 'gender' },
+            { model: models.Color, as: 'color' },
+          ]
+        }
+      ]}
     )
-    .then(item=>{
+    .then(items=>{
+      let mappedItem = items.map(function(item){
+        let newItemObj = JSON.parse(JSON.stringify(item));
+        // newItemObj.Sku.Category = (newItemObj.Sku.Category ? newItemObj.Sku.Category.name : null)
+        // newItemObj.Sku.Gender = (newItemObj.Sku.Gender ? newItemObj.Sku.Gender.name : null)
+        // newItemObj.Sku.Color = (newItemObj.Sku.Color ? newItemObj.Sku.Color.name : null)
+        return newItemObj
+      })
       result.success = true
       result.status = "OK"
-      result.item = item
+      result.item = mappedItem
       res.json(result)
     }).catch(err=>{
       console.log('Error when trying to show all item : ', err);
@@ -66,13 +81,45 @@ module.exports = {
       item: null
     }
     models.Item.findAll({
-      attributes: ["id", "sku", "name", "color", "size", "gender"],
-      include: [{model: models.Category, attributes: ["id", "name"]} ],
+      include: [
+        { model: models.Size,
+          as: 'size',
+          attributes: {
+            exclude: ["createdAt", "updatedAt"]
+          }
+        },
+        { model: models.Sku,
+          as: "sku",
+          attributes: {
+            exclude: ["createdAt", "updatedAt"]
+          },
+          include: [
+            { model: models.Category,
+              as: 'category',
+              attributes: {
+                exclude: ["createdAt", "updatedAt"]
+              }
+            },
+            { model: models.Gender,
+              as: 'gender',
+              attributes: {
+                exclude: ["createdAt", "updatedAt"]
+              }
+            },
+            { model: models.Color,
+              as: 'color',
+              attributes: {
+                exclude: ["createdAt", "updatedAt"]
+              }
+            },
+          ]
+        }
+      ],
       limit: req.query.limit,
       offset: req.skip,
       }
     )
-    .then(item=>{
+    .then(items=>{
       models.Item.count()
       .then(itemCount=>{
         pageCount = Math.ceil(itemCount / req.query.limit)
@@ -85,7 +132,20 @@ module.exports = {
           hasNextPage: paginate.hasNextPages(req)(pageCount),
           hasPrevPage: res.locals.paginate.hasPreviousPages
         }
-        result.item = item
+        let mappedItem = items.map(function(item){
+          let newItemObj = JSON.parse(JSON.stringify(item));
+          delete newItemObj.skuId
+          delete newItemObj.sizeId
+          newItemObj.size = (newItemObj.size ? newItemObj.size.name : null)
+          delete newItemObj.sku.categoryId
+          newItemObj.sku.category = (newItemObj.sku.category ? newItemObj.sku.category.name : null)
+          delete newItemObj.sku.colorId
+          newItemObj.sku.color = (newItemObj.sku.color ? newItemObj.sku.color.name : null)
+          delete newItemObj.sku.genderId
+          newItemObj.sku.gender = (newItemObj.sku.gender ? newItemObj.sku.gender.name : null)
+          return newItemObj
+        })
+        result.item = mappedItem
         res.json(result)
       })
     }).catch(err=>{
@@ -105,14 +165,59 @@ module.exports = {
       item: null
     }
     models.Item.find({
+      include: [
+        {
+          model: models.Size,
+          as: 'size',
+          attributes: {
+            exclude: ["createdAt", "updatedAt"]
+          },
+        },
+        {
+          model: models.Sku,
+          as: 'sku',
+          attributes: {
+            exclude: ["createdAt", "updatedAt"]
+          },
+          include: [
+            {
+              model: models.Category,
+              as: 'category',
+              attributes: {
+                exclude: ["createdAt", "updatedAt"]
+              },
+            },
+            {
+              model: models.Gender,
+              as: 'gender',
+              attributes: {
+                exclude: ["createdAt", "updatedAt"]
+              },
+            },
+            {
+              model: models.Color,
+              as: 'color',
+              attributes: {
+                exclude: ["createdAt", "updatedAt"]
+              },
+            },
+          ]
+        }
+      ],
       where: {
-        sku: req.params.sku
+        code: req.params.code
       }
     })
     .then(item=>{
+      let newItemObj = JSON.parse(JSON.stringify(item));
+      delete newItemObj.sizeId
+      delete newItemObj.skuId
+      delete newItemObj.sku.categoryId
+      delete newItemObj.sku.colorId
+      delete newItemObj.sku.genderId
       result.success = true,
       result.status = "OK",
-      result.item = item
+      result.item = newItemObj
       res.json(result)
     })
     .catch(err=>{
@@ -134,21 +239,15 @@ module.exports = {
     // cek apakah parameter lengkap dan sesuai dengan tipedatanya
     // catatan: parseInt("5aaa") = 5
     if (parseInt(req.body.id) == req.body.id
-        && parseInt(req.body.sku) == req.body.sku
-        && req.body.name
-        && req.body.color
-        && parseInt(req.body.size) == req.body.size
-        && req.body.gender
-        && parseInt(req.body.category) == req.body.category) {
+        && req.body.code
+        && req.body.sizeId
+        && req.body.skuId) {
       models.Item.findById(req.body.id)
       .then(item=>{
         if (item) {
-          item.sku = req.body.sku
-          item.name = req.body.name
-          item.color = req.body.color
-          item.size = req.body.size
-          item.gender = req.body.gender
-          item.categoryId = req.body.category
+          item.code = req.body.code
+          item.sizeId = req.body.sizeId
+          item.skuId = req.body.skuId
           item.save().then(()=>{
             result.success = true
             result.status = "OK"
