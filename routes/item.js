@@ -18,12 +18,9 @@ router.use(aclMiddleware.isAllowedToAccess('item'))
   *     }
   * @apiParamExample {json} Request-Example:
   *  {
-  *      "sku": "FGJ01FOCUB",
-  *      "categoryId": 4,
-  *      "name": "castelo",
-  *      "color": "Blue/Silver",
-  *      "size": "49",
-  *      "gender": "M"
+  *      "code": "FGJ01FOCUB",
+  *      "sizeId": "18",
+  *      "skuId": "6"
   *  }
   * @apiSuccess {Boolean} success true jika berhasil
   * @apiSuccess {string} status "OK" jika berhasil
@@ -37,20 +34,16 @@ router.use(aclMiddleware.isAllowedToAccess('item'))
   * @apiSuccessExample {json} success
   *     HTTP/1.1 200 OK
   *    {
-  *      "success": true,
-  *      "status": "OK",
-  *      "item": {
-  *          "id": 2,
-  *          "sku": "FGJ01FOCUB",
-  *          "categoryId": 4,
-  *          "name": "castelo",
-  *          "color": "Blue/Silver",
-  *          "size": "49",
-  *          "gender": "M",
-  *          "updatedAt": "2017-10-05T13:03:50.747Z",
-  *          "createdAt": "2017-10-05T13:03:50.747Z"
-  *          }
-  *      }
+  *        "success": true,
+  *        "status": "OK",
+  *        "item": {
+  *            "id": 9,
+  *            "code": "F0004",
+  *            "sizeId": 18,
+  *            "updatedAt": "2017-12-09T11:47:56.426Z",
+  *            "createdAt": "2017-12-09T11:47:56.426Z"
+  *        }
+  *    }
   * @apiErrorExample {json} Internal Server Error
   *     HTTP/1.1 500 Internal Server Error
   *     {
@@ -70,40 +63,49 @@ router.post('/create',itemController.create)
 *     }
 * @apiSuccessExample {json} Success
 *     HTTP/1.1 200 OK
-*     {
-*        "id": 1,
-*        "sku": "123134",
-*        "categoryId": 4,
-*        "name": "muller",
-*        "color": "merah pink",
-*        "size": "48",
-*        "gender": "running",
-*        "createdAt": "2017-10-23T03:37:16.542Z",
-*        "updatedAt": "2017-10-23T03:37:16.542Z",
-*        "Category": {
-*            "id": 4,
-*            "name": "Casual",
-*            "createdAt": "2017-10-23T03:32:47.423Z",
-*            "updatedAt": "2017-10-23T03:32:47.423Z"
-*        }
-*    },
-*    {
-*        "id": 3,
-*        "sku": "123136",
-*        "categoryId": 5,
-*        "name": "castelo",
-*        "color": "merah biru",
-*        "size": "48",
-*        "gender": "asd",
-*        "createdAt": "2017-10-26T13:20:19.416Z",
-*        "updatedAt": "2017-10-26T13:20:19.416Z",
-*        "Category": {
-*            "id": 5,
-*            "name": "Hiking",
-*            "createdAt": "2017-10-23T03:32:47.423Z",
-*            "updatedAt": "2017-10-23T03:32:47.423Z"
-*        }
-*    }
+      {
+          "success": true,
+          "status": "OK",
+          "pagination": {
+              "itemTotal": 7,
+              "pageCount": 1,
+              "currentPage": 1,
+              "hasNextPage": false,
+              "hasPrevPage": false
+          },
+          "item": [
+              {
+                  "id": 1,
+                  "code": "I122221",
+                  "createdAt": "2017-12-05T17:31:36.541Z",
+                  "updatedAt": "2017-12-05T17:31:36.541Z",
+                  "size": "47",
+                  "sku": {
+                      "id": 1,
+                      "code": "FGJ01FOCUB",
+                      "name": "FOCUS B JR",
+                      "category": "Tae Kwon Do",
+                      "gender": "Junior",
+                      "color": "Black/Black"
+                  }
+              },
+              {
+                  "id": 2,
+                  "code": "I122222",
+                  "createdAt": "2017-12-05T17:31:36.541Z",
+                  "updatedAt": "2017-12-05T17:31:36.541Z",
+                  "size": "47",
+                  "sku": {
+                      "id": 2,
+                      "code": "FGJ01LATIO",
+                      "name": "LATIO B",
+                      "category": "Badminton",
+                      "gender": "Junior",
+                      "color": "Black/Black"
+                  }
+              }
+          ]
+      }
 * @apiErrorExample {json} Internal Server Error
 *     HTTP/1.1 500 Internal Server Error
 *     {
@@ -112,6 +114,12 @@ router.post('/create',itemController.create)
 *       item: null
 *      }
 **/
-router.get('/all',itemController.all)
+router.get('/all',itemController.paginatedAll)
+
+router.get('/paginated', itemController.paginatedAll)
+
+router.get('/:code', itemController.detail)
+
+router.post('/update', itemController.update)
 
 module.exports = router;

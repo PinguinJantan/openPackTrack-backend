@@ -7,9 +7,11 @@ var bodyParser = require('body-parser');
 var jwt = require('jsonwebtoken');
 var nodeAcl = require('acl');
 var mongoose = require('mongoose');
+const paginate = require('express-paginate');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
+var sku = require('./routes/sku');
 var item = require('./routes/item');
 var report = require('./routes/report');
 var output = require('./routes/output');
@@ -72,6 +74,13 @@ console.log('pada NODE_ENV : ', process.env.NODE_ENV);
 //use cors
 app.use(cors())
 
+app.use(paginate.middleware(10,50))
+app.use(function(req, res, next) {
+  // set default or minimum is 10 (as it was prior to v0.2.0)
+  if (req.query.limit <= 10) req.query.limit = 10;
+  next();
+});
+
 
 //verify token
 router.use(function(req, res, next){
@@ -106,6 +115,7 @@ app.use('/api',router);
 app.use('/', index);
 app.use('/api/user', users);
 app.use('/api/item', item);
+app.use('/api/sku', sku);
 app.use('/api/report', report);
 app.use('/api/category', category);
 app.use('/api/inner', inner);

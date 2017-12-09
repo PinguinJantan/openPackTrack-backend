@@ -1,16 +1,13 @@
 'use strict';
 module.exports = function(sequelize, DataTypes) {
   var Item = sequelize.define('Item', {
-    sku: DataTypes.STRING,
-    categoryId: DataTypes.INTEGER,
-    name: DataTypes.STRING,
-    color: DataTypes.STRING,
-    size: DataTypes.STRING,
-    gender: DataTypes.STRING
+    code: DataTypes.STRING,
+    sizeId: DataTypes.INTEGER,
+    skuId: DataTypes.INTEGER
   }, {});
-  Item.associate = function (models) {
-    Item.belongsTo(models.Category,{foreignKey: 'categoryId'})
-    Item.hasOne(models.Inner,{foreignKey: 'itemId'})
+  Item.associate = function(models){
+    Item.belongsTo(models.Sku, {foreignKey: 'skuId', as: 'sku'})
+    Item.belongsTo(models.Size, {foreignKey: 'sizeId', as: 'size'})
   }
   return Item;
 };

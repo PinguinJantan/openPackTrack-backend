@@ -4,7 +4,7 @@ module.exports = function(sequelize, DataTypes) {
     name: DataTypes.STRING
   }, {});
   Category.associate = function (models) {
-    Category.hasMany(models.Item,{foreignKey: 'categoryId'})
+    Category.hasMany(models.Sku,{foreignKey: 'categoryId'})
   }
   return Category;
 };
