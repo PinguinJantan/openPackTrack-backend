@@ -11,15 +11,7 @@ router.get('/', function(req, res, next) {
   res.send('respond with a resource');
 });
 
-/**
- * @apiDefine useToken
- * @apiHeader {String} Authorization token untuk login user
- */
 
- /**
-  * @apiDefine successBoolean
-  * @apiSuccess {Boolean} success sukses tidaknya operasi
-  */
 
 /**
  * @api {get} user/all Get all users
