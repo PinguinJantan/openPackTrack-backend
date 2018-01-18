@@ -14,7 +14,7 @@ module.exports = {
       result.success = true
       result.status = "OK"
       result.carton = carton
-      res.json(carton)
+      res.json(result)
     }).catch(err=>{
       console.log('Error when trying to create new carton : ', err)
       if (err.errors) {
