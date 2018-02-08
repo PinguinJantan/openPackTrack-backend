@@ -1,8 +1,11 @@
 var express = require('express');
 var router = express.Router();
+var multer = require('multer');
 
 let itemController = require('../controllers/itemController')
 let aclMiddleware = require('../acl/aclMiddleware');
+
+var upload = multer({ dest: '/tmp/' })
 
 router.use(aclMiddleware.isAllowedToAccess('item'))
 
@@ -121,5 +124,7 @@ router.get('/paginated', itemController.paginatedAll)
 router.get('/:code', itemController.detail)
 
 router.post('/update', itemController.update)
+
+router.post('/import', upload.single('ItemCSV'), itemController.import)
 
 module.exports = router;

@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 var jwt = require('jsonwebtoken');
 var nodeAcl = require('acl');
 var mongoose = require('mongoose');
+var bodyParser = require('body-parser');
 const paginate = require('express-paginate');
 
 var index = require('./routes/index');
@@ -75,6 +76,10 @@ console.log('pada NODE_ENV : ', process.env.NODE_ENV);
 
 //use cors
 app.use(cors())
+
+//body parser
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(paginate.middleware(10,50))
 app.use(function(req, res, next) {
