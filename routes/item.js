@@ -125,6 +125,23 @@ router.get('/:code', itemController.detail)
 
 router.post('/update', itemController.update)
 
+/**
+ * @api {post} item/import Import from CSV
+ * @apiGroup Item
+ * @apiUse useToken
+ *
+ * @apiParam {File} ItemCSV csv file to be imported
+ * @apiUse successBoolean
+ * @apiSuccess {String} message
+ * @apiSuccess {Number} importedItems imported items count
+ * @apiSuccessExample {json} success example
+ {
+    "success": true,
+    "message": "Imported",
+    "importedItems": 1467
+ }
+ */
+
 router.post('/import', upload.single('ItemCSV'), itemController.import)
 
 module.exports = router;
