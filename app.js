@@ -12,6 +12,8 @@ const paginate = require('express-paginate');
 var index = require('./routes/index');
 var users = require('./routes/users');
 var sku = require('./routes/sku');
+var color = require('./routes/color');
+var size = require('./routes/size');
 var item = require('./routes/item');
 var innerreport = require('./routes/innerreport')
 var report = require('./routes/report');
@@ -117,6 +119,9 @@ app.use('/', index);
 app.use('/api/user', users);
 app.use('/api/item', item);
 app.use('/api/sku', sku);
+app.use('/api/color', color);
+app.use('/api/size', size);
+app.use('/api/report', report);
 app.use('/api/category', category);
 app.use('/api/inner', inner);
 app.use('/api/innergrade', innerGrade);
