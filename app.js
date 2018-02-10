@@ -13,6 +13,7 @@ var index = require('./routes/index');
 var users = require('./routes/users');
 var sku = require('./routes/sku');
 var item = require('./routes/item');
+var innerreport = require('./routes/innerreport')
 var report = require('./routes/report');
 var output = require('./routes/output');
 var category = require('./routes/category')
@@ -116,11 +117,12 @@ app.use('/', index);
 app.use('/api/user', users);
 app.use('/api/item', item);
 app.use('/api/sku', sku);
-app.use('/api/report', report);
 app.use('/api/category', category);
 app.use('/api/inner', inner);
 app.use('/api/innergrade', innerGrade);
 app.use('/api/innersource', innerSource);
+app.use('/api/innerreport',innerreport)
+app.use('/api/report',report)
 app.use('/api/warehouse', warehouse);
 app.use('/api/innerDeliveryOrder', innerDeliveryOrder);
 app.use('/api/carton', carton);
