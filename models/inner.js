@@ -17,7 +17,7 @@ module.exports = function(sequelize, DataTypes) {
     Inner.hasMany(models.Retur,{foreignKey: 'innerId'})
     Inner.hasMany(models.Output,{foreignKey: 'innerId'})
     Inner.hasMany(models.InnerDeliveryOrder,{foreignKey: 'innerId'})
-    Inner.hasOne(models.Report,{foreignKey: 'innerId'})
+    Inner.hasMany(models.InnerReport,{foreignKey: 'innerId'})
 
   }
   return Inner;
