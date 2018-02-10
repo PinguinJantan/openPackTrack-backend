@@ -8,7 +8,12 @@ module.exports =
     "database": process.env.PG_DATABASE || 'openpacktrackdev',
     "host": process.env.PG_HOSTNAME || '',
     "dialect": "postgres",
-    "logging": false
+    "logging": false,
+    "pool": {
+      "max": 5,
+      "min": 0,
+      "acquire": 60000
+    }
   },
   "test": {
     "username": "bukalelang",

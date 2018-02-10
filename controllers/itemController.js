@@ -1,6 +1,7 @@
 const paginate = require('express-paginate');
 
 let models = require('../models')
+let bulk = require('../modules/bulk')
 
 module.exports = {
   // tambah item baru
@@ -305,6 +306,240 @@ module.exports = {
       .catch(err=>{
 
       })
+    }
+  },
+
+  //import
+  // {
+  //   "fieldname": "ItemCSV",
+  //   "originalname": "g4798.png",
+  //   "encoding": "7bit",
+  //   "mimetype": "image/png",
+  //   "destination": "/tmp/",
+  //   "filename": "90c65d3089e8cb095970ecc25ba4015c",
+  //   "path": "/tmp/90c65d3089e8cb095970ecc25ba4015c",
+  //   "size": 60296
+  // }
+  import: function(req, res, next){
+    var result = {
+      success: false
+    }
+
+    if (req.file) {
+      let fs = require('fs');
+      let papa = require('papaparse');
+      let content = fs.readFileSync(req.file.path, {encoding: 'binary'})
+      papa.parse(content, {
+        header: true,
+        // dynamicTyping: true,
+        skipEmptyLines: true,
+        complete: function(csvResults){
+          var sizes = csvResults.data.map((item, idx, array)=>{
+            if(item["Size"]){
+              return item["Size"]
+            }
+            else {
+              return "Tidak tersedia"
+            }
+          })
+          var uniqueSizes = new Set(sizes)
+          var uniqueSizesArray = Array.from(uniqueSizes)
+          var sizesObjects = uniqueSizesArray.map(s=>{
+            return {name: s}
+          })
+          // todo: finish this
+          // ALTER SEQUENCE "Sizes_id_seq" RESTART WITH 21;
+          bulk.findOrCreate(models.Size, sizesObjects, ["id", "name"])
+          .then(sizeInstances=>{
+            // todo: colors
+            var colors = csvResults.data.map((item, idx, array)=>{
+              if(item["Color"]){
+                return item["Color"]
+              }
+              else {
+                return "Tidak tersedia"
+              }
+            })
+            var uniqueColors = new Set(colors)
+            var uniqueColorsArray = Array.from(uniqueColors)
+            var colorsObjects = uniqueColorsArray.map(c=>{
+              return {name: c}
+            })
+            bulk.findOrCreate(models.Color, colorsObjects, ["id", "name"])
+            .then(colorInstances=>{
+              var categories = csvResults.data.map((item, idx, array)=>{
+                if(item["Kategori Code"]){
+                  return item["Kategori Code"]
+                }
+                else {
+                  return "Tidak tersedia"
+                }
+              })
+              var uniqueCategories = new Set(categories)
+              var uniqueCategoriesArray = Array.from(uniqueCategories)
+              var categoryObjects = uniqueCategoriesArray.map(c=>{
+                return {name: c}
+              })
+              bulk.findOrCreate(models.Category, categoryObjects, ["id", "name"])
+              .then(categoryInstances=>{
+                // todo: sku
+                // https://stackoverflow.com/questions/18773778/create-array-of-unique-objects-by-property
+                var flags = {}
+                var anySkuEmpty = false
+                var uniqueItems = csvResults.data.filter(item=>{
+                  if(item["SKU"] && item["SKU Name"]){
+                    if (flags[item["SKU"]]) {
+                      return false
+                    }
+                    else {
+                      flags[item["SKU"]] = true
+                      return true
+                    }
+                  }
+                  else {
+                    anySkuEmpty = true
+                    return false
+                  }
+                })
+                if (anySkuEmpty) {
+                  result.message = "There are some item with empty SKU"
+                  res.json(result)
+                }
+                else {
+                  models.Gender.findAll({
+                    attributes: ["id", "name"]
+                  })
+                  .then(genders=>{
+                    var skus = uniqueItems.map(item=>{
+                      var thisCategory = categoryInstances.filter(cat=>{
+                        return cat.name == item["Kategori Code"]
+                      })
+                      var undefinedColor = colorInstances.filter(col=>{
+                        return col.name == "Tidak tersedia"
+                      })
+                      var thisColor = colorInstances.filter(col=>{
+                        return col.name == item["Color"]
+                      })
+                      // console.log("color", thisColor.length);
+                      if (thisColor.length == 0) {
+                        thisColor = undefinedColor
+                      }
+                      var genderName = thisCategory[0].name.split(",")[1]
+                      var thisGender = genders.filter(gen=>{
+                        return gen.name == genderName
+                      })
+
+                      return {
+                        code: item["SKU"],
+                        name: item["SKU Name"],
+                        categoryId: thisCategory[0].id,
+                        colorId: thisColor[0].id,
+                        genderId: thisGender[0].id
+                      }
+                    })
+
+                    var skuCodes = skus.map(sku=>{
+                      return {code: sku.code}
+                    })
+                    bulk.upsert(models.Sku, skus, skuCodes, ["id", "code"])
+                    .then(skuInstances=>{
+                      var uniqueFlags = {}
+                      var anyItemEmpty = false
+                      var uniqueItemsEntry = csvResults.data.filter(item=>{
+                        if(item["Item Code"] && item["Item Name"]){
+                          if (uniqueFlags[item["Item Code"]]) {
+                            return false
+                          }
+                          else {
+                            uniqueFlags[item["Item Code"]] = true
+                            return true
+                          }
+                        }
+                        else {
+                          anyItemEmpty = true
+                          return false
+                        }
+                      })
+                      if (anyItemEmpty) {
+                        result.message = "There are some items with empty SKU"
+                        res.json(result)
+                      }
+                      else {
+                        var items = uniqueItemsEntry.map(itemEntry=>{
+                          var thisSku = skuInstances.filter(sku=>{
+                            return sku.code == itemEntry["SKU"]
+                          })
+                          var thisSize = sizeInstances.filter(size=>{
+                            return size.name == itemEntry["Size"]
+                          })
+                          var undefinedSize = sizeInstances.filter(size=>{
+                            return size.name == "Tidak tersedia"
+                          })
+                          if (thisSize.length == 0) {
+                            thisSize = undefinedSize
+                          }
+
+                          return {
+                            code: itemEntry["Item Code"],
+                            sizeId: thisSize[0].id,
+                            skuId: thisSku[0].id
+                          }
+                        })
+                        var itemCodes = items.map(item=>{
+                          return {code: item.code}
+                        })
+                        bulk.itemUpsert(models.Item, items, itemCodes)
+                        .then(rowProcessed=>{
+                          result.success = true
+                          result.message = "Imported"
+                          result.importedItems = rowProcessed
+                          res.json(result)
+                        })
+                        .catch(err=>{
+                          result.errors = err
+                          res.json(result)
+                        })
+                      }
+                    })
+                    .catch(err=>{
+                      result.errors = err
+                      res.json(result)
+                    })
+                  })
+                  .catch(err=>{
+                    result.errors = err
+                    res.json(result)
+                  })
+                }
+              })
+              .catch(err=>{
+                result.errors = err
+                res.json(result)
+              })
+            })
+          })
+          .catch(e=>{
+            res.json(result)
+          })
+
+          //delete file
+          fs.unlink(req.file.path, err=>{
+            if (err && err.code == 'ENOENT') {
+              console.log("file ", req.file.pat, "doesn't exist");
+            }
+            if (err) {
+              console.log("error: ", err);
+            }
+            else {
+              console.log("temporary file deleted");
+            }
+          })
+        }
+      })
+    }
+    else {
+      result.message = "No file provided"
+      res.json(result)
     }
   }
 
