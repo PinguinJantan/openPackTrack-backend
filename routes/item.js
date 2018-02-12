@@ -119,8 +119,6 @@ router.post('/create',itemController.create)
 **/
 router.get('/all',itemController.paginatedAll)
 
-router.get('/paginated', itemController.paginatedAll)
-
 router.get('/:code', itemController.detail)
 
 router.post('/update', itemController.update)

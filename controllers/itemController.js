@@ -1,5 +1,6 @@
 const paginate = require('express-paginate');
 
+let sequelize = require('sequelize');
 let models = require('../models')
 let bulk = require('../modules/bulk')
 
@@ -81,7 +82,33 @@ module.exports = {
       pagination: null,
       item: null
     }
-    models.Item.findAll({
+    var allowedSort = ['updatedAt', 'code', 'name']
+    if (allowedSort.indexOf(req.query.sortBy) == -1) {
+      req.query.sortBy = 'updatedAt'
+    }
+    var allowedDirection = ['ASC', 'DESC']
+    if (req.query.sortDirection) {
+      req.query.sortDirection = req.query.sortDirection.toUpperCase()
+    }
+    if (allowedDirection.indexOf(req.query.sortDirection) == -1) {
+      req.query.sortDirection = 'ASC'
+    }
+    if (req.query.search == null) {
+      req.query.search = ''
+    }
+    var text = req.query.search
+    console.log(req.query);
+    models.Item.findAndCountAll({
+      logging: console.log,
+      where: {
+        $or: [
+          // https://stackoverflow.com/questions/33271413/sequelize-or-clause-with-multiple-models
+          sequelize.where(sequelize.col('size.name'), { $ilike: `%${text}%`}),
+          sequelize.where(sequelize.col('sku.name'), { $ilike: `%${text}%`}),
+          sequelize.where(sequelize.col('Item.code'), { $ilike: `%${text}%`}),
+          sequelize.where(sequelize.col('sku->color.name'), { $ilike: `%${text}%`}),
+        ]
+      },
       include: [
         { model: models.Size,
           as: 'size',
@@ -118,37 +145,37 @@ module.exports = {
       ],
       limit: req.query.limit,
       offset: req.skip,
+      order: [[req.query.sortBy, req.query.sortDirection]]
       }
     )
-    .then(items=>{
-      models.Item.count()
-      .then(itemCount=>{
-        pageCount = Math.ceil(itemCount / req.query.limit)
-        result.success = true
-        result.status = "OK"
-        result.pagination = {
-          itemTotal: itemCount,
-          pageCount: pageCount,
-          currentPage: req.query.page,
-          hasNextPage: paginate.hasNextPages(req)(pageCount),
-          hasPrevPage: res.locals.paginate.hasPreviousPages
-        }
-        let mappedItem = items.map(function(item){
-          let newItemObj = JSON.parse(JSON.stringify(item));
-          delete newItemObj.skuId
-          delete newItemObj.sizeId
-          newItemObj.size = (newItemObj.size ? newItemObj.size.name : null)
-          delete newItemObj.sku.categoryId
-          newItemObj.sku.category = (newItemObj.sku.category ? newItemObj.sku.category.name : null)
-          delete newItemObj.sku.colorId
-          newItemObj.sku.color = (newItemObj.sku.color ? newItemObj.sku.color.name : null)
-          delete newItemObj.sku.genderId
-          newItemObj.sku.gender = (newItemObj.sku.gender ? newItemObj.sku.gender.name : null)
-          return newItemObj
-        })
-        result.item = mappedItem
-        res.json(result)
+    .then(data=>{
+      var items = data.rows
+      var itemCount = data.count
+      pageCount = Math.ceil(itemCount / req.query.limit)
+      result.success = true
+      result.status = "OK"
+      result.pagination = {
+        itemTotal: itemCount,
+        pageCount: pageCount,
+        currentPage: req.query.page,
+        hasNextPage: paginate.hasNextPages(req)(pageCount),
+        hasPrevPage: res.locals.paginate.hasPreviousPages
+      }
+      let mappedItem = items.map(function(item){
+        let newItemObj = JSON.parse(JSON.stringify(item));
+        delete newItemObj.skuId
+        delete newItemObj.sizeId
+        newItemObj.size = (newItemObj.size ? newItemObj.size.name : null)
+        delete newItemObj.sku.categoryId
+        newItemObj.sku.category = (newItemObj.sku.category ? newItemObj.sku.category.name : null)
+        delete newItemObj.sku.colorId
+        newItemObj.sku.color = (newItemObj.sku.color ? newItemObj.sku.color.name : null)
+        delete newItemObj.sku.genderId
+        newItemObj.sku.gender = (newItemObj.sku.gender ? newItemObj.sku.gender.name : null)
+        return newItemObj
       })
+      result.item = mappedItem
+      res.json(result)
     }).catch(err=>{
       console.log('Error when trying to show all item : ', err);
       if (err.errors) {
@@ -539,7 +566,7 @@ module.exports = {
     }
     else {
       result.message = "No file provided"
-      res.json(result)
+      res.status(412).json(result)
     }
   }
 

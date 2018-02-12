@@ -70,5 +70,25 @@ module.exports = {
       }
       res.json(result)
     })
+  },
+
+  // get sku list
+  list: function(req, res){
+    var result = {
+      success: false
+    }
+    models.Sku.findAll({
+      attributes: ["id", "name"]
+    })
+    .then(skus=>{
+      result.success = true
+      result.skus = skus
+      res.json(result)
+    })
+    .catch(err=>{
+      result.message = ""
+      result.errors = err
+      res.json(result)
+    })
   }
 }
