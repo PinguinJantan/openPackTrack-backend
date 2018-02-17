@@ -57,6 +57,8 @@ router.use(aclMiddleware.isAllowedToAccess('item'))
   *       inner: null
   *      }
 **/
-router.post('/bulkcreate',innerReportController.bulkCreateOpname)
+router.post('/scancarton',innerReportController.bulkCreateOpname)
+router.post('/create',innerReportController.create)
+router.get('/all', innerReportController.all)
 
 module.exports = router;

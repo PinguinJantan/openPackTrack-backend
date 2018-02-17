@@ -1,10 +1,10 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   var Report = sequelize.define('Report', {
-    
+
   }, {});
   Report.associate= function(models){
-    Report.belongsTo(models.InnerReport,{foreignKey: 'reportId'})
+    Report.hasMany(models.InnerReport,{foreignKey: 'reportId',as:'innerReport'})
   }
   return Report;
 };

@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   InnerReport.associate= function(models){
     InnerReport.belongsTo(models.Inner,{foreignKey: 'innerId'})
-    InnerReport.belongsTo(models.Report,{foreignKey: 'reportId'})
+    InnerReport.belongsTo(models.Report,{foreignKey: 'reportId',as: 'report'})
   }
   return InnerReport;
 };
