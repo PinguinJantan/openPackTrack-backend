@@ -16,6 +16,7 @@ var sku = require('./routes/sku');
 var color = require('./routes/color');
 var size = require('./routes/size');
 var item = require('./routes/item');
+var innerreport = require('./routes/innerreport')
 var report = require('./routes/report');
 var output = require('./routes/output');
 var category = require('./routes/category')
@@ -130,6 +131,8 @@ app.use('/api/category', category);
 app.use('/api/inner', inner);
 app.use('/api/innergrade', innerGrade);
 app.use('/api/innersource', innerSource);
+app.use('/api/innerreport',innerreport)
+app.use('/api/report',report)
 app.use('/api/warehouse', warehouse);
 app.use('/api/innerDeliveryOrder', innerDeliveryOrder);
 app.use('/api/carton', carton);

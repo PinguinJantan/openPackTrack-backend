@@ -9,6 +9,7 @@ module.exports = function(sequelize, DataTypes) {
   }, {});
   Sku.associate = function (models) {
     Sku.belongsTo(models.Category, {foreignKey: 'categoryId', as: 'category'})
+    Sku.hasMany(models.Item, {foreignKey: 'skuId', as: 'sku'})
     Sku.belongsTo(models.Color, {foreignKey: 'colorId', as: 'color'})
     Sku.belongsTo(models.Gender, {foreignKey: 'genderId', as: 'gender'})
   }
