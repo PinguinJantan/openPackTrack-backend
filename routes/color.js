@@ -14,6 +14,13 @@ let aclMiddleware = require('../acl/aclMiddleware');
   * @apiSuccess {Boolean} success operation success or not
   */
 
+/**
+ * @apiDefine paginationParams
+ * @apiParam {Number} [limit] limit size object per page
+ * @apiParam {Number} [page] number of page to display
+ * @apiSuccess {Object} pagination Object
+ */
+
 router.use(aclMiddleware.isAllowedToAccess('category'))
 
 /**
