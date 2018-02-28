@@ -351,7 +351,7 @@ module.exports = {
     var result = {
       success: false
     }
-
+    console.log(req);
     if (req.file) {
       let fs = require('fs');
       let papa = require('papaparse');
