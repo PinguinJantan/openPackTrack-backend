@@ -568,6 +568,90 @@ module.exports = {
       result.message = "No file provided"
       res.status(412).json(result)
     }
+  },
+
+  // ekspor
+  export: function(req, res){
+    let papa = require('papaparse');
+    var result = {
+      success: false
+    }
+    var itemsToExport = {
+      data: [],
+      fields: ['Item Code', 'Item Name', 'SKU', 'SKU Name',
+               'Kategori Code', 'Color', 'Size']
+    }
+    models.Item.findAll({
+      attributes: {
+        exclude: ["createdAt", "updatedAt"]
+      },
+      include: [
+        {
+          model: models.Size,
+          as: 'size',
+          attributes: {
+            exclude: ["createdAt", "updatedAt"]
+          },
+        },
+        {
+          model: models.Sku,
+          as: 'sku',
+          attributes: {
+            exclude: ["createdAt", "updatedAt"]
+          },
+          include: [
+            {
+              model: models.Category,
+              as: 'category',
+              attributes: {
+                exclude: ["createdAt", "updatedAt"]
+              },
+            },
+            {
+              model: models.Color,
+              as: 'color',
+              attributes: {
+                exclude: ["createdAt", "updatedAt"]
+              },
+            },
+          ]
+        }
+      ],
+    })
+    .then(items=>{
+        items.forEach(item=>{
+          var row = [
+            item.code,
+            `${item.sku.name} ${item.size.name}`,
+            item.sku.code,
+            item.sku.name,
+            item.sku.category.name,
+          ]
+          if (item.sku.color.name == 'Tidak tersedia') {
+            row.push('')
+          }
+          else {
+            row.push(item.sku.color.name)
+          }
+          row.push(item.size.name)
+          itemsToExport.data.push(row)
+        })
+        var csv = papa.unparse(itemsToExport)
+        res.set({
+          "Content-Disposition": 'attachment; filename="item-packtrack-'+new Date(Date.now()).toLocaleString() + '.csv"',
+          "Content-Type": "text/csv",
+        })
+        res.send(csv)
+    })
+    .catch(err=>{
+      if (err.errors) {
+        result.errors = err.errors
+      }
+      else {
+        result.errors = err
+      }
+      res.json(result)
+    })
   }
 
 }

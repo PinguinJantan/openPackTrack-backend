@@ -119,6 +119,8 @@ router.post('/create',itemController.create)
 **/
 router.get('/all',itemController.paginatedAll)
 
+router.get('/export', itemController.export)
+
 router.get('/:code', itemController.detail)
 
 router.post('/update', itemController.update)
@@ -141,5 +143,6 @@ router.post('/update', itemController.update)
  */
 
 router.post('/import', upload.single('ItemCSV'), itemController.import)
+
 
 module.exports = router;
