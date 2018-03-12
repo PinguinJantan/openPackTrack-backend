@@ -22,11 +22,12 @@ module.exports = {
       result.inner = inner
       res.json(result)
     }).catch(err=>{
-      console.log('Error when trying to create new inner : ', err)
       if (err.errors) {
         result.errors = err.errors
       }
+      result.message=err.message
       res.json(result)
+      console.log('Error when trying to create new inner : ', err)
     })
   },
   all: function (req,res) {
@@ -51,11 +52,12 @@ module.exports = {
       result.inner= inner
       res.json(result)
     }).catch(err=>{
-      console.log("Error when trying show all inner: ", err);
       if(err.errors){
         result.errors = err.errors
       }
+      result.message=err.message
       res.json(result)
+      console.log(err);
     })
   }
 }
