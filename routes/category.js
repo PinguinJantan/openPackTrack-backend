@@ -11,7 +11,7 @@ router.use(aclMiddleware.isAllowedToAccess('category'))
 /**
   * @api {post} api/category/create Create
   * @apiGroup Category
-  * @apiHeader {String} token token untuk login user
+  * @apiUse useToken
   * @apiHeaderExample {json} Header-Example:
   *     {
   *       "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVzSW5NaW51dGVzIjoxNDQwLCJpYXQiOjE1MDcwMzQwNzJ9.je4md5GBuTSFGNivBaT3Ju7-yjVjkVS99WSIiwk7wA4",
@@ -20,9 +20,8 @@ router.use(aclMiddleware.isAllowedToAccess('category'))
   *  {
   *      "name": "running"
   *  }
-  * @apiSuccess {Boolean} success true jika berhasil
-  * @apiSuccess {string} status "OK" jika berhasil
-  * @apiSuccess {Array} category array dari category
+  * @apiUse successBoolean
+  * @apiSuccess {Object} created category object
   * @apiParam {string} name nama category
   * @apiSuccessExample {json} success
   *     HTTP/1.1 200 OK
@@ -46,9 +45,9 @@ router.use(aclMiddleware.isAllowedToAccess('category'))
 **/
 router.post('/create',categoryController.create)
 /**
-* @api {get} api/category/all List category
+* @api {get} api/category/list List category
 * @apiGroup Category
-* @apiHeader {String} token token untuk login user
+* @apiUse useToken
 * @apiHeaderExample {json} Header-Example:
 *     {
 *       "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVzSW5NaW51dGVzIjoxNDQwLCJpYXQiOjE1MDcwMzQwNzJ9.je4md5GBuTSFGNivBaT3Ju7-yjVjkVS99WSIiwk7wA4",
@@ -57,7 +56,6 @@ router.post('/create',categoryController.create)
 *     HTTP/1.1 200 OK
 *    {
 *    "success": true,
-*    "status": "OK",
 *    "category": [
 *        {
 *            "id": 4,
@@ -71,7 +69,8 @@ router.post('/create',categoryController.create)
 *            "createdAt": "2017-10-03T12:02:22.377Z",
 *            "updatedAt": "2017-10-03T12:02:22.377Z"
 *        }
-*    "message": ""
+*     ]
+*   }
 * @apiErrorExample {json} Internal Server Error
 *     HTTP/1.1 500 Internal Server Error
 *     {
@@ -80,6 +79,81 @@ router.post('/create',categoryController.create)
 *       item: null
 *      }
 **/
-router.get('/all',categoryController.all)
+router.get('/list',categoryController.all)
+
+/**
+ * @api {post} category/update Update a Category
+ * @apiGroup Category
+ * @apiUse useToken
+ *
+ * @apiParam {Number} id Category ID
+ * @apiParam {String} name Category name
+ * @apiUse successBoolean
+ * @apiSuccess {Object} category updated Category data
+ * @apiSuccessExample {json} success example
+ {
+     "success": true,
+     "category": {
+         "id": 12,
+         "name": "FG,M,04",
+         "createdAt": "2018-01-28T13:51:38.461Z",
+         "updatedAt": "2018-02-27T16:34:09.634Z"
+     }
+ }
+
+ @apiErrorExample {json} Category name already exist
+ {
+     "success": false,
+     "errors": [
+         {
+             "message": "name must be unique",
+             "type": "unique violation",
+             "path": "name",
+             "value": "FG,M,04"
+         }
+     ]
+ }
+ */
+router.post('/update', categoryController.update)
+
+/**
+ * @api {delete} category/delete Delete Category
+ * @apiGroup Category
+ * @apiUse useToken
+ *
+ * @apiUse successBoolean
+ * @apiSuccess {String} message
+ * @apiSuccessExample {json} success example
+ {
+     "success": true,
+     "message": "Category deleted"
+ }
+ */
+router.delete('/delete', categoryController.delete)
+
+/**
+ * @api {get} category/:categoryId Detail Category
+ * @apiGroup Category
+ * @apiUse useToken
+ *
+ * @apiUse successBoolean
+ * @apiSuccess {Object} category Category data
+ * @apiSuccessExample {json} success example
+ {
+     "success": true,
+     "category": {
+         "id": 12,
+         "name": "FG,M,04",
+         "createdAt": "2018-01-28T13:51:38.390Z",
+         "updatedAt": "2018-01-28T13:51:38.390Z",
+     }
+ }
+ * @apiErrorExample {json} not found
+ {
+    "success": true,
+    "message": "Category not found"
+}
+ */
+router.get('/:categoryId', categoryController.detail)
 
 module.exports = router;

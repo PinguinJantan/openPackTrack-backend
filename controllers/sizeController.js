@@ -167,4 +167,25 @@ module.exports = {
       })
     }
   },
+
+  // get size list
+  list: function(req, res){
+    var result = {
+      success: false
+    }
+    models.Size.findAll({
+      attributes: ["id", "name"]
+    })
+    .then(sizes=>{
+      result.success = true
+      result.sizes = sizes
+      res.json(result)
+    })
+    .catch(err=>{
+      result.message = ""
+      result.errors = err
+      res.json(result)
+    })
+  },
+  
 }

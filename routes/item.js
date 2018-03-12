@@ -57,7 +57,7 @@ router.use(aclMiddleware.isAllowedToAccess('item'))
 **/
 router.post('/create',itemController.create)
 /**
-* @api {get} api/item/all List item
+* @api {get} api/item/all All item
 * @apiGroup Item
 * @apiHeader {String} token token untuk login user
 * @apiHeaderExample {json} Header-Example:
@@ -119,7 +119,7 @@ router.post('/create',itemController.create)
 **/
 router.get('/all',itemController.paginatedAll)
 
-router.get('/paginated', itemController.paginatedAll)
+router.get('/export', itemController.export)
 
 router.get('/:code', itemController.detail)
 
@@ -143,5 +143,6 @@ router.post('/update', itemController.update)
  */
 
 router.post('/import', upload.single('ItemCSV'), itemController.import)
+
 
 module.exports = router;
