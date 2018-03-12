@@ -15,7 +15,8 @@ module.exports = {
       }
     })
     .then(innerReport=>{
-      if(innerReport.length != 0){
+      console.log(innerReport);
+      if(innerReport == null){
         return innerReport
       }else{
         result.message= 'duplicate inner'
@@ -73,8 +74,14 @@ module.exports = {
         result.innerReport=innerReport
         res.json(result)
       })
+      .catch(err=>{
+        result.message= err.message
+        res.status(400).json(result)
+        console.log(err)
+      })
     })
     .catch(err=>{
+      result.message= err.message
       res.status(400).json(result)
       console.log(err)
     })
@@ -87,10 +94,11 @@ module.exports = {
     }
      models.Carton.findOne({
         where: {
-          barcode: req.body.barcode
+          barcode: req.body.cartonBarcode
         },
         include: [{
           model: models.Inner,
+          as:'inner',
           attributes: ['id']
         }]
       })
@@ -104,14 +112,14 @@ module.exports = {
             barcode: carton.barcode,
             warehouseId: carton.warehouseId,
             reportId: req.body.reportId,
-            Inners: carton.Inners
+            inner: carton.inner
           }
         }
       })
     .then(carton=>{
       if(carton != null){
         const Op = Sequelize.Op
-        let arrayInnerids = carton.Inners.map(inner => inner.id)
+        let arrayInnerids = carton.inner.map(inner => inner.id)
         return models.InnerReport.findAll({
           where: {
             innerId: {
@@ -122,7 +130,7 @@ module.exports = {
         })
         .then(innerIds=>{
           if(innerIds.length ==0){
-            return carton.Inners.map(inner => {
+            return carton.inner.map(inner => {
               return {
                 innerId: inner.id,
                 reportId: carton.reportId
