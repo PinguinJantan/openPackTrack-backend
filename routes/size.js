@@ -6,6 +6,8 @@ let aclMiddleware = require('../acl/aclMiddleware');
 
 router.use(aclMiddleware.isAllowedToAccess('item'))
 
+router.get('/list', sizeController.list)
+
 /**
  * @api {post} size/create Create new size
  * @apiGroup Size
