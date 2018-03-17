@@ -1,3 +1,4 @@
+var jwt = require('jsonwebtoken')
 let models = require('../models')
 
 module.exports = {
@@ -445,5 +446,19 @@ module.exports = {
         }
       })
     }
-  }
+  },
+
+  refreshToken: function(req, res) {
+    var result = {
+      success: false
+    }
+    var secret = req.app.get('superSecret')
+    console.log(req.decoded.userId)
+    var token = jwt.sign({userId: req.decoded.userId }, secret, { expiresIn: '1d'});
+    if (token) {
+      result.success = true
+    }
+    result.token = token
+    res.json(result)
+  },
 }

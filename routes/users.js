@@ -11,6 +11,20 @@ router.get('/', function(req, res, next) {
   res.send('respond with a resource');
 });
 
+/**
+ * @api {get} user/refresh-token refresh access token
+ * @apiGroup User
+ * @apiUse useToken
+ *
+ * @apiUse successBoolean
+ * @apiSuccess {String} token new access token
+ * @apiSuccessExample {json} success example
+ {
+    "success": true,
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTUyMTI5ODA1MiwiZXhwIjoxNTIxMzg0NDUyfQ.79u25p0iHyHis7KIdOmq7fC0_PESg4MzYXREJF_8uWY"
+ }
+ */
+router.get('/refresh-token', userController.refreshToken)
 
 
 /**
