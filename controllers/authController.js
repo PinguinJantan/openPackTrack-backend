@@ -128,7 +128,7 @@ module.exports = {
       console.log('Error when trying to login : ', err);
       result.success = false
       result.status = "ERROR"
-      result.message = err
+      result.message = err.message
       res.json(result)
     })
   }

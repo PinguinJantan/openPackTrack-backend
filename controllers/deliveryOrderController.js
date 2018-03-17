@@ -16,8 +16,9 @@ module.exports = {
         result.deliveryOrder = deliveryOrder
         res.json(result)
       }).catch(err=>{
-        console.log("Error when trying create new deliveryOrder: ",err);
+        result.message=err.message
         res.json(result)
+        console.log("Error when trying create new deliveryOrder: ",err);
       })
   },
     all: function (req,res) {
@@ -33,8 +34,9 @@ module.exports = {
         result.deliveryOrder= deliveryOrder
         res.json(result)
       }).catch(err=>{
-        console.log("Error when trying show all deliveryOrder: ",err);
+        result.message= err.message
         res.json(result)
+        console.log("Error when trying show all deliveryOrder: ",err);
       })
     }
 

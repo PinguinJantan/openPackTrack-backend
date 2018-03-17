@@ -9,15 +9,15 @@ module.exports = function(sequelize, DataTypes) {
     sourceId: DataTypes.INTEGER
   }, {});
   Inner.associate = function (models) {
-    Inner.belongsTo(models.Item,{foreignKey: 'itemId'})
-    Inner.belongsTo(models.Carton,{foreignKey: 'cartonId'})
-    Inner.belongsTo(models.InnerGrade,{foreignKey: 'gradeId'})
-    Inner.belongsTo(models.InnerSource,{foreignKey: 'sourceId'})
+    Inner.belongsTo(models.Item,{foreignKey: 'itemId', as: 'item'})
+    Inner.belongsTo(models.Carton,{foreignKey: 'cartonId', as: 'carton'})
+    Inner.belongsTo(models.InnerGrade,{foreignKey: 'gradeId', as: 'innerGrade'})
+    Inner.belongsTo(models.InnerSource,{foreignKey: 'sourceId', as: 'innerSource'})
     Inner.hasMany(models.Retur,{foreignKey: 'innerId'})
     Inner.hasMany(models.Retur,{foreignKey: 'innerId'})
     Inner.hasMany(models.Output,{foreignKey: 'innerId'})
     Inner.hasMany(models.InnerDeliveryOrder,{foreignKey: 'innerId'})
-    Inner.hasMany(models.InnerReport,{foreignKey: 'innerId'})
+    Inner.hasMany(models.InnerReport,{foreignKey: 'innerId', as: 'inner'})
 
   }
   return Inner;

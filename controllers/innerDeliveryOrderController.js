@@ -17,8 +17,9 @@ module.exports = {
       result.innerDeliveryOrder= innerDeliveryOrder
       res.json(result)
     }).catch(err=>{
-      console.log("Error when trying create new innerDeliveryOrder: ",err);
+      result.message=err.message
       res.json(result)
+      console.log("Error when trying create new innerDeliveryOrder: ",err);
     })
   },
   all: function(req,res){
@@ -37,8 +38,9 @@ module.exports = {
       result.innerDeliveryOrder= innerDeliveryOrder
       res.json(result)
     }).catch(err=>{
-      console.log("Error when trying create new innerDeliveryOrder: ",err);
+      result.message=err.message
       res.json(result)
+      console.log("Error when trying create new innerDeliveryOrder: ",err);
     })
   }
 }
