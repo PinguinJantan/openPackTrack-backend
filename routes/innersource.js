@@ -9,7 +9,7 @@ router.use(aclMiddleware.isAllowedToAccess('items'))
 
 /* GET users listing. */
 /**
-  * @api {post} api/item/create Create
+  * @api {post} api/innersource/create Create
   * @apiGroup Inner Source
   * @apiHeader {String} token token untuk login user
   * @apiHeaderExample {json} Header-Example:

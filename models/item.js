@@ -6,6 +6,7 @@ module.exports = function(sequelize, DataTypes) {
     skuId: DataTypes.INTEGER
   }, {});
   Item.associate = function(models){
+    Item.hasMany(models.Inner,{foreignKey: 'itemId', as:'inner'})
     Item.belongsTo(models.Sku, {foreignKey: 'skuId', as: 'sku'})
     Item.belongsTo(models.Size, {foreignKey: 'sizeId', as: 'size'})
   }

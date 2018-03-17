@@ -19,7 +19,7 @@ router.use(aclMiddleware.isAllowedToAccess('item'))
   * @apiParamExample {json} Request-Example:
   *  {
   *      "barcode": "1212kj2",
-  *      "categoryId": 7,
+  *      "cartonId": 7,
   *      "isInStok": 1,
   *      "gradeId": "1",
   *      "sourceId": "2",

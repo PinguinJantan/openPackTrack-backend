@@ -6,7 +6,7 @@ module.exports = function(sequelize, DataTypes) {
   }, {});
   Carton.associate = function (models) {
     Carton.belongsTo(models.Warehouse,{foreignKey: 'warehouseId'})
-    Carton.hasMany(models.Inner,{foreignKey: 'cartonId'})
+    Carton.hasMany(models.Inner,{foreignKey: 'cartonId',as: 'inner'})
   }
   return Carton;
 };
