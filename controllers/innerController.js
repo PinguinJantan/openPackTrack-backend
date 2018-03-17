@@ -53,19 +53,19 @@ module.exports = {
       order = [['updatedAt', req.query.sortDirection]]
     }
     else if (req.query.sortBy == 'item'){
-      order = [[{model: models.Item}, 'code', req.query.sortDirection]]
+      order = [[{model: models.Item, as: 'item'}, 'code', req.query.sortDirection]]
     }
     else if (req.query.sortBy == 'carton') {
-      order = [[{model: models.Carton}, 'barcode', req.query.sortDirection]]
+      order = [[{model: models.Carton, as: 'carton'}, 'barcode', req.query.sortDirection]]
     }
     else if (req.query.sortBy == 'stock') {
       order = [['isInStok', req.query.sortDirection]]
     }
     else if (req.query.sortBy == 'grade') {
-      order = [[{model: models.InnerGrade}, 'name', req.query.sortDirection]]
+      order = [[{model: models.InnerGrade, as: 'innerGrade'}, 'name', req.query.sortDirection]]
     }
     else {
-      order = [[{model: models.InnerSource}, 'name', req.query.sortDirection]]
+      order = [[{model: models.InnerSource, as: 'innerSource'}, 'name', req.query.sortDirection]]
     }
     if (req.query.search == null) {
       req.query.search = ''
@@ -77,6 +77,7 @@ module.exports = {
       include: [
         {
           model: models.Carton,
+          as: 'carton',
           include: [
             {
               model: models.Warehouse,
@@ -91,18 +92,21 @@ module.exports = {
         },
         {
           model: models.Item,
+          as: 'item',
           attributes: {
             exclude: ['createdAt', 'updatedAt']
           }
         },
         {
           model: models.InnerGrade,
+          as: 'innerGrade',
           attributes: {
             exclude: ['createdAt', 'updatedAt']
           }
         },
         {
           model: models.InnerSource,
+          as: 'innerSource',
           attributes: {
             exclude: ['createdAt', 'updatedAt']
           }
@@ -111,9 +115,9 @@ module.exports = {
       where: {
         $or: [
           sequelize.where(sequelize.col('Inner.barcode'), { $ilike: `%${text}%`}),
-          sequelize.where(sequelize.col('Carton.barcode'), { $ilike: `%${text}%`}),
-          sequelize.where(sequelize.col('Carton->Warehouse.name'), { $ilike: `%${text}%`}),
-          sequelize.where(sequelize.col('Item.code'), { $ilike: `%${text}%`}),
+          sequelize.where(sequelize.col('carton.barcode'), { $ilike: `%${text}%`}),
+          sequelize.where(sequelize.col('carton->Warehouse.name'), { $ilike: `%${text}%`}),
+          sequelize.where(sequelize.col('item.code'), { $ilike: `%${text}%`}),
         ]
       },
       limit: req.query.limit,
