@@ -103,6 +103,9 @@ module.exports = {
         result.message=err.message
         res.json(result)
       })
+    }else{
+      result.message='invalid Profile ID'
+      res.status(412).json(result)
     }
   },
   delete: function(req,res){

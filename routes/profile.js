@@ -143,7 +143,7 @@ router.post('/update', profileController.update)
 router.delete('/delete', profileController.delete)
 
 /**
- * @api {get} profile/:profileId Detail profile
+ * @api {get} profile/?id=1 Detail profile
  * @apiGroup profile
  * @apiUse useToken
  *
