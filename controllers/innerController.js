@@ -147,5 +147,185 @@ module.exports = {
       res.json(result)
       console.log(err);
     })
+  },
+
+  detail: function(req, res) {
+    var result = {
+      success: false
+    }
+    models.Inner.find({
+      where: {
+        barcode: req.params.barcode
+      },
+      include: [
+        {
+          model: models.Item,
+          as: 'item',
+          attributes: {
+            exclude: ['createdAt', 'updatedAt']
+          }
+        },
+        {
+          model: models.Carton,
+          as: 'carton',
+          attributes: ['barcode']
+        },
+        {
+          model: models.InnerGrade,
+          as: 'innerGrade',
+          attributes: ['name']
+        }
+      ]
+    })
+    .then(inner=>{
+      if (inner) {
+        var _inner = JSON.parse(JSON.stringify(inner));
+        delete _inner.itemId
+        result.inner = _inner
+        res.json(result)
+      }
+      else {
+        res.json(inner)
+      }
+    })
+    .catch(err=>{
+      if(err.errors){
+        result.errors = err.errors
+      }
+      else {
+        result.errors = err
+      }
+      res.json(result)
+    })
+  },
+
+  ping: function(req, res){
+    var result = {
+      success: false
+    }
+    models.Inner.find({
+      where: {
+        barcode: req.params.barcode
+      }
+    })
+    .then(inner=>{
+      result.success = true
+      if (inner) {
+        result.exist = true
+      }
+      else {
+        result.exist = false
+      }
+      res.json(result)
+    })
+    .catch(err=>{
+      if(err.errors){
+        result.errors = err.errors
+      }
+      else {
+        result.errors = err
+      }
+      res.json(result)
+    })
+  },
+
+  inputScan: function(req, res){
+    var result = {
+      success: false
+    }
+
+    if(req.body.cartonBarcode && req.body.innerCodes){
+      try{
+        var innerCodes = JSON.parse(req.body.innerCodes)
+        models.Carton.findOne({
+          where: {
+            barcode: req.body.cartonBarcode
+          }
+        })
+        .then(carton=>{
+          if (carton) {
+            console.log('rejecting..');
+            return Promise.reject({message: 'carton already registered'})
+          }
+          else {
+            return Promise.all(innerCodes.map(inner=>{
+              return models.Inner.findOne({
+                where: {barcode: inner.barcode}
+              })
+              .then(data=>{
+                if (data) {
+                  return Promise.reject({message: 'innerbox already exist'})
+                }
+                else {
+                  return true
+                }
+              })
+            }))
+          }
+        })
+        .then(()=>{
+          console.log(models.sequelize.transaction)
+          return models.sequelize.transaction(function (t) {
+            return models.Carton.create({
+              barcode: req.body.cartonBarcode
+            }, {
+              transaction: t
+            })
+            .then(carton=>{
+              console.log('kene cuk');
+              return models.Item.findAll({
+                where: {
+                  $or: innerCodes.map(inner=>{
+                    return {code: inner.itemCode}
+                  })
+                },
+                attributes: ['id', 'code'],
+                transaction: t
+              })
+              .then(items=>{
+                if (!items) {
+                  // return Promise.reject('item not found')
+                  throw new Error({message: 'item not found'})
+                }
+                var itemIdCodes = {}
+                items.forEach(item=>{
+                  itemIdCodes[item.dataValues.code] = item.dataValues.id
+                })
+                console.log(items);
+                var innerToCreate = innerCodes.map(inner=>{
+                  return {
+                    barcode: inner.barcode,
+                    itemId: itemIdCodes[inner.itemCode],
+                    cartonId: carton.id
+                  }
+                })
+                return models.Inner.bulkCreate(innerToCreate, {transaction: t})
+              })
+            })
+          })
+        })
+        .then(inners=>{
+          result.success = true
+          res.json(result)
+        })
+        .catch(err=>{
+          if(err.errors){
+            result.errors = err.errors
+          }
+          else{
+            result.errors = err
+          }
+          res.json(result)
+        })
+      }
+      catch(err){
+        result.errors = {message: "Inner Barcodes must be a valid JSON array"}
+        res.status(412).json(result)
+      }
+    }
+    else {
+      result.errors = {message: "Invalid Parameter"}
+      res.status(412).json(result)
+    }
   }
 }

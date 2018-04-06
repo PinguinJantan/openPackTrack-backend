@@ -96,4 +96,45 @@ router.post('/create',cartonController.create)
 **/
  router.get('/all',cartonController.all)
 
+ /**
+  * @api {get} carton/ping/:barcode Ping a carton box
+  * @apiGroup Carton
+  * @apiUse useToken
+  *
+  * @apiUse successBoolean
+  * @apiSuccess {String} exist carton exists in database or not
+  * @apiSuccessExample {json} success example
+  {
+    "success": true,
+    "exist": true
+  }
+  * @apiErrorExample {json} already exist
+  {
+    "success": true,
+    "exist": false
+  }
+  */
+ router.get('/ping/:barcode/', cartonController.ping)
+
+ /**
+  * @api {get} carton/:barcode Get carton detail by barcode
+  * @apiGroup Carton
+  * @apiUse useToken
+  *
+  * @apiUse successBoolean
+  * @apiSuccess {Object} carton carton data
+  * @apiSuccessExample {json} success example
+  {
+    "success": true,
+    "carton": {
+        "id": 4,
+        "barcode": "BOXAAA",
+        "warehouseId": 2,
+        "createdAt": "2018-03-21T15:09:58.314Z",
+        "updatedAt": "2018-03-21T15:09:58.314Z"
+    }
+  }
+  */
+ router.get('/:barcode', cartonController.detail)
+
 module.exports = router;

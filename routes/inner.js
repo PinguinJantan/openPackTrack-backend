@@ -192,4 +192,67 @@ router.post('/create',innerController.create)
 **/
  router.get('/all',innerController.all)
 
+ /**
+  * @api {get} inner/input-scan Input scan (with carton box)
+  * @apiGroup Inner
+  * @apiUse useToken
+  *
+  * @apiUse successBoolean
+  * @apiSuccessExample {json} success example
+  {
+    "success": true
+  }
+  * @apiErrorExample {json} exist example
+  {
+    "success": false,
+    "errors": {
+        "message": "innerbox already exist"
+    }
+  }
+  */
+router.post('/input-scan', innerController.inputScan)
+
+ /**
+  * @api {get} inner/ping/:barcode Ping an inner box
+  * @apiGroup Inner
+  * @apiUse useToken
+  *
+  * @apiUse successBoolean
+  * @apiSuccess {String} exist inner exists in database or not
+  * @apiSuccessExample {json} success example
+  {
+    "success": true,
+    "exist": true
+  }
+  * @apiErrorExample {json} already exist
+  {
+    "success": true,
+    "exist": false
+  }
+  */
+router.get('/ping/:barcode/', innerController.ping)
+
+/**
+ * @api {get} inner/:barcode Get inner detail by barcode
+
+ * @apiGroup Inner
+ * @apiUse useToken
+ *
+ * @apiUse successBoolean
+ * @apiSuccess {Object} carton carton object
+ * @apiSuccessExample {json} success example
+ {
+    "success": true,
+    "carton": {
+        "id": 13,
+        "barcode": "AAAA",
+        "warehouseId": null,
+        "createdAt": "2018-04-05T14:12:55.879Z",
+        "updatedAt": "2018-04-05T14:12:55.879Z"
+    }
+ }
+ */
+router.get('/:barcode', innerController.detail)
+
+
 module.exports = router;
