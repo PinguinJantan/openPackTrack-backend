@@ -336,7 +336,13 @@ module.exports = {
         }
       })
       .catch(err=>{
-
+        if (err.errors) {
+          result.errors = err.errors
+        }
+        else {
+          result.errors = err
+        }
+        res.json(result)
       })
     }
   },

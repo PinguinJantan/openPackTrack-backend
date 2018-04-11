@@ -1,11 +1,26 @@
 var jwt = require('jsonwebtoken')
+let sequelize = require('sequelize');
 let models = require('../models')
 
 module.exports = {
   usersWithRoles: function(req, res, next){
     let mongo = req.app.get('mongo')
-    models.User.findAll()
-    .then(users=>{
+    if (req.query.search == null) {
+      req.query.search = ''
+    }
+    var text = req.query.search
+    models.User.findAndCountAll({
+      where: {
+        $or: [
+          sequelize.where(sequelize.col('User.name'), { $ilike: `%${text}%`}),
+          sequelize.where(sequelize.col('User.username'), { $ilike: `%${text}%`}),
+        ]
+      },
+      limit: req.query.limit,
+      offset: req.limit
+    })
+    .then(data=>{
+      var users = data.rows
       let allUsers = []
       mongo.collection("users").find({}).toArray((err, userRoles)=>{
         for (var i in users) {
@@ -18,7 +33,7 @@ module.exports = {
           for (var j in userRoles) {
             if (userRoles[j].key == users[i].id) {
               someone.hasRole = true
-              someone.roles.push(Object.keys(userRoles[j]).slice(2))
+              someone.roles = Object.keys(userRoles[j]).slice(2)
             }
           }
           allUsers.push(someone)
@@ -28,6 +43,55 @@ module.exports = {
           users: allUsers
         })
       })
+    })
+  },
+
+  //update user detail
+  updateUserDetail: function(req, res) {
+    var result = {
+      success: false
+    }
+    if (!req.body.name) {
+      result.message = 'no name provided'
+      res.status(412).json(result)
+    }
+    if (!req.body.username) {
+      result.message = 'no username provided'
+      res.status(412).json(result)
+    }
+    if (!req.body.email) {
+      result.message = 'no email provided'
+      res.status(412).json(result)
+    }
+    if (!req.body.identityNumber) {
+      result.message = 'no identityNumber provided'
+      res.status(412).json(result)
+    }
+    if(!req.body.id || parseInt(req.body.id) != req.body.id){
+      result.message = 'no id provided'
+      res.status(412).json(result)
+    }
+
+    models.User.findById(req.body.id)
+    .then(user=>{
+      user.name = req.body.name
+      user.username = req.body.username
+      user.email = req.body.email
+      user.identityNumber = req.body.identityNumber
+      return user.save()
+    })
+    .then(user=>{
+      result.success = true
+      res.json(result)
+    })
+    .catch(err=>{
+      if (err.errors) {
+        result.errors = err.errors
+      }
+      else {
+        result.errors = err
+      }
+      res.json(result)
     })
   },
 
