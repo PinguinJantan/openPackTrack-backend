@@ -46,5 +46,67 @@ module.exports = {
       }
       res.json(result)
     })
+  },
+
+  detail: function(req, res){
+    var result = {
+      success: false,
+      carton: null
+    }
+    models.Carton.find({
+      where: {
+        barcode: req.params.barcode
+      }
+    })
+    .then(carton=>{
+      if (carton) {
+        result.success = true
+        result.carton = carton
+        res.json(result)
+      }
+      else {
+        result.message = 'carton not found'
+        res.json(result)
+      }
+    })
+    .catch(err=>{
+      if (err.errors) {
+        result.errors = err.errors
+      }
+      else {
+        result.error = err
+      }
+      res.json(result)
+    })
+  },
+
+  ping: function(req, res){
+    var result = {
+      success: false
+    }
+    models.Carton.find({
+      where: {
+        barcode: req.params.barcode
+      }
+    })
+    .then(carton=>{
+      result.success = true
+      if (carton) {
+        result.exist = true
+      }
+      else {
+        result.exist = false
+      }
+      res.json(result)
+    })
+    .catch(err=>{
+      if(err.errors){
+        result.errors = err.errors
+      }
+      else {
+        result.errors = err
+      }
+      res.json(result)
+    })
   }
 }

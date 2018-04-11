@@ -189,7 +189,6 @@ module.exports = {
   detail: function(req, res, next){
     var result = {
       success: false,
-      status: "ERROR",
       item: null
     }
     models.Item.find({
@@ -237,16 +236,22 @@ module.exports = {
       }
     })
     .then(item=>{
-      let newItemObj = JSON.parse(JSON.stringify(item));
-      delete newItemObj.sizeId
-      delete newItemObj.skuId
-      delete newItemObj.sku.categoryId
-      delete newItemObj.sku.colorId
-      delete newItemObj.sku.genderId
-      result.success = true,
-      result.status = "OK",
-      result.item = newItemObj
-      res.json(result)
+      if(item){
+        let newItemObj = JSON.parse(JSON.stringify(item));
+        delete newItemObj.sizeId
+        delete newItemObj.skuId
+        delete newItemObj.sku.categoryId
+        delete newItemObj.sku.colorId
+        delete newItemObj.sku.genderId
+        result.success = true
+        result.item = newItemObj
+        res.json(result)
+      }
+      else {
+        result.success = true
+        result.message = "Item not found"
+        res.json(result)
+      }
     })
     .catch(err=>{
       console.log('Error when trying to show detail item : ', err);
