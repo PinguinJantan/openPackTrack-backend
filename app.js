@@ -92,8 +92,12 @@ app.use(function(req, res, next) {
 
 //verify token
 router.use(function(req, res, next){
-
-  var head = req.headers.authorization ? req.headers.authorization.split(' ') : ''
+  if (req.method == 'GET') {
+    var head = req.query.accessToken ? ['Bearer', req.query.accessToken] : ''
+  }
+  else {
+    var head = req.headers.authorization ? req.headers.authorization.split(' ') : ''
+  }
   var token = null
 
   if(head.length == 2){
