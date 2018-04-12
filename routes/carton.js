@@ -19,19 +19,22 @@ router.use(aclMiddleware.isAllowedToAccess('item'))
   * @apiParamExample {json} Request-Example:
   *  {
   *      "barcode": "1231231",
-  *      "warehouseId": 1
+  *      "warehouseId": 1,
+  *      "profileId": 1
   *  }
   * @apiSuccess {Boolean} success true jika berhasil
   * @apiSuccess {string} status "OK" jika berhasil
   * @apiSuccess {Array} carton array dari carton
   * @apiParam {string} barcode nomor sku carton
   * @apiParam {integer} warehouseId id kategori carton
+  * @apiParam {integer} profileId id profile carton
   * @apiSuccessExample {json} success
   *     HTTP/1.1 200 OK
   *    {
   *     "id": 9,
   *     "barcode": "1231231",
   *     "warehouseId": 1,
+  *     "profileId": 1,
   *     "updatedAt": "2017-10-30T05:14:33.876Z",
   *     "createdAt": "2017-10-30T05:14:33.876Z"
   *   }
@@ -54,38 +57,41 @@ router.post('/create',cartonController.create)
   *     }
   * @apiSuccessExample {json} Success
   *     HTTP/1.1 200 OK
-  *      "success": true,
-  *      "status": "OK",
-  *      "carton": [
-  *        {
-  *            "id": 7,
-  *            "barcode": "1212kj2",
-  *            "warehouseId": 1,
-  *            "createdAt": "2017-10-27T10:31:04.431Z",
-  *            "updatedAt": "2017-10-27T10:31:04.431Z",
-  *            "Warehouse": {
-  *                "id": 1,
-  *                "name": "warehouse a",
-  *                "address": "jl lorem ipsum bla bla bla",
-  *                "createdAt": "2017-10-27T10:04:43.681Z",
-  *                "updatedAt": "2017-10-27T10:04:43.681Z"
-  *            }
-  *        },
-  *        {
-  *            "id": 9,
-  *            "barcode": "1231231",
-  *            "warehouseId": 1,
-  *            "createdAt": "2017-10-30T05:14:33.876Z",
-  *            "updatedAt": "2017-10-30T05:14:33.876Z",
-  *            "Warehouse": {
-  *                "id": 1,
-  *                "name": "warehouse a",
-  *                "address": "jl lorem ipsum bla bla bla",
-  *                "createdAt": "2017-10-27T10:04:43.681Z",
-  *                "updatedAt": "2017-10-27T10:04:43.681Z"
-  *            }
-  *        }
-  *    ]
+  *       "success": true,
+          "status": "OK",
+          "carton": [
+                      {
+                          "id": 65,
+                          "barcode": "1231231",
+                          "createdAt": "2018-04-12T16:51:28.148Z",
+                          "updatedAt": "2018-04-12T16:51:28.148Z",
+                          "profile": {
+                              "id": 1,
+                              "count": 12,
+                              "type": "mix"
+                          },
+                          "warehouse": {
+                              "id": 2,
+                              "name": "Main",
+                              "address": "Jl Raya"
+                          }
+                      },
+                      {
+                          "id": 60,
+                          "barcode": "AAAXZZ",
+                          "createdAt": "2018-04-06T17:15:55.857Z",
+                          "updatedAt": "2018-04-06T17:15:55.857Z",
+                          "profile": {
+                              "id": 1,
+                              "count": 12,
+                              "type": "mix"
+                          },
+                          "warehouse": {
+                              "id": 2,
+                              "name": "Main",
+                              "address": "Jl Raya"
+                          }
+                      },
   * @apiErrorExample {json} Internal Server Error
   *     HTTP/1.1 500 Internal Server Error
   *     {

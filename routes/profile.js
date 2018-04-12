@@ -20,13 +20,11 @@ router.use(aclMiddleware.isAllowedToAccess('item'))
   *  {
   *      "count": 10
   *      "type": solid
-  *      "cartonId": 1
   *  }
   * @apiUse successBoolean
   * @apiSuccess {Object} created profile object
   * @apiParam {integer} count jumlah sepatu dalam carton
   * @apiParam {enum} type type profile (solid,mix)
-  * @apiParam {integer} cartonId id carton
   * @apiSuccessExample {json} success
   *     HTTP/1.1 200 OK
   *     {
@@ -35,7 +33,6 @@ router.use(aclMiddleware.isAllowedToAccess('item'))
             "message": "Create success"
                 "id": 2,
                 "count": 12,
-                "cartonId": 1,
                 "type": "mix",
                 "updatedAt": "2018-03-21T14:45:37.969Z",
                 "createdAt": "2018-03-21T14:45:37.969Z"
@@ -66,7 +63,6 @@ router.post('/create',profileController.create)
           {
               "id": 1,
               "count": 10,
-              "cartonId": 1,
               "type": "solid",
               "createdAt": "2018-03-21T14:44:18.006Z",
               "updatedAt": "2018-03-21T14:44:18.006Z"
@@ -74,7 +70,6 @@ router.post('/create',profileController.create)
           {
               "id": 2,
               "count": 12,
-              "cartonId": 1,
               "type": "mix",
               "createdAt": "2018-03-21T14:45:37.969Z",
               "updatedAt": "2018-03-21T14:45:37.969Z"
@@ -109,7 +104,6 @@ router.get('/list',profileController.all)
        "profile": {
           "id": 2,
           "count": "10",
-          "cartonId": 1,
           "type": "mix",
           "createdAt": "2018-03-21T14:45:37.969Z",
           "updatedAt": "2018-03-21T15:04:37.347Z"
@@ -155,7 +149,6 @@ router.delete('/delete', profileController.delete)
      "profile": {
                  "id": 1,
                  "count": 10,
-                 "cartonId": 1,
                  "type": "solid",
                  "createdAt": "2018-03-21T14:44:18.006Z",
                  "updatedAt": "2018-03-21T14:44:18.006Z"

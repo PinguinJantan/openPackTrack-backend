@@ -2,7 +2,6 @@
 module.exports = (sequelize, DataTypes) => {
   var Profile = sequelize.define('Profile', {
     count: DataTypes.INTEGER,
-    cartonId: DataTypes.INTEGER,
     type: {
       type: DataTypes.ENUM,
       values: ['solid','mix']
@@ -10,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   Profile.associate = function(models) {
     // associations can be defined here
-    Profile.hasMany(models.Carton,{foreignKey: 'cartonId',as: 'carton'})
+    Profile.hasMany(models.Carton,{foreignKey: 'profileId',as: 'carton'})
 
   };
   return Profile;
