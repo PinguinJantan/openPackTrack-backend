@@ -9,7 +9,8 @@ module.exports = {
     }
     models.Carton.create({
       barcode: req.body.barcode,
-      warehouseId: req.body.warehouseId
+      warehouseId: req.body.warehouseId,
+      profileId: req.body.profileId
     }).then(carton=>{
       result.success = true
       result.status = "OK"
@@ -30,8 +31,23 @@ module.exports = {
       carton: null
     }
     models.Carton.findAll({
-        include: [{model: models.Warehouse} ]
+        include: [{model: models.Profile,
+                  as: 'profile',
+                  attributes: {
+                    exclude: ["createdAt", "updatedAt"]
+                  }
+                },
+                {model: models.Warehouse,
+                as:'warehouse',
+                attributes: {
+                  exclude: ["createdAt", "updatedAt"]
+                  }
+                }
+              ],
+        attributes:{
+          exclude:["profileId","warehouseId"]
         }
+      }
     )
     .then(carton=>{
       result.success= true
