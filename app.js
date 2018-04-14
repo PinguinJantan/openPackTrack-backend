@@ -20,6 +20,7 @@ var innerreport = require('./routes/innerreport')
 var report = require('./routes/report');
 var output = require('./routes/output');
 var category = require('./routes/category')
+var profile = require('./routes/profile')
 var retur = require('./routes/retur')
 var auth = require('./routes/auth');
 var deliveryOrder = require('./routes/deliveryorder');
@@ -132,6 +133,7 @@ app.use('/api/color', color);
 app.use('/api/size', size);
 app.use('/api/report', report);
 app.use('/api/category', category);
+app.use('/api/profile', profile);
 app.use('/api/inner', inner);
 app.use('/api/innergrade', innerGrade);
 app.use('/api/innersource', innerSource);
