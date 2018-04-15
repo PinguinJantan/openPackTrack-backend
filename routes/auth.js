@@ -6,50 +6,6 @@ let authController = require('../controllers/authController')
 /* GET users listing. */
 
 /**
-  * @api {post} auth/register Registrasi
-  * @apiGroup Auth
-  * @apiParamExample {json} Request-Example:
-  *     {
-  *       "name" : "jhon doe",
-  *       "username" : "jhondoe",
-  *       "password" : "secret",
-  *       "email" : "jhondoe@example.co.id",
-  *       "identityNumber" : "113211019"
-  *     }
-  * @apiSuccess {Boolean} success true jika berhasil
-  * @apiSuccess {string} status "OK" jika berhasil
-  * @apiSuccess {Array} user array dari user
-  * @apiParam {string} name nama pengguna
-  * @apiParam {string} username username pengguna
-  * @apiParam {string} password password pengguna
-  * @apiParam {string} email email pengguna
-  * @apiParam {string} identityNumber nomer induk pengguna
-  * @apiSuccessExample {json} Success
-  *     HTTP/1.1 200 OK
-  *   {
-  *    "success": true,
-  *    "status": "OK",
-  *    "user": {
-  *        "id": 6,
-  *        "username": "jhondoe",
-  *        "name": "jhon doe",
-  *        "identityNumber": "113211019",
-  *        "email" : "jhondoe@example.co.id",
-  *        "updatedAt": "2017-10-27T07:12:18.295Z",
-  *        "createdAt": "2017-10-27T07:12:18.295Z"
-  *      }
-  *    }
-  * @apiErrorExample {json} Internal Server Error
-  *     HTTP/1.1 500 Internal Server Error
-  *     {
-  *       success: false,
-  *       status: "ERROR",
-  *       user: null
-  *      }
-
-**/
-router.post('/register', authController.register);
-/**
   * @api {post} auth/login Login
   * @apiGroup Auth
   * @apiParamExample {json} Request-Example
