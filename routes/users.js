@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 let userController = require('../controllers/userController')
+let authController = require('../controllers/authController')
 let aclMiddleware = require('../acl/aclMiddleware');
 
 router.use(aclMiddleware.isAllowedToAccess('user'))
@@ -26,6 +27,49 @@ router.get('/', function(req, res, next) {
  */
 router.get('/refresh-token', userController.refreshToken)
 
+/**
+  * @api {post} user/create Add new user
+  * @apiGroup User
+  * @apiParamExample {json} Request-Example:
+  *     {
+  *       "name" : "jhon doe",
+  *       "username" : "jhondoe",
+  *       "password" : "secret",
+  *       "email" : "jhondoe@example.co.id",
+  *       "identityNumber" : "113211019"
+  *     }
+  * @apiSuccess {Boolean} success true jika berhasil
+  * @apiSuccess {string} status "OK" jika berhasil
+  * @apiSuccess {Array} user array dari user
+  * @apiParam {string} name nama pengguna
+  * @apiParam {string} username username pengguna
+  * @apiParam {string} password password pengguna
+  * @apiParam {string} email email pengguna
+  * @apiParam {string} identityNumber nomer induk pengguna
+  * @apiSuccessExample {json} Success
+  *     HTTP/1.1 200 OK
+  *   {
+  *    "success": true,
+  *    "status": "OK",
+  *    "user": {
+  *        "id": 6,
+  *        "username": "jhondoe",
+  *        "name": "jhon doe",
+  *        "identityNumber": "113211019",
+  *        "email" : "jhondoe@example.co.id",
+  *        "updatedAt": "2017-10-27T07:12:18.295Z",
+  *        "createdAt": "2017-10-27T07:12:18.295Z"
+  *      }
+  *    }
+  * @apiErrorExample {json} Internal Server Error
+  *     HTTP/1.1 500 Internal Server Error
+  *     {
+  *       success: false,
+  *       status: "ERROR",
+  *       user: null
+  *      }
+**/
+router.post('/create', authController.register)
 
 /**
  * @api {get} user/all Get all users
@@ -62,6 +106,71 @@ router.get('/refresh-token', userController.refreshToken)
   }
  */
 router.get('/all', userController.usersWithRoles)
+
+/**
+ * @api {get} user/update Update user detail
+ * @apiGroup User
+ * @apiUse useToken
+ * @apiParam {string} name nama pengguna
+ * @apiParam {string} username username pengguna
+ * @apiParam {string} identityNumber nomer induk pengguna
+ * @apiParam {string} password password pengguna
+ * @apiParam {string} email email pengguna
+ *
+ * @apiUse successBoolean
+ * @apiSuccessExample {json} success example
+ {
+    "success": true
+ }
+ */
+
+ router.post('/update', userController.updateUserDetail)
+
+ /**
+  * @api {get} user/deactivate Deactivate user
+  * @apiGroup User
+  * @apiUse useToken
+  * @apiParam {string} username username pengguna
+  *
+  * @apiUse successBoolean
+  * @apiSuccessExample {json} success example
+  {
+     "success": true
+  }
+  */
+ router.post('/deactivate', userController.deactivateUser)
+
+ /**
+  * @api {get} user/reactivate Reactivate user
+  * @apiGroup User
+  * @apiUse useToken
+  * @apiParam {string} username username pengguna
+  *
+  * @apiUse successBoolean
+  * @apiSuccessExample {json} success example
+  {
+     "success": true
+  }
+  */
+ router.post('/reactivate', userController.reactivateUser)
+
+ /**
+  * @api {get} user/role/all get all roles
+  * @apiGroup User
+  * @apiUse useToken
+  *
+  * @apiUse successBoolean
+  * @apiSuccessExample {json} success example
+  {
+    "success": true,
+    "roles": [
+        "basic",
+        "admin",
+        "Serdadu"
+    ]
+  }
+*/
+router.get('/role/all', userController.allRoles)
 
 /**
  * @api {post} user/role/create Create new role

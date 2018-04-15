@@ -12,11 +12,8 @@ module.exports = function(sequelize, DataTypes) {
     identityNumber: DataTypes.STRING,
     salt: DataTypes.STRING
   }, {
-    classMethods: {
-      associate: function(models) {
-        // associations can be defined here
-      }
-    }
+    timestamps: true,
+    paranoid: true
   });
   User.associate = function (models) {
     User.belongsTo(models.Warehouse,{foreignKey: 'warehouseId'})
