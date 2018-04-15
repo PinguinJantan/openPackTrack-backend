@@ -111,6 +111,11 @@ router.get('/all', userController.usersWithRoles)
  * @api {get} user/update Update user detail
  * @apiGroup User
  * @apiUse useToken
+ * @apiParam {string} name nama pengguna
+ * @apiParam {string} username username pengguna
+ * @apiParam {string} identityNumber nomer induk pengguna
+ * @apiParam {string} password password pengguna
+ * @apiParam {string} email email pengguna
  *
  * @apiUse successBoolean
  * @apiSuccessExample {json} success example
@@ -120,6 +125,52 @@ router.get('/all', userController.usersWithRoles)
  */
 
  router.post('/update', userController.updateUserDetail)
+
+ /**
+  * @api {get} user/deactivate Deactivate user
+  * @apiGroup User
+  * @apiUse useToken
+  * @apiParam {string} username username pengguna
+  *
+  * @apiUse successBoolean
+  * @apiSuccessExample {json} success example
+  {
+     "success": true
+  }
+  */
+ router.post('/deactivate', userController.deactivateUser)
+
+ /**
+  * @api {get} user/reactivate Reactivate user
+  * @apiGroup User
+  * @apiUse useToken
+  * @apiParam {string} username username pengguna
+  *
+  * @apiUse successBoolean
+  * @apiSuccessExample {json} success example
+  {
+     "success": true
+  }
+  */
+ router.post('/reactivate', userController.reactivateUser)
+
+ /**
+  * @api {get} user/role/all get all roles
+  * @apiGroup User
+  * @apiUse useToken
+  *
+  * @apiUse successBoolean
+  * @apiSuccessExample {json} success example
+  {
+    "success": true,
+    "roles": [
+        "basic",
+        "admin",
+        "Serdadu"
+    ]
+  }
+*/
+router.get('/role/all', userController.allRoles)
 
 /**
  * @api {post} user/role/create Create new role

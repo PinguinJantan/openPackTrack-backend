@@ -8,6 +8,9 @@ module.exports = {
     if (req.query.search == null) {
       req.query.search = ''
     }
+    if (req.query.withDeleted != 'true') {
+      req.query.withDeleted = false
+    }
     var text = req.query.search
     models.User.findAndCountAll({
       where: {
@@ -17,7 +20,8 @@ module.exports = {
         ]
       },
       limit: req.query.limit,
-      offset: req.limit
+      offset: req.limit,
+      paranoid: !req.query.withDeleted
     })
     .then(data=>{
       var users = data.rows
@@ -126,6 +130,105 @@ module.exports = {
           success: false,
           message: "User " + req.params.username + " not found"
         })
+      }
+    })
+  },
+
+  //delete user
+  deactivateUser: function(req, res) {
+    var result = {
+      success: false
+    }
+    if (req.body.username) {
+      models.User.destroy({
+        where: {
+          username: req.body.username
+        }
+      })
+      .then(user=>{
+        if (user) {
+          result.success = true
+          res.json(result)
+        }
+        else {
+          result.message = 'username not found'
+          res.json(result)
+        }
+      })
+      .catch(err=>{
+        if (err.message) {
+          result.message = err.message
+        }
+        else {
+          result.errors = err
+        }
+        res.json(result)
+      })
+    }
+    else {
+      result.message = 'no username provided'
+      res.json(result)
+    }
+  },
+
+  //reactivate user
+  reactivateUser: function(req, res) {
+    var result = {
+      success: false
+    }
+    if (req.body.username) {
+      models.User.findOne({
+        where: {
+          username: req.body.username
+        },
+        paranoid: false
+      })
+      .then(user=>{
+        if (user) {
+          return user.restore()
+        }
+        else {
+          return Promise.reject({message: 'username not found'})
+        }
+      })
+      .then(()=>{
+        result.success = true
+        res.json(result)
+      })
+      .catch(err=>{
+        if (err.message) {
+          result.message = err.message
+        }
+        else {
+          result.errors = err
+        }
+        res.json(result)
+      })
+    }
+    else {
+      result.message = 'no username provided'
+      res.json(result)
+    }
+  },
+
+  //all roles
+  allRoles: function(req, res) {
+    var result = {
+      success: false
+    }
+    let mongo = req.app.get('mongo')
+    mongo.collection('roles').find({}).toArray((err, roles)=>{
+      if (err) {
+        res.json(err)
+      }
+      else {
+        var roleNames = []
+        roles.forEach(role=>{
+          roleNames.push(role.key)
+        })
+        result.success = true
+        result.roles = roleNames
+        res.json(result)
       }
     })
   },
