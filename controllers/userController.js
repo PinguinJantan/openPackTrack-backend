@@ -1,9 +1,13 @@
+const paginate = require('express-paginate')
 var jwt = require('jsonwebtoken')
-let sequelize = require('sequelize');
+let sequelize = require('sequelize')
 let models = require('../models')
 
 module.exports = {
   usersWithRoles: function(req, res, next){
+    var result = {
+      success: false
+    }
     let mongo = req.app.get('mongo')
     if (req.query.search == null) {
       req.query.search = ''
@@ -20,17 +24,29 @@ module.exports = {
         ]
       },
       limit: req.query.limit,
-      offset: req.limit,
+      offset: req.skip,
       paranoid: !req.query.withDeleted
     })
     .then(data=>{
       var users = data.rows
+      var userCount = data.count
+      pageCount = Math.ceil(userCount / req.query.limit)
       let allUsers = []
       mongo.collection("users").find({}).toArray((err, userRoles)=>{
+        if (err) {
+          if (err.message) {
+            result.message = err.message
+          }
+          else {
+            result.error = err
+          }
+          return res.status(500).json(result)
+        }
         for (var i in users) {
           let someone = {
             name: users[i].name,
             username: users[i].username,
+            deletedAt: users[i].deletedAt,
             hasRole: false,
             roles: []
           }
@@ -42,11 +58,26 @@ module.exports = {
           }
           allUsers.push(someone)
         }
-        res.json({
-          success: true,
-          users: allUsers
-        })
+        result.success = true
+        result.pagination = {
+          userTotal: userCount,
+          pageCount: pageCount,
+          currentPage: req.query.page,
+          hasNextPage: paginate.hasNextPages(req)(pageCount),
+          hasPrevPage: res.locals.paginate.hasPreviousPages
+        }
+        result.users = allUsers
+        res.json(result)
       })
+    })
+    .catch(err=>{
+      if (err.message) {
+        result.message = err.message
+      }
+      else {
+        result.error = err
+      }
+      return res.status(500).json(result)
     })
   },
 
@@ -101,6 +132,9 @@ module.exports = {
 
   // Detail data user
   userDetail: function(req, res, next){
+    var result = {
+      success: false
+    }
     models.User.find({
       where: {
         username: req.params.username
@@ -110,26 +144,32 @@ module.exports = {
       if (user) {
         let mongo = req.app.get('mongo')
         mongo.collection("users").find({key: user.id.toString()}).toArray((err, userRoles)=>{
+          if (err) {
+            if (err.message) {
+              result.message = err.message
+            }
+            else {
+              result.error = err
+            }
+            return res.status(500).json(result)
+          }
           console.log(userRoles);
           let someone = {
-            success: true,
-            user: {
-              id: user.id,
-              name: user.name,
-              username: user.username,
-              email: user.email,
-              identityNumber: user.identityNumber,
-              roles: Object.keys(userRoles[0]).slice(2)
-            }
+            id: user.id,
+            name: user.name,
+            username: user.username,
+            email: user.email,
+            identityNumber: user.identityNumber,
+            roles: Object.keys(userRoles[0]).slice(2)
           }
-          res.json(someone)
+          result.success = true
+          result.user = someone
+          res.json(result)
         })
       }
       else {
-        res.json({
-          success: false,
-          message: "User " + req.params.username + " not found"
-        })
+        result.message = "User " + req.params.username + " not found"
+        res.json(result)
       }
     })
   },

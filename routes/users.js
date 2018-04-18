@@ -75,35 +75,41 @@ router.post('/create', authController.register)
  * @api {get} user/all Get all users
  * @apiGroup User
  * @apiUse useToken
+ * @apiUse paginationParams
+ * @apiParam {Boolean} [withDeleted=false] include deleted user
  *
  * @apiUse successBoolean
  * @apiSuccess {Object[]} users user data
  * @apiSuccessExample {json} success example
  {
     "success": true,
+    "pagination": {
+        "userTotal": 2,
+        "pageCount": 1,
+        "currentPage": 1,
+        "hasNextPage": false,
+        "hasPrevPage": false
+    },
     "users": [
         {
-            "name": "arnaz",
-            "username": "sikun",
+            "name": "nurul irfan zzz",
+            "username": "mnirfan",
+            "deletedAt": null,
             "hasRole": true,
             "roles": [
-                [
-                    "admin"
-                ]
+                "admin",
+                "Serdadu"
             ]
         },
         {
-            "name": "Diky Arga",
-            "username": "dikyarga",
-            "hasRole": true,
-            "roles": [
-                [
-                    "admin"
-                ]
-            ]
-        },
+            "name": "nurul",
+            "username": "nurul",
+            "deletedAt": "2018-04-16T13:21:18.728Z",
+            "hasRole": false,
+            "roles": []
+        }
     ]
-  }
+}
  */
 router.get('/all', userController.usersWithRoles)
 
