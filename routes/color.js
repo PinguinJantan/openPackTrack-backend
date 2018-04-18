@@ -16,8 +16,8 @@ let aclMiddleware = require('../acl/aclMiddleware');
 
 /**
  * @apiDefine paginationParams
- * @apiParam {Number} [limit] limit size object per page
- * @apiParam {Number} [page] number of page to display
+ * @apiParam {Number} [limit=10] limit size object per page
+ * @apiParam {Number} [page=1] number of page to display
  * @apiSuccess {Object} pagination Object
  */
 
