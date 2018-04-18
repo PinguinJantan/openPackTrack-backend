@@ -76,7 +76,8 @@ router.post('/create', authController.register)
  * @apiGroup User
  * @apiUse useToken
  * @apiUse paginationParams
- * @apiParam {Boolean} [withDeleted=false] include deleted user
+ * @apiParam {String} [search] string to search in `user.username`, and `user.name` field.
+ * @apiParam {Boolean} [withDeleted=false] include deleted (deactivated) user
  *
  * @apiUse successBoolean
  * @apiSuccess {Object[]} users user data
@@ -136,7 +137,7 @@ router.get('/all', userController.usersWithRoles)
   * @api {get} user/deactivate Deactivate user
   * @apiGroup User
   * @apiUse useToken
-  * @apiParam {string} username username pengguna
+  * @apiParam {string} username username
   *
   * @apiUse successBoolean
   * @apiSuccessExample {json} success example
@@ -150,7 +151,7 @@ router.get('/all', userController.usersWithRoles)
   * @api {get} user/reactivate Reactivate user
   * @apiGroup User
   * @apiUse useToken
-  * @apiParam {string} username username pengguna
+  * @apiParam {string} username username
   *
   * @apiUse successBoolean
   * @apiSuccessExample {json} success example
@@ -162,10 +163,11 @@ router.get('/all', userController.usersWithRoles)
 
  /**
   * @api {get} user/role/all get all roles
-  * @apiGroup User
+  * @apiGroup ACL
   * @apiUse useToken
   *
   * @apiUse successBoolean
+  * @apiSuccess {String[]} roles list of roles
   * @apiSuccessExample {json} success example
   {
     "success": true,

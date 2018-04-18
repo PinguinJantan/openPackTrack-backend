@@ -61,124 +61,49 @@ router.post('/create',innerController.create)
 /**
 * @api {get} api/inner/all List inner
 * @apiGroup Inner
-* @apiHeader {String} token token untuk login user
+* @apiUse useToken
+* @apiUse paginationParams
+* @apiUse useSortDir
+* @apiParam {String} [search] string to search in `inner.barcode`, `carton.barcode`, `warehouse.name`, and `item.code` field.
+* @apiParam {String} [sortBy] available: `updatedAt`, `item`, `carton`, `stock`, `grade`, or `source`.
+* @apiUse successBoolean
+* @apiSuccess {Object[]} inners Inners object
 * @apiHeaderExample {json} Header-Example:
 *     {
 *       "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVzSW5NaW51dGVzIjoxNDQwLCJpYXQiOjE1MDcwMzQwNzJ9.je4md5GBuTSFGNivBaT3Ju7-yjVjkVS99WSIiwk7wA4",
 *     }
 * @apiSuccessExample {json} Success
 *     HTTP/1.1 200 OK
-*     {
+* {
     "success": true,
-    "status": "OK",
-    "inner": [
+    "pagination": {
+        "innerTotal": 16,
+        "pageCount": 2,
+        "currentPage": 1,
+        "hasNextPage": true,
+        "hasPrevPage": false
+    },
+    "inners": [
         {
-            "id": 39,
-            "barcode": "1212kj2",
-            "itemId": 3,
-            "cartonId": 7,
-            "isInStok": true,
-            "gradeId": 1,
-            "sourceId": 3,
-            "createdAt": "2017-10-30T10:15:23.232Z",
-            "updatedAt": "2017-10-30T10:15:23.232Z",
-            "Carton": {
-                "id": 7,
-                "barcode": "1212kj2",
-                "warehouseId": 1,
-                "createdAt": "2017-10-27T10:31:04.431Z",
-                "updatedAt": "2017-10-27T10:31:04.431Z",
-                "Warehouse": {
-                    "id": 1,
-                    "name": "warehouse a",
-                    "address": "jl lorem ipsum bla bla bla",
-                    "createdAt": "2017-10-27T10:04:43.681Z",
-                    "updatedAt": "2017-10-27T10:04:43.681Z"
-                }
+            "barcode": "MASK",
+            "isInStok": null,
+            "createdAt": "2018-04-06T17:32:52.076Z",
+            "updatedAt": "2018-04-06T17:32:52.076Z",
+            "carton": {
+                "id": 63,
+                "barcode": "AAAXZZYZZ",
+                "profileId": 2,
+                "warehouseId": null,
+                "warehouse": null
             },
-            "Item": {
-                "id": 3,
-                "sku": "122223",
-                "categoryId": 1,
-                "name": "CRV B",
-                "color": "Hitam/ Hitam",
-                "size": "47",
-                "gender": "M",
-                "createdAt": "2017-10-26T15:45:16.625Z",
-                "updatedAt": "2017-10-26T15:45:16.625Z",
-                "Category": {
-                    "id": 1,
-                    "name": "Tae Kwon Do",
-                    "createdAt": "2017-10-26T15:45:16.611Z",
-                    "updatedAt": "2017-10-26T15:45:16.611Z"
-                }
+            "item": {
+                "id": 10310,
+                "code": "FGJ01SUPERB31",
+                "sizeId": 2,
+                "skuId": 3308
             },
-            "InnerGrade": {
-                "id": 1,
-                "name": "A",
-                "createdAt": "2017-10-28T17:37:29.118Z",
-                "updatedAt": "2017-10-28T17:37:29.118Z"
-            },
-            "InnerSource": {
-                "id": 3,
-                "name": "Factory B",
-                "createdAt": "2017-10-30T09:57:50.808Z",
-                "updatedAt": "2017-10-30T09:57:50.808Z"
-            }
-        },
-        {
-            "id": 44,
-            "barcode": "1212kj2",
-            "itemId": 3,
-            "cartonId": 7,
-            "isInStok": true,
-            "gradeId": 1,
-            "sourceId": 3,
-            "createdAt": "2017-10-30T12:49:01.130Z",
-            "updatedAt": "2017-10-30T12:49:01.130Z",
-            "Carton": {
-                "id": 7,
-                "barcode": "1212kj2",
-                "warehouseId": 1,
-                "createdAt": "2017-10-27T10:31:04.431Z",
-                "updatedAt": "2017-10-27T10:31:04.431Z",
-                "Warehouse": {
-                    "id": 1,
-                    "name": "warehouse a",
-                    "address": "jl lorem ipsum bla bla bla",
-                    "createdAt": "2017-10-27T10:04:43.681Z",
-                    "updatedAt": "2017-10-27T10:04:43.681Z"
-                }
-            },
-            "Item": {
-                "id": 3,
-                "sku": "122223",
-                "categoryId": 1,
-                "name": "CRV B",
-                "color": "Hitam/ Hitam",
-                "size": "47",
-                "gender": "M",
-                "createdAt": "2017-10-26T15:45:16.625Z",
-                "updatedAt": "2017-10-26T15:45:16.625Z",
-                "Category": {
-                    "id": 1,
-                    "name": "Tae Kwon Do",
-                    "createdAt": "2017-10-26T15:45:16.611Z",
-                    "updatedAt": "2017-10-26T15:45:16.611Z"
-                }
-            },
-            "InnerGrade": {
-                "id": 1,
-                "name": "A",
-                "createdAt": "2017-10-28T17:37:29.118Z",
-                "updatedAt": "2017-10-28T17:37:29.118Z"
-            },
-            "InnerSource": {
-                "id": 3,
-                "name": "Factory B",
-                "createdAt": "2017-10-30T09:57:50.808Z",
-                "updatedAt": "2017-10-30T09:57:50.808Z"
-            }
+            "innerGrade": null,
+            "innerSource": null
         }
     ]
 }
@@ -186,8 +111,7 @@ router.post('/create',innerController.create)
 *     HTTP/1.1 500 Internal Server Error
 *     {
 *       success: false,
-*       status: "ERROR",
-*       inner: null
+*       inners: null
 *      }
 **/
  router.get('/all',innerController.all)
@@ -196,6 +120,10 @@ router.post('/create',innerController.create)
   * @api {get} inner/input-scan Input scan (with carton box)
   * @apiGroup Inner
   * @apiUse useToken
+  * @apiParam {String} cartonBarcode carton barcode
+  * @apiParam {Object[]} innerCodes inner barcode and item code.
+
+  example: `[{"barcode": "CODE123",  "itemCode": "FGJ01SUPERB31"}, {"barcode": "CODE124",  "itemCode": "FGJ01SUPERB31"}]`
   *
   * @apiUse successBoolean
   * @apiSuccessExample {json} success example
