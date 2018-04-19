@@ -48,6 +48,8 @@ router.post('/create',categoryController.create)
 * @api {get} api/category/list List category
 * @apiGroup Category
 * @apiUse useToken
+* @apiUse successBoolean
+* @apiSuccess {Object[]} categories categories
 * @apiHeaderExample {json} Header-Example:
 *     {
 *       "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVzSW5NaW51dGVzIjoxNDQwLCJpYXQiOjE1MDcwMzQwNzJ9.je4md5GBuTSFGNivBaT3Ju7-yjVjkVS99WSIiwk7wA4",
@@ -56,7 +58,7 @@ router.post('/create',categoryController.create)
 *     HTTP/1.1 200 OK
 *    {
 *    "success": true,
-*    "category": [
+*    "categories": [
 *        {
 *            "id": 4,
 *            "name": "Tae Kwon Do",

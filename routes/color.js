@@ -15,10 +15,16 @@ let aclMiddleware = require('../acl/aclMiddleware');
   */
 
 /**
+ * @apiDefine useSortDir
+ * @apiParam {String} [sortDirection=ASC] sort in ascending or descending. Available: `ASC` and `DESC`
+ */
+
+/**
  * @apiDefine paginationParams
- * @apiParam {Number} [limit] limit size object per page
- * @apiParam {Number} [page] number of page to display
- * @apiSuccess {Object} pagination Object
+ * @apiParam {Number} [limit=10] limit size object per page
+ * @apiParam {Number} [page=1] number of page to display
+ *
+ * @apiSuccess {Object} pagination Pagination detail
  */
 
 router.use(aclMiddleware.isAllowedToAccess('category'))
@@ -68,9 +74,9 @@ router.post('/create', colorController.create)
  * @api {post} color/all Get all colors (paginated)
  * @apiGroup Color
  * @apiUse useToken
+ * @apiUse paginationParams
  *
  * @apiUse successBoolean
- * @apiSuccess {Object} pagination Pagination detail
  * @apiSuccess {Object[]} colors Colors in current page
  * @apiSuccessExample {json} success example
  {

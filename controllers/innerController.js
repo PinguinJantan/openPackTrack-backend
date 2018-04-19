@@ -81,6 +81,7 @@ module.exports = {
           include: [
             {
               model: models.Warehouse,
+              as: 'warehouse',
               attributes: {
                 exclude: ['createdAt', 'updatedAt']
               }
@@ -116,7 +117,7 @@ module.exports = {
         $or: [
           sequelize.where(sequelize.col('Inner.barcode'), { $ilike: `%${text}%`}),
           sequelize.where(sequelize.col('carton.barcode'), { $ilike: `%${text}%`}),
-          sequelize.where(sequelize.col('carton->Warehouse.name'), { $ilike: `%${text}%`}),
+          sequelize.where(sequelize.col('carton->warehouse.name'), { $ilike: `%${text}%`}),
           sequelize.where(sequelize.col('item.code'), { $ilike: `%${text}%`}),
         ]
       },

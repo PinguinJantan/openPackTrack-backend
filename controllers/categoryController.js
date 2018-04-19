@@ -25,12 +25,12 @@ module.exports = {
       success : false
     }
     models.Category.findAll()
-    .then(category=>{
+    .then(categories=>{
       result.success = true
-      result.category = category
+      result.categories = categories
       res.json(result)
     }).catch(err=>{
-      console.log('Error when trying to show all category : ', err);
+      console.log('Error when trying to show all categories : ', err);
       if (err.errors) {
         result.message = err.errors
       }

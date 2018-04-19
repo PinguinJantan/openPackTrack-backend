@@ -1,3 +1,5 @@
+const paginate = require('express-paginate')
+let sequelize = require('sequelize')
 let models = require('../models')
 
 module.exports = {
@@ -26,39 +28,79 @@ module.exports = {
   },
   all: function (req, res) {
     var result= {
-      success: false,
-      status: "ERROR",
-      carton: null
+      success: false
     }
-    models.Carton.findAll({
-        include: [{model: models.Profile,
-                  as: 'profile',
-                  attributes: {
-                    exclude: ["createdAt", "updatedAt"]
-                  }
-                },
-                {model: models.Warehouse,
-                as:'warehouse',
-                attributes: {
-                  exclude: ["createdAt", "updatedAt"]
-                  }
-                }
-              ],
+    var allowedSort = ['updatedAt', 'barcode']
+    if (allowedSort.indexOf(req.query.sortBy) == -1) {
+      req.query.sortBy = 'updatedAt'
+    }
+    var allowedDirection = ['ASC', 'DESC']
+    if (req.query.sortDirection) {
+      req.query.sortDirection = req.query.sortDirection.toUpperCase()
+    }
+    if (allowedDirection.indexOf(req.query.sortDirection) == -1) {
+      req.query.sortDirection = 'ASC'
+    }
+    if (req.query.search == null) {
+      req.query.search = ''
+    }
+    var text = req.query.search
+    console.log(req.query);
+    models.Carton.findAndCountAll({
+        include: [
+          {
+            model: models.Profile,
+            as: 'profile',
+            attributes: {
+              exclude: ["createdAt", "updatedAt"]
+            }
+          },
+          {
+            model: models.Warehouse,
+            as:'warehouse',
+            attributes: {
+              exclude: ["createdAt", "updatedAt"]
+              }
+            }
+        ],
         attributes:{
           exclude:["profileId","warehouseId"]
-        }
+        },
+        where: {
+          $or: [
+            // https://stackoverflow.com/questions/33271413/sequelize-or-clause-with-multiple-models
+            sequelize.where(sequelize.col('Carton.barcode'), { $ilike: `%${text}%`}),
+            // sequelize.where(sequelize.col('profile.type'), { $ilike: `%${text}%`})
+          ]
+        },
+        limit: req.query.limit,
+        offset: req.skip,
+        order: [[req.query.sortBy, req.query.sortDirection]]
       }
     )
-    .then(carton=>{
+    .then(data=>{
+      var carton = data.rows
+      var cartonCount = data.count
+      pageCount = Math.ceil(cartonCount / req.query.limit)
       result.success= true
       result.status= "OK"
-      result.carton= carton
+      result.pagination = {
+        cartonTotal: cartonCount,
+        pageCount: pageCount,
+        currentPage: req.query.page,
+        hasNextPage: paginate.hasNextPages(req)(pageCount),
+        hasPrevPage: res.locals.paginate.hasPreviousPages
+      }
+      result.cartons = carton
       res.json(result)
     })
     .catch(err=>{
       console.log('Error when trying to show all carton : ', err);
       if (err.errors) {
         result.errors = err.errors
+      }
+      if (err.message) {
+        result.message = err.message
       }
       res.json(result)
     })
