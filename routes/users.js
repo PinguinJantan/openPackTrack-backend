@@ -115,7 +115,7 @@ router.post('/create', authController.register)
 router.get('/all', userController.usersWithRoles)
 
 /**
- * @api {get} user/update Update user detail
+ * @api {post} user/update Update user detail
  * @apiGroup User
  * @apiUse useToken
  * @apiParam {string} name nama pengguna
@@ -134,7 +134,7 @@ router.get('/all', userController.usersWithRoles)
  router.post('/update', userController.updateUserDetail)
 
  /**
-  * @api {get} user/deactivate Deactivate user
+  * @api {delete} user/deactivate Deactivate user
   * @apiGroup User
   * @apiUse useToken
   * @apiParam {string} username username
@@ -145,10 +145,10 @@ router.get('/all', userController.usersWithRoles)
      "success": true
   }
   */
- router.post('/deactivate', userController.deactivateUser)
+ router.delete('/deactivate', userController.deactivateUser)
 
  /**
-  * @api {get} user/reactivate Reactivate user
+  * @api {post} user/reactivate Reactivate user
   * @apiGroup User
   * @apiUse useToken
   * @apiParam {string} username username

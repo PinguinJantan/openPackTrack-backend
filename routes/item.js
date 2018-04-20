@@ -125,7 +125,7 @@ router.post('/create',itemController.create)
 router.get('/all',itemController.paginatedAll)
 
 /**
- * @api {post} item/export Export to CSV
+ * @api {get} item/export Export to CSV
  * @apiGroup Item
  * @apiParam {String} accessToken access token for authentication
  *
@@ -134,7 +134,7 @@ router.get('/all',itemController.paginatedAll)
 router.get('/export', itemController.export)
 
 /**
- * @api {post} item/:code Detail item
+ * @api {get} item/:code Detail item
  * @apiGroup Item
  * @apiUse useToken
  *
