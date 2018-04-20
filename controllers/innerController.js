@@ -235,7 +235,7 @@ module.exports = {
       success: false
     }
 
-    if(req.body.cartonBarcode && req.body.innerCodes){
+    if(req.body.cartonBarcode && req.body.innerCodes && parseInt(req.body.profileId) == req.body.profileId){
       try{
         var innerCodes = JSON.parse(req.body.innerCodes)
         models.Carton.findOne({
@@ -265,15 +265,15 @@ module.exports = {
           }
         })
         .then(()=>{
-          console.log(models.sequelize.transaction)
+          // console.log(models.sequelize.transaction)
           return models.sequelize.transaction(function (t) {
             return models.Carton.create({
-              barcode: req.body.cartonBarcode
+              barcode: req.body.cartonBarcode,
+              profileId: req.body.profileId
             }, {
               transaction: t
             })
             .then(carton=>{
-              console.log('kene cuk');
               return models.Item.findAll({
                 where: {
                   $or: innerCodes.map(inner=>{
@@ -313,6 +313,9 @@ module.exports = {
           if(err.errors){
             result.errors = err.errors
           }
+          else if (err.message) {
+            result.message = err.message
+          }
           else{
             result.errors = err
           }
@@ -320,12 +323,12 @@ module.exports = {
         })
       }
       catch(err){
-        result.errors = {message: "Inner Barcodes must be a valid JSON array"}
+        result.message = "Inner Barcodes must be a valid JSON array"
         res.status(412).json(result)
       }
     }
     else {
-      result.errors = {message: "Invalid Parameter"}
+      result.message = "Invalid Parameter"
       res.status(412).json(result)
     }
   }

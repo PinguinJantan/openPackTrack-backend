@@ -117,10 +117,11 @@ router.post('/create',innerController.create)
  router.get('/all',innerController.all)
 
  /**
-  * @api {get} inner/input-scan Input scan (with carton box)
+  * @api {post} inner/input-scan Input scan (with carton box)
   * @apiGroup Inner
   * @apiUse useToken
   * @apiParam {String} cartonBarcode carton barcode
+  * @apiParam {Number} profileId carton profile ID
   * @apiParam {Object[]} innerCodes inner barcode and item code.
 
   example: `[{"barcode": "CODE123",  "itemCode": "FGJ01SUPERB31"}, {"barcode": "CODE124",  "itemCode": "FGJ01SUPERB31"}]`
@@ -132,10 +133,8 @@ router.post('/create',innerController.create)
   }
   * @apiErrorExample {json} exist example
   {
-    "success": false,
-    "errors": {
-        "message": "innerbox already exist"
-    }
+      "success": false,
+      "message": "carton already registered"
   }
   */
 router.post('/input-scan', innerController.inputScan)
