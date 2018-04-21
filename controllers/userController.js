@@ -143,7 +143,9 @@ module.exports = {
     .then(user=>{
       if (user) {
         let mongo = req.app.get('mongo')
-        mongo.collection("users").find({key: user.id.toString()}).toArray((err, userRoles)=>{
+        var userToFind = {}
+        userToFind[user.id.toString()] = {$exists: true}
+        mongo.collection("roles").find(userToFind).toArray((err, userRoles)=>{
           if (err) {
             if (err.message) {
               result.message = err.message
@@ -153,6 +155,9 @@ module.exports = {
             }
             return res.status(500).json(result)
           }
+          userRoles = userRoles.map(userRole=>{
+            return userRole.key
+          })
           console.log(userRoles);
           let someone = {
             id: user.id,
@@ -160,7 +165,7 @@ module.exports = {
             username: user.username,
             email: user.email,
             identityNumber: user.identityNumber,
-            roles: Object.keys(userRoles[0]).slice(2)
+            roles: userRoles
           }
           result.success = true
           result.user = someone
