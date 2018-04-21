@@ -85,7 +85,7 @@ router.post('/create', authController.register)
  {
     "success": true,
     "pagination": {
-        "userTotal": 2,
+        "total": 2,
         "pageCount": 1,
         "currentPage": 1,
         "hasNextPage": false,

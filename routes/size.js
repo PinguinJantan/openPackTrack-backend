@@ -63,7 +63,7 @@ router.post('/create', sizeController.create)
  {
     "success": true,
     "pagination": {
-        "sizeTotal": 2,
+        "total": 2,
         "pageCount": 1,
         "currentPage": 1,
         "hasNextPage": false,

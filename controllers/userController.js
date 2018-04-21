@@ -60,7 +60,7 @@ module.exports = {
         }
         result.success = true
         result.pagination = {
-          userTotal: userCount,
+          total: userCount,
           pageCount: pageCount,
           currentPage: req.query.page,
           hasNextPage: paginate.hasNextPages(req)(pageCount),

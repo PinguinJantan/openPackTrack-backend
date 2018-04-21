@@ -85,7 +85,7 @@ module.exports = {
       result.success= true
       result.status= "OK"
       result.pagination = {
-        cartonTotal: cartonCount,
+        total: cartonCount,
         pageCount: pageCount,
         currentPage: req.query.page,
         hasNextPage: paginate.hasNextPages(req)(pageCount),

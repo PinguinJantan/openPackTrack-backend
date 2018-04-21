@@ -75,7 +75,7 @@ module.exports = {
       pageCount = Math.ceil(skus.count / req.query.limit)
       result.success = true
       result.pagination = {
-        skuTotal: skus.count,
+        total: skus.count,
         pageCount: pageCount,
         currentPage: req.query.page,
         hasNextPage: paginate.hasNextPages(req)(pageCount),

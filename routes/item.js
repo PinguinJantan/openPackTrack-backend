@@ -75,7 +75,7 @@ router.post('/create',itemController.create)
           "success": true,
           "status": "OK",
           "pagination": {
-              "itemTotal": 7,
+              "total": 7,
               "pageCount": 1,
               "currentPage": 1,
               "hasNextPage": false,

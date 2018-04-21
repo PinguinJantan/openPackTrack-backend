@@ -64,7 +64,7 @@ router.post('/create',skuController.create)
  {
     "success": true,
     "pagination": {
-        "skuTotal": 217,
+        "total": 217,
         "pageCount": 22,
         "currentPage": 1,
         "hasNextPage": true,

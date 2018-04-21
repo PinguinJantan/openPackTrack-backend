@@ -77,7 +77,7 @@ router.post('/create',innerController.create)
 * {
     "success": true,
     "pagination": {
-        "innerTotal": 16,
+        "total": 16,
         "pageCount": 2,
         "currentPage": 1,
         "hasNextPage": true,
