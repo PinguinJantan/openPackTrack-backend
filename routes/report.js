@@ -64,7 +64,7 @@ router.post('/create',reportController.create)
         "success": true,
            "message": "Request success",
            "pagination": {
-               "reportTotal": 136,
+               "total": 136,
                "pageCount": 14,
                "currentPage": 1,
                "hasNextPage": true,

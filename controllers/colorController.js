@@ -47,7 +47,7 @@ module.exports = {
         pageCount = Math.ceil(colorCount / req.query.limit)
         result.success = true
         result.pagination = {
-          colorTotal: colorCount,
+          total: colorCount,
           pageCount: pageCount,
           currentPage: req.query.page,
           hasNextPage: paginate.hasNextPages(req)(pageCount),

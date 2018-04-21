@@ -130,7 +130,7 @@ module.exports = {
       result.success= true
       result.inners= inners.rows
       result.pagination = {
-        innerTotal: inners.count,
+        total: inners.count,
         pageCount: pageCount,
         currentPage: req.query.page,
         hasNextPage: paginate.hasNextPages(req)(pageCount),

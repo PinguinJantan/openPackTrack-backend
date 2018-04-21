@@ -82,7 +82,7 @@ router.post('/create', colorController.create)
  {
      "success": true,
      "pagination": {
-         "colorTotal": 2,
+         "total": 2,
          "pageCount": 1,
          "currentPage": 1,
          "hasNextPage": false,

@@ -155,7 +155,7 @@ module.exports = {
       result.success = true
       result.status = "OK"
       result.pagination = {
-        itemTotal: itemCount,
+        total: itemCount,
         pageCount: pageCount,
         currentPage: req.query.page,
         hasNextPage: paginate.hasNextPages(req)(pageCount),
