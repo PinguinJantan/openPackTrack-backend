@@ -238,14 +238,36 @@ module.exports = {
     if(req.body.cartonBarcode && req.body.innerCodes && parseInt(req.body.profileId) == req.body.profileId){
       try{
         var innerCodes = JSON.parse(req.body.innerCodes)
-        models.Carton.findOne({
-          where: {
-            barcode: req.body.cartonBarcode
+        models.Profile.findById(req.body.profileId)
+        .then(profile=>{
+          if (!profile) {
+            return Promise.reject({message: "Profile not found"})
           }
+          else if (profile.count != innerCodes.length) {
+            return Promise.reject({message: "Expected " + profile.count + " inners"})
+          }
+          else {
+            var notTheSame = false
+            innerCodes.forEach(inner=>{
+              notTheSame = inner.itemCode !== innerCodes[0].itemCode
+            })
+            if (profile.type == 'solid' && notTheSame) {
+              return Promise.reject({message: "Expected solid inners"})
+            }
+            else {
+              return true
+            }
+          }
+        })
+        .then(()=>{
+          return models.Carton.findOne({
+            where: {
+              barcode: req.body.cartonBarcode
+            }
+          })
         })
         .then(carton=>{
           if (carton) {
-            console.log('rejecting..');
             return Promise.reject({message: 'carton already registered'})
           }
           else {
