@@ -36,6 +36,7 @@ router.get('/refresh-token', userController.refreshToken)
   *       "username" : "jhondoe",
   *       "password" : "secret",
   *       "email" : "jhondoe@example.co.id",
+  *       "warehouseId" : 1,
   *       "identityNumber" : "113211019"
   *     }
   * @apiSuccess {Boolean} success true jika berhasil
@@ -45,6 +46,7 @@ router.get('/refresh-token', userController.refreshToken)
   * @apiParam {string} username username pengguna
   * @apiParam {string} password password pengguna
   * @apiParam {string} email email pengguna
+  * @apiParam {integer} warehouseId id warehouse
   * @apiParam {string} identityNumber nomer induk pengguna
   * @apiSuccessExample {json} Success
   *     HTTP/1.1 200 OK
@@ -55,6 +57,7 @@ router.get('/refresh-token', userController.refreshToken)
   *        "id": 6,
   *        "username": "jhondoe",
   *        "name": "jhon doe",
+  *        "warehouseId": 1,
   *        "identityNumber": "113211019",
   *        "email" : "jhondoe@example.co.id",
   *        "updatedAt": "2017-10-27T07:12:18.295Z",
