@@ -81,6 +81,7 @@ module.exports = {
           include: [
             {
               model: models.Warehouse,
+              as: 'warehouse',
               attributes: {
                 exclude: ['createdAt', 'updatedAt']
               }
@@ -116,7 +117,7 @@ module.exports = {
         $or: [
           sequelize.where(sequelize.col('Inner.barcode'), { $ilike: `%${text}%`}),
           sequelize.where(sequelize.col('carton.barcode'), { $ilike: `%${text}%`}),
-          sequelize.where(sequelize.col('carton->Warehouse.name'), { $ilike: `%${text}%`}),
+          sequelize.where(sequelize.col('carton->warehouse.name'), { $ilike: `%${text}%`}),
           sequelize.where(sequelize.col('item.code'), { $ilike: `%${text}%`}),
         ]
       },
@@ -129,7 +130,7 @@ module.exports = {
       result.success= true
       result.inners= inners.rows
       result.pagination = {
-        innerTotal: inners.count,
+        total: inners.count,
         pageCount: pageCount,
         currentPage: req.query.page,
         hasNextPage: paginate.hasNextPages(req)(pageCount),
@@ -234,17 +235,39 @@ module.exports = {
       success: false
     }
 
-    if(req.body.cartonBarcode && req.body.innerCodes){
+    if(req.body.cartonBarcode && req.body.innerCodes && parseInt(req.body.profileId) == req.body.profileId){
       try{
         var innerCodes = JSON.parse(req.body.innerCodes)
-        models.Carton.findOne({
-          where: {
-            barcode: req.body.cartonBarcode
+        models.Profile.findById(req.body.profileId)
+        .then(profile=>{
+          if (!profile) {
+            return Promise.reject({message: "Profile not found"})
           }
+          else if (profile.count != innerCodes.length) {
+            return Promise.reject({message: "Expected " + profile.count + " inners"})
+          }
+          else {
+            var notTheSame = false
+            innerCodes.forEach(inner=>{
+              notTheSame = inner.itemCode !== innerCodes[0].itemCode
+            })
+            if (profile.type == 'solid' && notTheSame) {
+              return Promise.reject({message: "Expected solid inners"})
+            }
+            else {
+              return true
+            }
+          }
+        })
+        .then(()=>{
+          return models.Carton.findOne({
+            where: {
+              barcode: req.body.cartonBarcode
+            }
+          })
         })
         .then(carton=>{
           if (carton) {
-            console.log('rejecting..');
             return Promise.reject({message: 'carton already registered'})
           }
           else {
@@ -264,15 +287,15 @@ module.exports = {
           }
         })
         .then(()=>{
-          console.log(models.sequelize.transaction)
+          // console.log(models.sequelize.transaction)
           return models.sequelize.transaction(function (t) {
             return models.Carton.create({
-              barcode: req.body.cartonBarcode
+              barcode: req.body.cartonBarcode,
+              profileId: req.body.profileId
             }, {
               transaction: t
             })
             .then(carton=>{
-              console.log('kene cuk');
               return models.Item.findAll({
                 where: {
                   $or: innerCodes.map(inner=>{
@@ -312,6 +335,9 @@ module.exports = {
           if(err.errors){
             result.errors = err.errors
           }
+          else if (err.message) {
+            result.message = err.message
+          }
           else{
             result.errors = err
           }
@@ -319,12 +345,12 @@ module.exports = {
         })
       }
       catch(err){
-        result.errors = {message: "Inner Barcodes must be a valid JSON array"}
+        result.message = "Inner Barcodes must be a valid JSON array"
         res.status(412).json(result)
       }
     }
     else {
-      result.errors = {message: "Invalid Parameter"}
+      result.message = "Invalid Parameter"
       res.status(412).json(result)
     }
   }

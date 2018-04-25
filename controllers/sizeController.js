@@ -40,21 +40,20 @@ module.exports = {
       offset: req.skip,
       }
     )
-    .then(sizes=>{
-      models.Size.count()
-      .then(sizeCount=>{
-        pageCount = Math.ceil(sizeCount / req.query.limit)
-        result.success = true
-        result.pagination = {
-          sizeTotal: sizeCount,
-          pageCount: pageCount,
-          currentPage: req.query.page,
-          hasNextPage: paginate.hasNextPages(req)(pageCount),
-          hasPrevPage: res.locals.paginate.hasPreviousPages
-        }
-        result.sizes = sizes
-        res.json(result)
-      })
+    .then(data=>{
+      var sizeCount = data.count
+      var sizes = data.rows
+      pageCount = Math.ceil(sizeCount / req.query.limit)
+      result.success = true
+      result.pagination = {
+        total: sizeCount,
+        pageCount: pageCount,
+        currentPage: req.query.page,
+        hasNextPage: paginate.hasNextPages(req)(pageCount),
+        hasPrevPage: res.locals.paginate.hasPreviousPages
+      }
+      result.sizes = sizes
+      res.json(result)
     })
     .catch(err=>{
       result.message = "Error while trying to get sizes."
@@ -187,5 +186,5 @@ module.exports = {
       res.json(result)
     })
   },
-  
+
 }

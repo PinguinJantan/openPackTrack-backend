@@ -155,7 +155,7 @@ module.exports = {
       result.success = true
       result.status = "OK"
       result.pagination = {
-        itemTotal: itemCount,
+        total: itemCount,
         pageCount: pageCount,
         currentPage: req.query.page,
         hasNextPage: paginate.hasNextPages(req)(pageCount),
@@ -336,7 +336,13 @@ module.exports = {
         }
       })
       .catch(err=>{
-
+        if (err.errors) {
+          result.errors = err.errors
+        }
+        else {
+          result.errors = err
+        }
+        res.json(result)
       })
     }
   },

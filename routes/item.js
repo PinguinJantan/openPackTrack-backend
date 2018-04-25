@@ -56,10 +56,15 @@ router.use(aclMiddleware.isAllowedToAccess('item'))
   *      }
 **/
 router.post('/create',itemController.create)
+
 /**
 * @api {get} api/item/all All item
 * @apiGroup Item
-* @apiHeader {String} token token untuk login user
+* @apiUse useToken
+* @apiUse useSortDir
+* @apiUse paginationParams
+* @apiParam {String} [search] search by `size.name`, `sku.name`, `item.name`, and `color.name` field.
+* @apiParam {String} [sortBy] sort by `updatedAt`, `code`, or `name`.
 * @apiHeaderExample {json} Header-Example:
 *     {
 *       "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVzSW5NaW51dGVzIjoxNDQwLCJpYXQiOjE1MDcwMzQwNzJ9.je4md5GBuTSFGNivBaT3Ju7-yjVjkVS99WSIiwk7wA4",
@@ -70,7 +75,7 @@ router.post('/create',itemController.create)
           "success": true,
           "status": "OK",
           "pagination": {
-              "itemTotal": 7,
+              "total": 7,
               "pageCount": 1,
               "currentPage": 1,
               "hasNextPage": false,
@@ -119,8 +124,55 @@ router.post('/create',itemController.create)
 **/
 router.get('/all',itemController.paginatedAll)
 
+/**
+ * @api {get} item/export Export to CSV
+ * @apiGroup Item
+ * @apiParam {String} accessToken access token for authentication
+ *
+ * @apiSuccess {File} csv Exported csv
+ */
 router.get('/export', itemController.export)
 
+/**
+ * @api {get} item/:code Detail item
+ * @apiGroup Item
+ * @apiUse useToken
+ *
+ * @apiParam {String} code item code
+ * @apiUse successBoolean
+ * @apiSuccess {Object} item detail item object
+ * @apiSuccessExample {json} success example
+ {
+    "success": true,
+    "item": {
+        "id": 11740,
+        "code": "FGW07VALLENBM40",
+        "createdAt": "2018-02-07T04:55:41.507Z",
+        "updatedAt": "2018-02-07T04:55:41.507Z",
+        "size": {
+            "id": 139,
+            "name": "40"
+        },
+        "sku": {
+            "id": 3290,
+            "code": "FGW07VALLENBM",
+            "name": "VALLEN BM ",
+            "category": {
+                "id": 24,
+                "name": "FG,W,07"
+            },
+            "gender": {
+                "id": 2,
+                "name": "W"
+            },
+            "color": {
+                "id": 28,
+                "name": "Tidak tersedia"
+            }
+        }
+    }
+ }
+ */
 router.get('/:code', itemController.detail)
 
 router.post('/update', itemController.update)

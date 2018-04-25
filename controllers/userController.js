@@ -1,38 +1,140 @@
+const paginate = require('express-paginate')
 var jwt = require('jsonwebtoken')
+let sequelize = require('sequelize')
 let models = require('../models')
 
 module.exports = {
   usersWithRoles: function(req, res, next){
+    var result = {
+      success: false
+    }
     let mongo = req.app.get('mongo')
-    models.User.findAll()
-    .then(users=>{
+    if (req.query.search == null) {
+      req.query.search = ''
+    }
+    if (req.query.withDeleted != 'true') {
+      req.query.withDeleted = false
+    }
+    var text = req.query.search
+    models.User.findAndCountAll({
+      where: {
+        $or: [
+          sequelize.where(sequelize.col('User.name'), { $ilike: `%${text}%`}),
+          sequelize.where(sequelize.col('User.username'), { $ilike: `%${text}%`}),
+        ]
+      },
+      limit: req.query.limit,
+      offset: req.skip,
+      paranoid: !req.query.withDeleted
+    })
+    .then(data=>{
+      var users = data.rows
+      var userCount = data.count
+      pageCount = Math.ceil(userCount / req.query.limit)
       let allUsers = []
       mongo.collection("users").find({}).toArray((err, userRoles)=>{
+        if (err) {
+          if (err.message) {
+            result.message = err.message
+          }
+          else {
+            result.error = err
+          }
+          return res.status(500).json(result)
+        }
         for (var i in users) {
           let someone = {
             name: users[i].name,
             username: users[i].username,
+            deletedAt: users[i].deletedAt,
             hasRole: false,
             roles: []
           }
           for (var j in userRoles) {
             if (userRoles[j].key == users[i].id) {
               someone.hasRole = true
-              someone.roles.push(Object.keys(userRoles[j]).slice(2))
+              someone.roles = Object.keys(userRoles[j]).slice(2)
             }
           }
           allUsers.push(someone)
         }
-        res.json({
-          success: true,
-          users: allUsers
-        })
+        result.success = true
+        result.pagination = {
+          total: userCount,
+          pageCount: pageCount,
+          currentPage: req.query.page,
+          hasNextPage: paginate.hasNextPages(req)(pageCount),
+          hasPrevPage: res.locals.paginate.hasPreviousPages
+        }
+        result.users = allUsers
+        res.json(result)
       })
+    })
+    .catch(err=>{
+      if (err.message) {
+        result.message = err.message
+      }
+      else {
+        result.error = err
+      }
+      return res.status(500).json(result)
+    })
+  },
+
+  //update user detail
+  updateUserDetail: function(req, res) {
+    var result = {
+      success: false
+    }
+    if (!req.body.name) {
+      result.message = 'no name provided'
+      res.status(412).json(result)
+    }
+    if (!req.body.username) {
+      result.message = 'no username provided'
+      res.status(412).json(result)
+    }
+    if (!req.body.email) {
+      result.message = 'no email provided'
+      res.status(412).json(result)
+    }
+    if (!req.body.identityNumber) {
+      result.message = 'no identityNumber provided'
+      res.status(412).json(result)
+    }
+    if(!req.body.id || parseInt(req.body.id) != req.body.id){
+      result.message = 'no id provided'
+      res.status(412).json(result)
+    }
+
+    models.User.findById(req.body.id)
+    .then(user=>{
+      user.name = req.body.name
+      user.username = req.body.username
+      user.email = req.body.email
+      user.identityNumber = req.body.identityNumber
+      return user.save()
+    })
+    .then(user=>{
+      result.success = true
+      res.json(result)
+    })
+    .catch(err=>{
+      if (err.errors) {
+        result.errors = err.errors
+      }
+      else {
+        result.errors = err
+      }
+      res.json(result)
     })
   },
 
   // Detail data user
   userDetail: function(req, res, next){
+    var result = {
+      success: false
+    }
     models.User.find({
       where: {
         username: req.params.username
@@ -41,27 +143,137 @@ module.exports = {
     .then(user=>{
       if (user) {
         let mongo = req.app.get('mongo')
-        mongo.collection("users").find({key: user.id.toString()}).toArray((err, userRoles)=>{
+        var userToFind = {}
+        userToFind[user.id.toString()] = {$exists: true}
+        mongo.collection("roles").find(userToFind).toArray((err, userRoles)=>{
+          if (err) {
+            if (err.message) {
+              result.message = err.message
+            }
+            else {
+              result.error = err
+            }
+            return res.status(500).json(result)
+          }
+          userRoles = userRoles.map(userRole=>{
+            return userRole.key
+          })
           console.log(userRoles);
           let someone = {
-            success: true,
-            user: {
-              id: user.id,
-              name: user.name,
-              username: user.username,
-              email: user.email,
-              identityNumber: user.identityNumber,
-              roles: Object.keys(userRoles[0]).slice(2)
-            }
+            id: user.id,
+            name: user.name,
+            username: user.username,
+            email: user.email,
+            identityNumber: user.identityNumber,
+            roles: userRoles
           }
-          res.json(someone)
+          result.success = true
+          result.user = someone
+          res.json(result)
         })
       }
       else {
-        res.json({
-          success: false,
-          message: "User " + req.params.username + " not found"
+        result.message = "User " + req.params.username + " not found"
+        res.json(result)
+      }
+    })
+  },
+
+  //delete user
+  deactivateUser: function(req, res) {
+    var result = {
+      success: false
+    }
+    if (req.body.username) {
+      models.User.destroy({
+        where: {
+          username: req.body.username
+        }
+      })
+      .then(user=>{
+        if (user) {
+          result.success = true
+          res.json(result)
+        }
+        else {
+          result.message = 'username not found'
+          res.json(result)
+        }
+      })
+      .catch(err=>{
+        if (err.message) {
+          result.message = err.message
+        }
+        else {
+          result.errors = err
+        }
+        res.json(result)
+      })
+    }
+    else {
+      result.message = 'no username provided'
+      res.json(result)
+    }
+  },
+
+  //reactivate user
+  reactivateUser: function(req, res) {
+    var result = {
+      success: false
+    }
+    if (req.body.username) {
+      models.User.findOne({
+        where: {
+          username: req.body.username
+        },
+        paranoid: false
+      })
+      .then(user=>{
+        if (user) {
+          return user.restore()
+        }
+        else {
+          return Promise.reject({message: 'username not found'})
+        }
+      })
+      .then(()=>{
+        result.success = true
+        res.json(result)
+      })
+      .catch(err=>{
+        if (err.message) {
+          result.message = err.message
+        }
+        else {
+          result.errors = err
+        }
+        res.json(result)
+      })
+    }
+    else {
+      result.message = 'no username provided'
+      res.json(result)
+    }
+  },
+
+  //all roles
+  allRoles: function(req, res) {
+    var result = {
+      success: false
+    }
+    let mongo = req.app.get('mongo')
+    mongo.collection('roles').find({}).toArray((err, roles)=>{
+      if (err) {
+        res.json(err)
+      }
+      else {
+        var roleNames = []
+        roles.forEach(role=>{
+          roleNames.push(role.key)
         })
+        result.success = true
+        result.roles = roleNames
+        res.json(result)
       }
     })
   },

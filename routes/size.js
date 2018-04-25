@@ -55,18 +55,15 @@ router.post('/create', sizeController.create)
  * @apiDescription to use the pagination: size/all?limit=x&page=y
  * @apiGroup Size
  * @apiUse useToken
- *
- * @apiParam {Number} [limit] limit size object per page
- * @apiParam {Number} [page] number of page to display
+ * @apiUse paginationParams
  *
  * @apiUse successBoolean
- * @apiSuccess {Object} pagination Pagination detail
  * @apiSuccess {Object[]} sizes Sizes in current page
  * @apiSuccessExample {json} success example
  {
     "success": true,
     "pagination": {
-        "sizeTotal": 2,
+        "total": 2,
         "pageCount": 1,
         "currentPage": 1,
         "hasNextPage": false,

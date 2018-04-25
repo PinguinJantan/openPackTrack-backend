@@ -28,7 +28,7 @@ module.exports = {
       message: '',
       pagination: null
     }
-    models.Report.findAll({
+    models.Report.findAndCountAll({
       include:[{model: models.InnerReport,
                 attributes:{
                   exclude:['reportId']
@@ -55,27 +55,21 @@ module.exports = {
       limit: req.query.limit,
       offset: req.skip
     })
-    .then(report=>{
-      models.Report.count()
-      .then(reportCount=>{
-        pageCount= Math.ceil(reportCount/req.query.limit)
-        result.success= true
-        result.pagination={
-          reportTotal: reportCount,
-          pageCount: pageCount,
-          currentPage: req.query.page,
-          hasNextPage: paginate.hasNextPages(req)(pageCount),
-          hasPrevPage: res.locals.paginate.hasPreviousPages
-        }
-        result.message='Request success'
-        result.report=report
-        res.json(result)
-      })
-      .catch(err=>{
-        result.message=err.message
-        res.status(400).json(result)
-        console.log(err)
-      })
+    .then(data=>{
+      var reports = data.rows
+      var reportCount = data.count
+      pageCount= Math.ceil(reportCount/req.query.limit)
+      result.success= true
+      result.pagination={
+        total: reportCount,
+        pageCount: pageCount,
+        currentPage: req.query.page,
+        hasNextPage: paginate.hasNextPages(req)(pageCount),
+        hasPrevPage: res.locals.paginate.hasPreviousPages
+      }
+      result.message = 'Request success'
+      result.reports = reports
+      res.json(result)
     })
     .catch(err=>{
       result.message=err.message

@@ -46,7 +46,7 @@ router.use(aclMiddleware.isAllowedToAccess('item'))
      ]
  }
  */
- 
+
 router.post('/create',skuController.create)
 
 /**
@@ -54,14 +54,17 @@ router.post('/create',skuController.create)
  * @apiGroup SKU
  * @apiUse useToken
  *
- * @apiUse successBoolean
+ * @apiUse useSortDir
  * @apiUse paginationParams
+ * @apiUse successBoolean
+ * @apiParam {String} [search] string to search in `sku.name` dan `sku.code` field.
+ * @apiParam {String} [sortBy] available: `updatedAt`, `code`, `name`.
  * @apiSuccess {Object} skus List of SKU
  * @apiSuccessExample {json} success example
  {
     "success": true,
     "pagination": {
-        "skuTotal": 217,
+        "total": 217,
         "pageCount": 22,
         "currentPage": 1,
         "hasNextPage": true,
@@ -84,10 +87,9 @@ router.post('/create',skuController.create)
                 "id": 1,
                 "name": "M"
             }
-        },
-        ....
+        }
     ]
-}
+  }
  */
 router.get('/all',skuController.paginatedAll)
 

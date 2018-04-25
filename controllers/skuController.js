@@ -1,4 +1,5 @@
-const paginate = require('express-paginate');
+const paginate = require('express-paginate')
+let sequelize = require('sequelize')
 let models = require('../models')
 
 module.exports = {
@@ -34,38 +35,54 @@ module.exports = {
   // paginated all
   paginatedAll: function(req, res, next){
     var result = {
-      success: false,
-      status: "ERROR",
-      pagination: null,
-      skus: null
+      success: false
     }
-    models.Sku.findAll({
+    var allowedSort = ['updatedAt', 'code', 'name']
+    if (allowedSort.indexOf(req.query.sortBy) == -1) {
+      req.query.sortBy = 'updatedAt'
+    }
+    var allowedDirection = ['ASC', 'DESC']
+    if (req.query.sortDirection) {
+      req.query.sortDirection = req.query.sortDirection.toUpperCase()
+    }
+    if (allowedDirection.indexOf(req.query.sortDirection) == -1) {
+      req.query.sortDirection = 'ASC'
+    }
+    if (req.query.search == null) {
+      req.query.search = ''
+    }
+    var text = req.query.search
+    models.Sku.findAndCountAll({
       attributes: ["id", "code", "name"],
       include: [
         {model: models.Category, attributes: ["id", "name"], as: 'category'},
         {model: models.Color, attributes: ["id", "name"], as: 'color'},
         {model: models.Gender, attributes: ["id", "name"], as: 'gender'}
       ],
+      where: {
+        $or: [
+          sequelize.where(sequelize.col('Sku.code'), { $ilike: `%${text}%`}),
+          sequelize.where(sequelize.col('Sku.name'), { $ilike: `%${text}%`})
+        ]
+      },
       limit: req.query.limit,
       offset: req.skip,
+      order: [[req.query.sortBy, req.query.sortDirection]]
       }
     )
     .then(skus=>{
-      models.Sku.count()
-      .then(skuCount=>{
-        pageCount = Math.ceil(skuCount / req.query.limit)
-        result.success = true
-        result.status = "OK"
-        result.pagination = {
-          skuTotal: skuCount,
-          pageCount: pageCount,
-          currentPage: req.query.page,
-          hasNextPage: paginate.hasNextPages(req)(pageCount),
-          hasPrevPage: res.locals.paginate.hasPreviousPages
-        }
-        result.skus = skus
-        res.json(result)
-      })
+      result.success = true
+      pageCount = Math.ceil(skus.count / req.query.limit)
+      result.success = true
+      result.pagination = {
+        total: skus.count,
+        pageCount: pageCount,
+        currentPage: req.query.page,
+        hasNextPage: paginate.hasNextPages(req)(pageCount),
+        hasPrevPage: res.locals.paginate.hasPreviousPages
+      }
+      result.skus = skus.rows
+      res.json(result)
     }).catch(err=>{
       console.log('Error when trying to show all SKUs : ', err);
       if (err.errors) {
