@@ -27,9 +27,8 @@ module.exports = {
       success: false,
       warehouse: null
     }
-    models.Warehouse.findAll({
-      include: [{model: models.Carton}]
-    }).then(warehouse=>{
+    models.Warehouse.findAll()
+    .then(warehouse=>{
       result.success = true
       result.warehouse = warehouse
       res.json(warehouse)
@@ -45,8 +44,8 @@ module.exports = {
     let result={
       success: false
     }
-    if(req.query.id){
-      models.Warehouse.findById(req.query.id)
+    if(req.params.id){
+      models.Warehouse.findById(req.params.id)
       .then(warehouse=>{
         if(warehouse.length==0){
           result.message= 'Warehouse not found'
@@ -80,6 +79,7 @@ module.exports = {
           result.success=true
           result.message='Update warehouse with id '+req.body.id+' success'
           result.warehouse= warehouse
+          res.json(result)
         }).catch((err) => {
           console.log(err);
           result.message=err.message

@@ -4,7 +4,7 @@ var router = express.Router();
 let warehouseController = require('../controllers/warehouseController')
 let aclMiddleware = require('../acl/aclMiddleware');
 
-router.use(aclMiddleware.isAllowedToAccess('items'))
+router.use(aclMiddleware.isAllowedToAccess('item'))
 
 
 /* GET users listing. */
