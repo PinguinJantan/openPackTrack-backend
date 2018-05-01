@@ -88,7 +88,7 @@ router.post('/create',warehouseController.create)
 **/
  router.get('/all',warehouseController.all)
  /**
-  * @api {get} warehouse/?id=1 Detail warehouse
+  * @api {get} warehouse/:id Detail warehouse
   * @apiGroup warehouse
   * @apiUse useToken
   *
