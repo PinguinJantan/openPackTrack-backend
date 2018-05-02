@@ -91,7 +91,7 @@ module.exports = {
     if(req.body.id){
       models.InnerGrade.findById(req.body.id,{attributes:['id']})
       .then(innerGrade=>{
-        if(innergrade){
+        if(innerGrade){
           innerGrade.destroy()
           .then(()=>{
             esult.success = true

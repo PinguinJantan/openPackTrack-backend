@@ -103,7 +103,7 @@ router.post('/create',innerGradeController.create)
  *       item: null
  *      }
  **/
- router.get('/',innerGradeController.detail)
+ router.get('/:id',innerGradeController.detail)
  /**
   * @api {post} innergrade/update Update a innergrade
   * @apiGroup inner Grade

@@ -19,7 +19,7 @@ module.exports = {
       if (err.errors) {
         result.errors = err.errors
       }
-      res.status(201).json(result)
+      res.json(result)
     })
   },
   all: function (req,res) {

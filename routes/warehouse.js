@@ -111,7 +111,7 @@ router.post('/create',warehouseController.create)
      "message": "warehouse not found"
  }
   */
- router.get('/',warehouseController.detail)
+ router.get('/:id',warehouseController.detail)
  /**
   * @api {post} warehouse/update Update a warehouse
   * @apiGroup warehouse
