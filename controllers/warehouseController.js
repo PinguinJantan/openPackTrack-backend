@@ -45,9 +45,9 @@ module.exports = {
       success: false
     }
     if(req.params.id){
-      models.Warehouse.findById(req.paramms.id)
+      models.Warehouse.findById(req.params.id)
       .then(warehouse=>{
-        if(warehouse.length==0){
+        if(warehouse==null){
           result.message= 'Warehouse not found'
         }
         result.warehouse=warehouse

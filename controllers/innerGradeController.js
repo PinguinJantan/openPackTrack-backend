@@ -48,7 +48,7 @@ module.exports = {
         if(innerGrade.length==0){
           result.message= 'innerGrade not found'
         }
-        result.warehouse=warehouse
+        result.innerGrade=innerGrade
         res.json(result)
       }).catch(err=>{
         result.errors=err.message
@@ -94,7 +94,7 @@ module.exports = {
         if(innerGrade){
           innerGrade.destroy()
           .then(()=>{
-            esult.success = true
+            result.success = true
             result.message = "innerGrade deleted"
             res.json(result)
           }).catch(err=>{
