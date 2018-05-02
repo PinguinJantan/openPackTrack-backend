@@ -57,6 +57,7 @@ module.exports = {
       name: req.body.name,
       email: req.body.email,
       username: req.body.username,
+      warehouseId: req.body.warehouseId,
       identityNumber: req.body.identityNumber,
       password: passwordData.hash,
       salt: passwordData.salt

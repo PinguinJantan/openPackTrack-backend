@@ -4,7 +4,7 @@ var router = express.Router();
 let warehouseController = require('../controllers/warehouseController')
 let aclMiddleware = require('../acl/aclMiddleware');
 
-router.use(aclMiddleware.isAllowedToAccess('items'))
+router.use(aclMiddleware.isAllowedToAccess('item'))
 
 
 /* GET users listing. */
@@ -87,5 +87,78 @@ router.post('/create',warehouseController.create)
 *      }
 **/
  router.get('/all',warehouseController.all)
+ /**
+  * @api {get} warehouse/:id Detail warehouse
+  * @apiGroup warehouse
+  * @apiUse useToken
+  *
+  * @apiUse successBoolean
+  * @apiSuccess {Object} warehouse warehouse data
+  * @apiSuccessExample {json} success example
+  {
+      "success": true,
+      "warehouse": {
+                  "id": 1,
+                  "name": "Warehouse A",
+                  "address": "Bulustalan IV",
+                  "createdAt": "2018-03-21T14:44:18.006Z",
+                  "updatedAt": "2018-03-21T14:44:18.006Z"
+              },
+  }
+  * @apiErrorExample {json} not found
+  {
+     "success": false,
+     "message": "warehouse not found"
+ }
+  */
+ router.get('/:id',warehouseController.detail)
+ /**
+  * @api {post} warehouse/update Update a warehouse
+  * @apiGroup warehouse
+  * @apiUse useToken
+  *
+  * @apiParam {Integer} id warehouse ID
+  * @apiParam {string} name nama warehouse
+  * @apiParam {string} address alamat warehouse
+  * @apiUse successBoolean
+  * @apiSuccess {Object} warehouse updated warehouse data
+  * @apiSuccessExample {json} success example
+  {
+        "success": true,
+        "message": ''Update warehouse with id 2 success'',
+        "warehouse": {
+              "id": 1,
+              "name": "Warehouse AB",
+              "address": "Bulustalan IV",
+              "createdAt": "2018-03-21T14:44:18.006Z",
+              "updatedAt": "2018-03-21T14:44:18.006Z"
+       }
+  }
+
+  @apiErrorExample {json} warehouse name already exist
+  {
+      "success": false,
+      "warehouse": {
+
+           }
+  }
+  */
+ router.post('/update',warehouseController.update)
+ /**
+  * @api {delete} warehouse/delete Delete warehouse
+  * @apiGroup warehouse
+  * @apiUse useToken
+  *
+  * @apiParam {integer} id id warehouse
+  * @apiUse successBoolean
+  * @apiSuccess {String} message
+  * @apiSuccessExample {json} success example
+  {
+      "success": true,
+      "message": "warehouse deleted"
+  }
+  */
+ router.delete('/delete',warehouseController.delete)
+
 
 module.exports = router;
