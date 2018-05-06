@@ -19,10 +19,12 @@ router.get('/', function(req, res, next) {
  *
  * @apiUse successBoolean
  * @apiSuccess {String} token new access token
+ * @apiSuccess {Number} expiresAt token expire date in UNIX epoch format
  * @apiSuccessExample {json} success example
  {
     "success": true,
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTUyMTI5ODA1MiwiZXhwIjoxNTIxMzg0NDUyfQ.79u25p0iHyHis7KIdOmq7fC0_PESg4MzYXREJF_8uWY"
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTUyMTI5ODA1MiwiZXhwIjoxNTIxMzg0NDUyfQ.79u25p0iHyHis7KIdOmq7fC0_PESg4MzYXREJF_8uWY",
+    "expiresAt": 1525700890
  }
  */
 router.get('/refresh-token', userController.refreshToken)

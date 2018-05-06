@@ -669,8 +669,9 @@ module.exports = {
     var token = jwt.sign({userId: req.decoded.userId }, secret, { expiresIn: '1d'});
     if (token) {
       result.success = true
+      result.token = token
+      result.expiresAt = Math.floor((new Date).getTime() / 1000) + (60 * 60 * 24)
     }
-    result.token = token
     res.json(result)
   },
 }
