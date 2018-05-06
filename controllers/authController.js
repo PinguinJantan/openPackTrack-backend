@@ -132,5 +132,28 @@ module.exports = {
       result.message = err.message
       res.json(result)
     })
+  },
+
+  ping: function (req, res) {
+    var result = {
+      success: false
+    }
+    if(req.query.accessToken){
+      jwt.verify(req.query.accessToken, req.app.get('superSecret'), function (err, decoded) {
+        if(err){
+          result.message = 'invalid or expired token'
+          res.status(403).json(result)
+        }else {
+          result.success = true
+          res.json(result)
+        }
+      })
+    }
+    else {
+      result.message = 'no token provided'
+      res.status(403).json(result)
+    }
+
   }
+
 }

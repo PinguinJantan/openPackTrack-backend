@@ -287,6 +287,22 @@ module.exports = {
           }
         })
         .then(()=>{
+          return models.InnerGrade.findOne({
+            where: {
+              name: 'A'
+            }
+          })
+        })
+        .then(innerGrade=>{
+          var innerSource = models.InnerSource.findOne({
+            where: {
+              name: 'Factory'
+            }
+          })
+          return Promise.all([innerGrade, innerSource])
+        })
+        .then(data=>{
+          [grade, source] = data
           // console.log(models.sequelize.transaction)
           return models.sequelize.transaction(function (t) {
             return models.Carton.create({
@@ -306,9 +322,9 @@ module.exports = {
                 transaction: t
               })
               .then(items=>{
-                if (!items) {
-                  // return Promise.reject('item not found')
-                  throw new Error({message: 'item not found'})
+                if (!items.length) {
+                  return Promise.reject({message: 'item not found'})
+                  // throw new Error({message: 'item not found'})
                 }
                 var itemIdCodes = {}
                 items.forEach(item=>{
@@ -319,7 +335,10 @@ module.exports = {
                   return {
                     barcode: inner.barcode,
                     itemId: itemIdCodes[inner.itemCode],
-                    cartonId: carton.id
+                    cartonId: carton.id,
+                    isInStok: true,
+                    gradeId: grade.id,
+                    sourceId: source.id
                   }
                 })
                 return models.Inner.bulkCreate(innerToCreate, {transaction: t})

@@ -38,6 +38,19 @@ let authController = require('../controllers/authController')
   *       message: "Authentication failed. Wrong password."
   *     }
 **/
-router.post('/login',authController.login);
+router.post('/login', authController.login)
+
+/**
+ * @api {get} auth/ping Check access token validity
+ * @apiGroup Auth
+ *
+ * @apiParam {String} accessToken user access token
+ * @apiUse successBoolean
+ * @apiSuccessExample {json} success example
+ {
+    "success": true
+ }
+ */
+router.get('/ping', authController.ping)
 
 module.exports = router;
