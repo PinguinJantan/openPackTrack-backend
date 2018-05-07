@@ -16,8 +16,11 @@ let authController = require('../controllers/authController')
   * @apiParam {string} username username pengguna
   * @apiParam {string} password password pengguna
   * @apiSuccess {Boolean} success true jika berhasil
-  * @apiSuccess {string} message pesan dari server
-  * @apiSuccess {string} token token setelah berhasil login
+  * @apiSuccess {Object} user
+  * @apiSuccess {string} user.name user full name
+  * @apiSuccess {string} user.username username
+  * @apiSuccess {string} user.token token setelah berhasil login
+  * @apiSuccess {Number} user.expiresAt waktu token kadaluwarsa dalam format UNIX epoch time
   * @apiSuccessExample {json} Success
   *     HTTP/1.1 200 OK
   *   {
@@ -28,7 +31,8 @@ let authController = require('../controllers/authController')
   *      "name": "jhondoe",
   *      "username": "jhondoe",
   *      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImlyZmFuIiwiaWF0IjoxNTA5MDg4NDIzLCJleHAiOjE1MDkxNzQ4MjN9.PtvYELiK4Uyaw2phiyxOrBQJTC8BNNPVVgT1zinCk8g"
-  *       }
+  *       },
+  *      "expiresAt": 1525700890
   *     }
   * @apiErrorExample {json} Wrong password
   *     HTTP/1.1/ 200 OK

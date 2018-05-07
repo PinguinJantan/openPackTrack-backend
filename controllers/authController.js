@@ -1,4 +1,4 @@
-var jwt = require('jsonwebtoken')
+ var jwt = require('jsonwebtoken')
 let models = require('../models')
 let crypto = require('crypto');
 
@@ -87,7 +87,6 @@ module.exports = {
     var result = {
       success: false,
       status: "ERROR",
-      message: "",
       user: {
         name: null,
         username: null,
@@ -118,10 +117,11 @@ module.exports = {
           console.log(token);
           result.success = true
           result.status = "OK"
-          result.message = 'Login success boskuh'
+          // result.message = 'Login success boskuh'
           result.user.name = user.name
           result.user.username = user.username
           result.user.token = token
+          result.user.expiresAt = Math.floor((new Date).getTime() / 1000) + (60 * 60 * 24)
           res.json(result)
         }
       }
