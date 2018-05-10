@@ -117,7 +117,7 @@ router.post('/create',innerController.create)
  router.get('/all',innerController.all)
 
  /**
-  * @api {post} inner/input-scan Input scan (with carton box)
+  * @api {post} api/inner/input-scan Input scan (with carton box)
   * @apiGroup Inner
   * @apiUse useToken
   * @apiParam {String} cartonBarcode carton barcode
@@ -140,24 +140,37 @@ router.post('/create',innerController.create)
 router.post('/input-scan', innerController.inputScan)
 
  /**
-  * @api {get} inner/ping/:barcode Ping an inner box
+  * @api {get} api/inner/ping Ping an inner box
   * @apiGroup Inner
   * @apiUse useToken
+  * @apiParam {String} barcode Inner barcode
+  * @apiParam {String} itemCode Item code
   *
   * @apiUse successBoolean
   * @apiSuccess {String} exist inner exists in database or not
-  * @apiSuccessExample {json} success example
+  * @apiSuccess {String} [itemDetail] additional item detail
+  * @apiSuccessExample {json} available for use
+  {
+    "success": true,
+    "exist": false,
+    "itemDetail": {
+      "size": "31",
+      "skuName": "SUPER STAR B JR"
+    }
+  }
+  * @apiSuccessExample {json} already exist
   {
     "success": true,
     "exist": true
   }
-  * @apiErrorExample {json} already exist
+  * @apiSuccessExample {json} item not found
   {
     "success": true,
     "exist": false
+    "itemDetail": null
   }
   */
-router.get('/ping/:barcode/', innerController.ping)
+router.get('/ping', innerController.ping)
 
 /**
  * @api {get} inner/:barcode Get inner detail by barcode

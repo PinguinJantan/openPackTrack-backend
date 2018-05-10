@@ -206,18 +206,48 @@ module.exports = {
     }
     models.Inner.find({
       where: {
-        barcode: req.params.barcode
+        barcode: req.query.barcode
       }
     })
     .then(inner=>{
       result.success = true
       if (inner) {
         result.exist = true
+        res.json(result)
       }
       else {
         result.exist = false
+        models.Item.find({
+          where: {
+            code: req.query.itemCode
+          },
+          include: [
+            {
+              model: models.Sku,
+              as: 'sku',
+              attributes: ['name']
+            },
+            {
+              model: models.Size,
+              as: 'size',
+              attributes: ['name']
+            },
+          ]
+        })
+        .then(item => {
+          result.itemDetail = null
+          if (item) {
+            result.itemDetail = {
+              size: item.size.name,
+              skuName: item.sku.name
+            }
+            res.json(result)
+          }
+          else {
+            res.json(result)
+          }
+        })
       }
-      res.json(result)
     })
     .catch(err=>{
       if(err.errors){
