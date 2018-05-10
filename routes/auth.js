@@ -30,6 +30,7 @@ let authController = require('../controllers/authController')
   *    "user": {
   *      "name": "jhondoe",
   *      "username": "jhondoe",
+  *      "wareouseId": 1,
   *      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImlyZmFuIiwiaWF0IjoxNTA5MDg4NDIzLCJleHAiOjE1MDkxNzQ4MjN9.PtvYELiK4Uyaw2phiyxOrBQJTC8BNNPVVgT1zinCk8g"
   *       },
   *      "expiresAt": 1525700890

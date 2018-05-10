@@ -1,5 +1,8 @@
 const paginate = require('express-paginate')
 let sequelize = require('sequelize')
+const Op = sequelize.Op
+
+
 let models = require('../models')
 
 module.exports = {
@@ -166,5 +169,54 @@ module.exports = {
       }
       res.json(result)
     })
+  },
+  repack: function(req,res){
+    let result={
+      success: false
+    }
+    if(req.body.barcode&&req.body.warehouseId&&req.body.profileId&&req.body.repackCartonId){
+      models.sequelize.transaction(function(t){
+        return models.Carton.create({
+          barcode: req.body.barcode,
+          warehouseId: req.body.warehouseId,
+          profileId: req.body.profileId
+        },{
+          transaction:t
+        }).then((carton) => {
+          let repackCartonId=JSON.parse(req.body.repackCartonId)
+          return models.Inner.findAndCountAll({
+            where:{
+              cartonId:{
+                [Op.in]:repackCartonId
+              }
+            }
+          }).then((inners)=>{
+            if(inners.count<12){
+              let innerIds= inners.rows.map(inner=>{
+                return inner.id
+              })
+              models.Inner.update(
+                {cartonId: carton.id},
+                {where:{id:{[Op.in]:innerIds}}}
+              ).then(updated=>{
+                result.success= true
+                result.message='repack success'
+                res.json(result)
+              })
+            }else{
+              result.message='inner more than 12'
+              res.json(result)
+            }
+          })
+        })
+      }).catch((err) => {
+        console.log(err);
+        result.message=err.message
+        res.json(result)
+      })
+    }else{
+      result.message='required parameters'
+      res.status(422).json(result)
+    }
   }
 }
