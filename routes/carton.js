@@ -217,4 +217,6 @@ router.post('/create',cartonController.create)
   */
  router.get('/:barcode', cartonController.detail)
 
+ router.post('/repack',cartonController.repack)
+
 module.exports = router;
