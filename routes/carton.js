@@ -177,7 +177,7 @@ router.post('/create',cartonController.create)
  router.get('/all',cartonController.all)
 
  /**
-  * @api {get} carton/ping/:barcode Ping a carton box
+  * @api {get} api/carton/ping/:barcode Ping a carton box
   * @apiGroup Carton
   * @apiUse useToken
   *
@@ -197,7 +197,7 @@ router.post('/create',cartonController.create)
  router.get('/ping/:barcode/', cartonController.ping)
 
  /**
-  * @api {get} carton/:barcode Get carton detail by barcode
+  * @api {get} api/carton/:barcode Get carton detail by barcode
   * @apiGroup Carton
   * @apiUse useToken
   *
