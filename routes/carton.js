@@ -216,7 +216,43 @@ router.post('/create',cartonController.create)
   }
   */
  router.get('/:barcode', cartonController.detail)
-
+ /* GET users listing. */
+ /**
+   * @api {post} api/carton/repack Repack
+   * @apiGroup Carton
+   * @apiHeader {String} token token untuk login user
+   * @apiHeaderExample {json} Header-Example:
+   *     {
+   *       "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVzSW5NaW51dGVzIjoxNDQwLCJpYXQiOjE1MDcwMzQwNzJ9.je4md5GBuTSFGNivBaT3Ju7-yjVjkVS99WSIiwk7wA4",
+   *     }
+   * @apiParamExample {json} Request-Example:
+   *  {
+   *      "barcode": "1231231",
+   *      "warehouseId": 1,
+   *      "profileId": 1,
+          "repackCartonId":[1,2]
+   *  }
+   * @apiSuccess {Boolean} success true jika berhasil
+   * @apiSuccess {string} status "OK" jika berhasil
+   * @apiSuccess {Array} carton array dari carton
+   * @apiParam {string} barcode nomor sku carton
+   * @apiParam {integer} warehouseId id kategori carton
+   * @apiParam {integer} profileId id profile carton
+   * @apiParam {object[]} repackCartonId array id carton yang di repack
+   example:`[1,2]`
+   * @apiSuccessExample {json} success
+   *     HTTP/1.1 200 OK
+   *    {
+   *     "success": true
+         "message": "repack success"
+   *   }
+   * @apiErrorExample {json} inner more than 12
+   *     HTTP/1.1 500 Internal Server Error
+   *     {
+   *       success: false,
+   *       message: "inner more than 12"
+   *      }
+ **/
  router.post('/repack',cartonController.repack)
 
 module.exports = router;
