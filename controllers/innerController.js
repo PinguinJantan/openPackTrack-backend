@@ -281,7 +281,7 @@ module.exports = {
             innerCodes.forEach(inner=>{
               notTheSame = inner.itemCode !== innerCodes[0].itemCode
             })
-            if (profile.type == 'solid' && notTheSame) {
+            if (profile.type == 'solid' && !notTheSame) {
               return Promise.reject({message: "Expected solid inners"})
             }
             else {
