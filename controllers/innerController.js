@@ -277,11 +277,13 @@ module.exports = {
             return Promise.reject({message: "Expected " + profile.count + " inners"})
           }
           else {
-            var notTheSame = false
+            var theSame = true
             innerCodes.forEach(inner=>{
-              notTheSame = inner.itemCode !== innerCodes[0].itemCode
+              if (inner.itemCode !== innerCodes[0].itemCode) {
+                theSame = false
+              }
             })
-            if (profile.type == 'solid' && notTheSame) {
+            if (profile.type == 'solid' && !theSame) {
               return Promise.reject({message: "Expected solid inners"})
             }
             else {
