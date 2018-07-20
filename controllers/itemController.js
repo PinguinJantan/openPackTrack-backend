@@ -12,12 +12,17 @@ module.exports = {
       status: "ERROR",
       item: null
     }
-    if(req.body.code&req.body.sizeId&req.body.skuId&req.body.item){
+    console.log('code',req.body.code);
+    console.log('sizeId',req.body.sizeId);
+    console.log('skuId',req.body.skuId);
+    console.log('barcode',req.body.barcode);
+    
+    if(req.body.code&&req.body.sizeId&&req.body.skuId&&req.body.barcode){
       models.Item.create({
         code: req.body.code,
         sizeId: req.body.sizeId,
         skuId: req.body.skuId,
-        item: req.body.item
+        barcode: req.body.barcode
       }).then(item=>{
         result.success = true
         result.status = "OK"
