@@ -3,7 +3,8 @@ module.exports = function(sequelize, DataTypes) {
   var Item = sequelize.define('Item', {
     code: DataTypes.STRING,
     sizeId: DataTypes.INTEGER,
-    skuId: DataTypes.INTEGER
+    skuId: DataTypes.INTEGER,
+    barcode: DataTypes.STRING
   }, {});
   Item.associate = function(models){
     Item.hasMany(models.Inner,{foreignKey: 'itemId', as:'inner'})

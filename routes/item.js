@@ -33,6 +33,7 @@ router.use(aclMiddleware.isAllowedToAccess('item'))
   * @apiParam {string} name nama item
   * @apiParam {string} color warna item
   * @apiParam {string} size ukuran item
+  * @apiParam {string} barcode barcode item
   * @apiParam {string} gender gender item (M,W,JR)
   * @apiSuccessExample {json} success
   *     HTTP/1.1 200 OK
@@ -43,6 +44,7 @@ router.use(aclMiddleware.isAllowedToAccess('item'))
   *            "id": 9,
   *            "code": "F0004",
   *            "sizeId": 18,
+  *            "barcode": 'QWE2131',
   *            "updatedAt": "2017-12-09T11:47:56.426Z",
   *            "createdAt": "2017-12-09T11:47:56.426Z"
   *        }

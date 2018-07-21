@@ -12,22 +12,33 @@ module.exports = {
       status: "ERROR",
       item: null
     }
-    models.Item.create({
-      code: req.body.code,
-      sizeId: req.body.sizeId,
-      skuId: req.body.skuId
-    }).then(item=>{
-      result.success = true
-      result.status = "OK"
-      result.item = item
+    console.log('code',req.body.code);
+    console.log('sizeId',req.body.sizeId);
+    console.log('skuId',req.body.skuId);
+    console.log('barcode',req.body.barcode);
+    
+    if(req.body.code&&req.body.sizeId&&req.body.skuId&&req.body.barcode){
+      models.Item.create({
+        code: req.body.code,
+        sizeId: req.body.sizeId,
+        skuId: req.body.skuId,
+        barcode: req.body.barcode
+      }).then(item=>{
+        result.success = true
+        result.status = "OK"
+        result.item = item
+        res.json(result)
+      }).catch(err => {
+        console.log('Error when trying to create new item : ', err);
+        if (err.errors) {
+          result.errors = err.errors
+        }
+        res.json(result)
+      })
+    }else{
+      result.message = 'missing parameters'
       res.json(result)
-    }).catch(err => {
-      console.log('Error when trying to create new item : ', err);
-      if (err.errors) {
-        result.errors = err.errors
-      }
-      res.json(result)
-    })
+    }
 
   },
 
