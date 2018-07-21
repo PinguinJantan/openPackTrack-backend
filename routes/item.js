@@ -22,18 +22,15 @@ router.use(aclMiddleware.isAllowedToAccess('item'))
   * @apiParamExample {json} Request-Example:
   *  {
   *      "code": "FGJ01FOCUB",
-  *      "sizeId": "18",
+  *      "size": "42",
   *      "skuId": "6"
   *  }
   * @apiSuccess {Boolean} success true jika berhasil
   * @apiSuccess {string} status "OK" jika berhasil
-  * @apiSuccess {Array} item array dari item
-  * @apiParam {string} sku nomor sku item
-  * @apiParam {integer} categoryId id kategori item
-  * @apiParam {string} name nama item
-  * @apiParam {string} color warna item
-  * @apiParam {string} size ukuran item
-  * @apiParam {string} gender gender item (M,W,JR)
+  * @apiSuccess {Object} item Object
+  * @apiParam {Number} code code untuk Item (barcode)
+  * @apiParam {Number} size ukuran item
+  * @apiParam {Number} skuId ID SKU
   * @apiSuccessExample {json} success
   *     HTTP/1.1 200 OK
   *    {
@@ -42,7 +39,7 @@ router.use(aclMiddleware.isAllowedToAccess('item'))
   *        "item": {
   *            "id": 9,
   *            "code": "F0004",
-  *            "sizeId": 18,
+  *            "size": 42,
   *            "updatedAt": "2017-12-09T11:47:56.426Z",
   *            "createdAt": "2017-12-09T11:47:56.426Z"
   *        }

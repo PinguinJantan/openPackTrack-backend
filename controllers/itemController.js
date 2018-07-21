@@ -6,15 +6,19 @@ let bulk = require('../modules/bulk')
 
 module.exports = {
   // tambah item baru
-  create: function(req,res,next){
+  create: async function(req,res,next){
     var result = {
       success: false,
       status: "ERROR",
       item: null
     }
+    var size = await models.Size.findOrCreate({
+      where: {name: req.body.size},
+      defaults: {name: req.body.size}
+    })
     models.Item.create({
       code: req.body.code,
-      sizeId: req.body.sizeId,
+      sizeId: size[0].dataValues.id,
       skuId: req.body.skuId
     }).then(item=>{
       result.success = true
