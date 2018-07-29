@@ -32,26 +32,15 @@ module.exports = {
   all: function(req, res){
     var result = {
       success: false,
-      pagination: null,
       sizes: null
     }
-    models.Size.findAll({
-      limit: req.query.limit,
-      offset: req.skip,
-      }
-    )
+    models.Size.findAll()
     .then(data=>{
-      var sizeCount = data.count
-      var sizes = data.rows
-      pageCount = Math.ceil(sizeCount / req.query.limit)
+      console.log(data);
+      
+      var sizeCount = data.length
+      var sizes = data
       result.success = true
-      result.pagination = {
-        total: sizeCount,
-        pageCount: pageCount,
-        currentPage: req.query.page,
-        hasNextPage: paginate.hasNextPages(req)(pageCount),
-        hasPrevPage: res.locals.paginate.hasPreviousPages
-      }
       result.sizes = sizes
       res.json(result)
     })

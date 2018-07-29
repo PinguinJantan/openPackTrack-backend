@@ -12,26 +12,31 @@ module.exports = {
       status: "ERROR",
       item: null
     }
-    var size = await models.Size.findOrCreate({
-      where: {name: req.body.size},
-      defaults: {name: req.body.size}
-    })
-    models.Item.create({
-      code: req.body.code,
-      sizeId: size[0].dataValues.id,
-      skuId: req.body.skuId
-    }).then(item=>{
-      result.success = true
-      result.status = "OK"
-      result.item = item
-      res.json(result)
-    }).catch(err => {
-      console.log('Error when trying to create new item : ', err);
-      if (err.errors) {
-        result.errors = err.errors
-      }
-      res.json(result)
-    })
+    if(req.body.code&&req.body.size&&req.body.skuId){
+      var size = await models.Size.findOrCreate({
+        where: {name: req.body.size},
+        defaults: {name: req.body.size}
+      })
+      models.Item.create({
+        code: req.body.code,
+        sizeId: size[0].dataValues.id,
+        skuId: req.body.skuId
+      }).then(item=>{
+        result.success = true
+        result.status = "OK"
+        result.item = item
+        res.status(201).json(result)
+      }).catch(err => {
+        console.log('Error when trying to create new item : ', err);
+        if (err.errors) {
+          result.errors = err.errors
+        }
+        res.status(500).json(result)
+      })
+    }else{
+      result.message = 'missing parameters'
+      res.status(412).json(result)
+    }
 
   },
 

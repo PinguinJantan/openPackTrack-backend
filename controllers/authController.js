@@ -120,6 +120,7 @@ module.exports = {
           // result.message = 'Login success boskuh'
           result.user.name = user.name
           result.user.username = user.username
+          result.user.warehouseId = user.warehouseId
           result.user.token = token
           result.user.expiresAt = Math.floor((new Date).getTime() / 1000) + (60 * 60 * 24)
           res.json(result)
