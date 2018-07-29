@@ -27,5 +27,8 @@
     "redis": "^2.8.0",
     "sequelize": "^4.28.0",
     "serve-favicon": "~2.4.2"
+  },
+  "devDependencies": {
+    "sequelize-replace-enum-postgres": "^1.4.0"
   }
 }
