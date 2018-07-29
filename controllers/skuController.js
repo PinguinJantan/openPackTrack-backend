@@ -3,16 +3,28 @@ let sequelize = require('sequelize')
 let models = require('../models')
 
 module.exports = {
-  create: function(req, res, next){
+  create: async function(req, res, next){
     var result = {
       success: false,
     }
+    var category = await models.Category.findOrCreate({
+      where: {name: req.body.category},
+      defaults: {name: req.body.category}
+    })
+    var color = await models.Color.findOrCreate({
+      where: {name: req.body.color},
+      defaults: {name: req.body.color}
+    })
+    var gender = await models.Gender.findOrCreate({
+      where: {name: req.body.gender},
+      defaults: {name: req.body.gender}
+    })
     models.Sku.create({
       code: req.body.code,
       name: req.body.name,
-      categoryId: req.body.categoryId,
-      colorId: req.body.colorId,
-      genderId: req.body.genderId
+      categoryId: category[0].dataValues.id,
+      colorId: color[0].dataValues.id,
+      genderId: gender[0].dataValues.id
     }).then(sku=>{
       result.success = true
       result.sku = sku
@@ -28,7 +40,7 @@ module.exports = {
           result.errors.push({code: err.parent.code, message: 'NOT NULL violation'})
         }
       }
-      res.json(result)
+      res.status(500).json(result)
     })
   },
 
@@ -108,7 +120,7 @@ module.exports = {
     .catch(err=>{
       result.message = ""
       result.errors = err
-      res.json(result)
+      res.status(500).json(result)
     })
   },
 
@@ -162,7 +174,7 @@ module.exports = {
         else {
           result.errors = err
         }
-        res.json(result)
+        res.status(500).json(result)
       })
     }
     else {
@@ -195,7 +207,7 @@ module.exports = {
       })
       .catch(err=>{
         result.errors = err
-        res.json(result)
+        res.status(500).json(result)
       })
     }
     else {
@@ -239,7 +251,7 @@ module.exports = {
       })
       .catch(err=>{
         result.errors = err
-        res.json(result)
+        res.status(500).json(result)
       })
     }
     else {

@@ -107,7 +107,7 @@ router.use(function(req, res, next){
       token = head[1]
       jwt.verify(token, app.get('superSecret'), function (err, decoded) {
         if(err){
-          res.json({
+          res.status(403).json({
             success: false,
             message: 'Failed to authenticate token.'
           })
