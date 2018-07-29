@@ -84,9 +84,9 @@ module.exports = {
             Object.keys(keys[i]).forEach(idx=>{
               keyForQuery += '"' + idx + '"=' + "'" + keys[i][idx] + "'"
             })
-            var query = 'UPDATE "'+ model.getTableName() +'" SET "code" = ?, "sizeId" = ?, "skuId" = ? WHERE ' + keyForQuery + ';'
+            var query = 'UPDATE "'+ model.getTableName() +'" SET "code" = ?, "sizeId" = ?, "skuId" = ?, "barcode" = ? WHERE ' + keyForQuery + ';'
             var rowUpdated = await models.sequelize.query(query, {
-              replacements: [rows[i].code, rows[i].sizeId, rows[i].skuId],
+              replacements: [rows[i].code, rows[i].sizeId, rows[i].skuId, rows[i].barcode],
               type: models.sequelize.QueryTypes.UPDATE
             })
           }

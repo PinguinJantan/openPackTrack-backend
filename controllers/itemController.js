@@ -529,7 +529,8 @@ module.exports = {
                           return {
                             code: itemEntry["Item Code"],
                             sizeId: thisSize[0].id,
-                            skuId: thisSku[0].id
+                            skuId: thisSku[0].id,
+                            barcode: itemEntry["Barcode"]
                           }
                         })
                         var itemCodes = items.map(item=>{
