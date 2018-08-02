@@ -1,6 +1,7 @@
 let models = require('../models')
 
 module.exports = {
+  //TODO: sesuaikan dengan model baru
   create: function(req,res,next){
     var result = {
       success : false
@@ -27,10 +28,30 @@ module.exports = {
     var result = {
       success : false
     }
-    models.Profile.findAll()
+    models.Profile.findAll({
+      include: [{
+        model: models.ProfileItem,
+        as: 'profileItem',
+        attributes: ['itemId', 'amount'],
+        include: [{
+          model: models.Item,
+          as: 'item',
+          attributes: ['skuId', 'sizeId'],
+          include: [{
+            model: models.Sku,
+            as: 'sku',
+            attributes: ['name']
+          },{
+            model: models.Size,
+            as: 'size',
+            attributes: ['name']
+          }]
+        }]
+      }]
+    })
     .then(profile=>{
       result.success = true
-      result.profile = profile
+      result.profiles = profile
       res.json(result)
     }).catch(err=>{
       console.log(err);

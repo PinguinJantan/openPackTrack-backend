@@ -107,6 +107,8 @@ router.post('/create', colorController.create)
 
 router.get('/all', colorController.all)
 
+router.get('/list', colorController.list)
+
 /**
  * @api {post} color/update update an exisiting color
  * @apiGroup Color

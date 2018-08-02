@@ -6,38 +6,36 @@ let bulk = require('../modules/bulk')
 
 module.exports = {
   // tambah item baru
-  create: function(req,res,next){
+  create: async function(req,res,next){
     var result = {
       success: false,
       status: "ERROR",
       item: null
     }
-    console.log('code',req.body.code);
-    console.log('sizeId',req.body.sizeId);
-    console.log('skuId',req.body.skuId);
-    console.log('barcode',req.body.barcode);
-    
-    if(req.body.code&&req.body.sizeId&&req.body.skuId&&req.body.barcode){
+    if(req.body.code&&req.body.size&&req.body.skuId){
+      var size = await models.Size.findOrCreate({
+        where: {name: req.body.size},
+        defaults: {name: req.body.size}
+      })
       models.Item.create({
         code: req.body.code,
-        sizeId: req.body.sizeId,
-        skuId: req.body.skuId,
-        barcode: req.body.barcode
+        sizeId: size[0].dataValues.id,
+        skuId: req.body.skuId
       }).then(item=>{
         result.success = true
         result.status = "OK"
         result.item = item
-        res.json(result)
+        res.status(201).json(result)
       }).catch(err => {
         console.log('Error when trying to create new item : ', err);
         if (err.errors) {
           result.errors = err.errors
         }
-        res.json(result)
+        res.status(500).json(result)
       })
     }else{
       result.message = 'missing parameters'
-      res.json(result)
+      res.status(412).json(result)
     }
 
   },
@@ -531,7 +529,8 @@ module.exports = {
                           return {
                             code: itemEntry["Item Code"],
                             sizeId: thisSize[0].id,
-                            skuId: thisSku[0].id
+                            skuId: thisSku[0].id,
+                            barcode: itemEntry["Barcode"]
                           }
                         })
                         var itemCodes = items.map(item=>{
