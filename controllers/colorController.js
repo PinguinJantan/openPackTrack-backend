@@ -65,6 +65,26 @@ module.exports = {
     })
   },
 
+  list: function(req, res) {
+    var result = {
+      success: false
+    }
+    models.Color.findAll({
+      attributes: ['id', 'name']
+    })
+    .then(colors => {
+      result.success = true
+      result.colors = colors
+      res.json(result)
+    })
+    .catch(err => {
+      if (err.errors) {
+        result.error = err.errors
+        res.status(500).json(result)
+      }
+    })
+  },
+
   // detail warna
   detail: function(req, res){
     var result = {

@@ -14,6 +14,7 @@ var index = require('./routes/index');
 var users = require('./routes/users');
 var sku = require('./routes/sku');
 var color = require('./routes/color');
+var gender = require('./routes/gender');
 var size = require('./routes/size');
 var item = require('./routes/item');
 var innerreport = require('./routes/innerreport')
@@ -130,6 +131,7 @@ app.use('/api/user', users);
 app.use('/api/item', item);
 app.use('/api/sku', sku);
 app.use('/api/color', color);
+app.use('/api/gender', gender);
 app.use('/api/size', size);
 app.use('/api/report', report);
 app.use('/api/category', category);
