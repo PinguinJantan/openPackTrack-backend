@@ -11,7 +11,12 @@ module.exports = (sequelize, DataTypes) => {
   Profile.associate = function(models) {
     // associations can be defined here
     Profile.hasMany(models.Carton, {foreignKey: 'profileId', as: 'carton'})
-    Profile.hasMany(models.ProfileItem, {foreignKey: 'profileId', as: 'profileItem'})
+    Profile.hasMany(models.ProfileItem, {
+      foreignKey: 'profileId',
+      as: 'profileItem',
+      onDelete: 'cascade',
+      hooks: true
+    })
   };
   return Profile;
 };
