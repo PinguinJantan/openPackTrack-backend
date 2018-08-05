@@ -27,10 +27,16 @@ module.exports = {
         transaction: t
       })
       await t.commit()
-      res.json(profile)
+      result.success = true
+      result.profile = profile
+      res.json(result)
     }
     catch(err) {
-      res.status(500).json(err.message)
+      result.message = err.message
+      if (err.errors) {
+        result.errors = err.errors
+      }
+      res.status(500).json(result)
       return
     }
     // models.Profile.create({
