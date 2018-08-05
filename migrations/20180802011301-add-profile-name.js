@@ -3,7 +3,8 @@
 module.exports = {
   up: function (queryInterface, Sequelize) {
     return queryInterface.addColumn('Profiles', 'name', {
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
+      unique: true
     })
   },
 
