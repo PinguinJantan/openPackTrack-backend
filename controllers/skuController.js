@@ -1,30 +1,44 @@
 const paginate = require('express-paginate')
 let sequelize = require('sequelize')
 let models = require('../models')
+let customs = require('../modules/customs')
 
 module.exports = {
   create: async function(req, res, next){
     var result = {
       success: false,
     }
-    var category = await models.Category.findOrCreate({
-      where: {name: req.body.category},
-      defaults: {name: req.body.category}
-    })
-    var color = await models.Color.findOrCreate({
-      where: {name: req.body.color},
-      defaults: {name: req.body.color}
-    })
-    var gender = await models.Gender.findOrCreate({
-      where: {name: req.body.gender},
-      defaults: {name: req.body.gender}
-    })
+    var category, color, gender = null
+    try {
+      category = await customs.findOrCreate(
+        models.Category,
+        {name: req.body.category},
+        {name: req.body.category}
+      )
+      console.log(category)
+      color = await customs.findOrCreate(
+        models.Color,
+        {name: req.body.color},
+        {name: req.body.color}
+      )
+      console.log(color)
+      gender = await customs.findOrCreate(
+        models.Gender,
+        {name: req.body.gender},
+        {name: req.body.gender}
+      )
+      console.log(gender)
+    }
+    catch (err) {
+      res.json(err)
+      return
+    }
     models.Sku.create({
       code: req.body.code,
       name: req.body.name,
-      categoryId: category[0].dataValues.id,
-      colorId: color[0].dataValues.id,
-      genderId: gender[0].dataValues.id
+      categoryId: category.id,
+      colorId: color.id,
+      genderId: gender.id
     }).then(sku=>{
       result.success = true
       result.sku = sku
@@ -110,7 +124,7 @@ module.exports = {
       success: false
     }
     models.Sku.findAll({
-      attributes: ["id", "name"]
+      attributes: ["id", "name", "code"]
     })
     .then(skus=>{
       result.success = true
