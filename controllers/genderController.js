@@ -8,9 +8,9 @@ module.exports = {
     models.Gender.findAll({
       attributes: ['id', 'name']
     })
-    .then(gender => {
+    .then(genders => {
       result.success = true
-      result.gender = gender
+      result.genders = genders
       res.json(result)
     })
     .catch(err => {

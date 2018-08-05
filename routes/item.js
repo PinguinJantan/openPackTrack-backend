@@ -21,14 +21,16 @@ router.use(aclMiddleware.isAllowedToAccess('item'))
   *     }
   * @apiParamExample {json} Request-Example:
   *  {
-  *      "code": "FGJ01FOCUB",
+  *      "barcode": "FGJ01FOCUB42",
+  *      "code": "FGJ01FOCUB42",
   *      "size": "42",
   *      "skuId": "6"
   *  }
   * @apiSuccess {Boolean} success true jika berhasil
   * @apiSuccess {string} status "OK" jika berhasil
   * @apiSuccess {Object} item Object
-  * @apiParam {Number} code code untuk Item (barcode)
+  * @apiParam {String} code code untuk Item
+  * @apiParam {String} barcode barcode untuk Item
   * @apiParam {Number} size ukuran item
   * @apiParam {Number} skuId ID SKU
   * @apiSuccessExample {json} success

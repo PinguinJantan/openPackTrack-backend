@@ -3,6 +3,7 @@ const paginate = require('express-paginate');
 let sequelize = require('sequelize');
 let models = require('../models')
 let bulk = require('../modules/bulk')
+let customs = require('../modules/customs')
 
 module.exports = {
   // tambah item baru
@@ -12,15 +13,17 @@ module.exports = {
       status: "ERROR",
       item: null
     }
-    if(req.body.code&&req.body.size&&req.body.skuId){
-      var size = await models.Size.findOrCreate({
-        where: {name: req.body.size},
-        defaults: {name: req.body.size}
-      })
+    if(req.body.code&&req.body.size&&req.body.skuId&&req.body.barcode){
+      var size = await customs.findOrCreate(
+        models.Size,
+        {name: req.body.size},
+        {name: req.body.size}
+      )
       models.Item.create({
         code: req.body.code,
-        sizeId: size[0].dataValues.id,
-        skuId: req.body.skuId
+        sizeId: size.id,
+        skuId: req.body.skuId,
+        barcode: req.body.barcode
       }).then(item=>{
         result.success = true
         result.status = "OK"
