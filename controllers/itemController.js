@@ -13,7 +13,7 @@ module.exports = {
       status: "ERROR",
       item: null
     }
-    if(req.body.code&&req.body.size&&req.body.skuId){
+    if(req.body.code&&req.body.size&&req.body.skuId&&req.body.barcode){
       var size = await customs.findOrCreate(
         models.Size,
         {name: req.body.size},
@@ -22,7 +22,8 @@ module.exports = {
       models.Item.create({
         code: req.body.code,
         sizeId: size.id,
-        skuId: req.body.skuId
+        skuId: req.body.skuId,
+        barcode: req.body.barcode
       }).then(item=>{
         result.success = true
         result.status = "OK"
