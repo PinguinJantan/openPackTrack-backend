@@ -137,7 +137,7 @@ module.exports = {
     }
     models.User.find({
       where: {
-        username: req.params.username
+        $or: [{username: req.params.username}, {id: req.decoded.userId}]
       }
     })
     .then(user=>{

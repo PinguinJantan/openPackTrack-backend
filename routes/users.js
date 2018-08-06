@@ -13,7 +13,7 @@ router.get('/', function(req, res, next) {
 });
 
 /**
- * @api {get} user/refresh-token refresh access token
+ * @api {get} api/user/refresh-token refresh access token
  * @apiGroup User
  * @apiUse useToken
  *
@@ -30,7 +30,7 @@ router.get('/', function(req, res, next) {
 router.get('/refresh-token', userController.refreshToken)
 
 /**
-  * @api {post} user/create Add new user
+  * @api {post} api/user/create Add new user
   * @apiGroup User
   * @apiParamExample {json} Request-Example:
   *     {
@@ -77,7 +77,7 @@ router.get('/refresh-token', userController.refreshToken)
 router.post('/create', authController.register)
 
 /**
- * @api {get} user/all Get all users
+ * @api {get} api/user/all Get all users
  * @apiGroup User
  * @apiUse useToken
  * @apiUse paginationParams
@@ -120,7 +120,7 @@ router.post('/create', authController.register)
 router.get('/all', userController.usersWithRoles)
 
 /**
- * @api {post} user/update Update user detail
+ * @api {post} api/api/user/update Update user detail
  * @apiGroup User
  * @apiUse useToken
  * @apiParam {string} name nama pengguna
@@ -139,7 +139,7 @@ router.get('/all', userController.usersWithRoles)
  router.post('/update', userController.updateUserDetail)
 
  /**
-  * @api {delete} user/deactivate Deactivate user
+  * @api {delete} api/api/api/user/deactivate Deactivate user
   * @apiGroup User
   * @apiUse useToken
   * @apiParam {string} username username
@@ -153,7 +153,7 @@ router.get('/all', userController.usersWithRoles)
  router.delete('/deactivate', userController.deactivateUser)
 
  /**
-  * @api {post} user/reactivate Reactivate user
+  * @api {post} api/api/api/api/user/reactivate Reactivate user
   * @apiGroup User
   * @apiUse useToken
   * @apiParam {string} username username
@@ -167,7 +167,7 @@ router.get('/all', userController.usersWithRoles)
  router.post('/reactivate', userController.reactivateUser)
 
  /**
-  * @api {get} user/role/all get all roles
+  * @api {get} api/user/role/all get all roles
   * @apiGroup ACL
   * @apiUse useToken
   *
@@ -186,7 +186,7 @@ router.get('/all', userController.usersWithRoles)
 router.get('/role/all', userController.allRoles)
 
 /**
- * @api {post} user/role/create Create new role
+ * @api {post} api/user/role/create Create new role
  * @apiGroup ACL
  * @apiUse useToken
  *
@@ -221,7 +221,7 @@ router.get('/role/all', userController.allRoles)
 router.post('/role/create', userController.addRole)
 
 /**
- * @api {post} user/role/delete Delete an existing role
+ * @api {post} api/user/role/delete Delete an existing role
  * @apiGroup ACL
  * @apiUse useToken
  *
@@ -237,7 +237,7 @@ router.post('/role/create', userController.addRole)
 router.post('/role/delete', userController.removeRole)
 
 /**
- * @api {post} user/role/assign Assign a user to a role
+ * @api {post} api/user/role/assign Assign a user to a role
  * @apiGroup ACL
  * @apiUse useToken
  *
@@ -263,7 +263,29 @@ router.post('/role/delete', userController.removeRole)
 router.post('/role/assign', userController.addRoleToUser)
 
 /**
- * @api {get} user/:username Get user detail
+ * @api {get} api/user/me Get current user detail
+ * @apiGroup User
+ * @apiUse useToken
+ *
+ * @apiSuccessExample {json} success
+ {
+   "success": true,
+   "user": {
+       "id": 1,
+       "name": "Nurul Irfan",
+       "username": "mnirfan",
+       "email": "hello@nurulirfan.com",
+       "identityNumber": "A11.2014.08363",
+       "roles": [
+           "admin"
+       ]
+   }
+ }
+ */
+router.get('/me', userController.userDetail)
+
+/**
+ * @api {get} api/user/:username Get user detail
  * @apiGroup User
  * @apiUse useToken
  *
@@ -293,7 +315,7 @@ router.post('/role/assign', userController.addRoleToUser)
 router.get('/:username', userController.userDetail)
 
 /**
- * @api {get} user/role/:roleName Get role detail
+ * @api {get} api/user/role/:roleName Get role detail
  * @apiGroup ACL
  * @apiUse useToken
  *
@@ -334,7 +356,7 @@ router.get('/:username', userController.userDetail)
 router.get('/role/:roleName', userController.roleDetail)
 
 /**
- * @api {get} user/role/:roleName:/resource Get role resource permission
+ * @api {get} api/api/user/role/:roleName:/resource Get role resource permission
  * @apiGroup ACL
  * @apiUse useToken
  *
@@ -363,7 +385,7 @@ router.get('/role/:roleName', userController.roleDetail)
 router.get('/role/:roleName/:resource', userController.roleDetailResource)
 
 /**
- * @api {post} user/role/resouce/allow Give resource access to a role
+ * @api {post} api/user/role/resouce/allow Give resource access to a role
  * @apiDescription operation will always succeeded even if resource or permission doesn't exist before
  * @apiGroup ACL
  * @apiUse useToken
@@ -394,7 +416,7 @@ router.get('/role/:roleName/:resource', userController.roleDetailResource)
 router.post('/role/resource/allow', userController.allowRoleToResource)
 
 /**
- * @api {post} user/role/resouce/revoke Revoke resource access from a role
+ * @api {post} api/user/role/resouce/revoke Revoke resource access from a role
  * @apiDescription operation will always succeeded even if permission doesn't has permission before or resource doesn't exist
  * @apiGroup ACL
  * @apiUse useToken
