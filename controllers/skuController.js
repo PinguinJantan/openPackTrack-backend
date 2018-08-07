@@ -7,29 +7,34 @@ module.exports = {
     var result = {
       success: false,
     }
-    models.Sku.create({
-      code: req.body.code,
-      name: req.body.name,
-      categoryId: req.body.categoryId,
-      colorId: req.body.colorId,
-      genderId: req.body.genderId
-    }).then(sku=>{
-      result.success = true
-      result.sku = sku
-      res.json(result)
-    }).catch(err => {
-      console.log('Error when trying to create new SKU : ', err);
-      result.errors = []
-      if (err.errors) {
-        result.errors = err.errors
-      }
-      else if(err.parent) {
-        if (err.parent.code) {
-          result.errors.push({code: err.parent.code, message: 'NOT NULL violation'})
+    if(req.body.code&&req.body.name&&req.body.categoryId&&req.body.colorId&&req.body.genderId){
+      models.Sku.create({
+        code: req.body.code,
+        name: req.body.name,
+        categoryId: req.body.categoryId,
+        colorId: req.body.colorId,
+        genderId: req.body.genderId
+      }).then(sku=>{
+        result.success = true
+        result.sku = sku
+        res.json(result)
+      }).catch(err => {
+        console.log('Error when trying to create new SKU : ', err);
+        result.errors = []
+        if (err.errors) {
+          result.errors = err.errors
         }
-      }
-      res.json(result)
-    })
+        else if(err.parent) {
+          if (err.parent.code) {
+            result.errors.push({code: err.parent.code, message: 'NOT NULL violation'})
+          }
+        }
+        res.status(500).json(result)
+      })
+    }else {
+      result.message = "Invalid Parameter"
+      res.status(412).json(result)
+    }
   },
 
   // paginated all
@@ -88,7 +93,7 @@ module.exports = {
       if (err.errors) {
         result.errors = err.errors
       }
-      res.json(result)
+      res.status(500).json(result)
     })
   },
 
@@ -108,7 +113,7 @@ module.exports = {
     .catch(err=>{
       result.message = ""
       result.errors = err
-      res.json(result)
+      res.status(500).json(result)
     })
   },
 
@@ -228,18 +233,18 @@ module.exports = {
             }
             else {
               result.errors = err
-              res.json(result)
+              res.status(500).json(result)
             }
           })
         }
         else {
           result.message = "SKU not found"
-          res.json(result)
+          res.status(422).json(result)
         }
       })
       .catch(err=>{
         result.errors = err
-        res.json(result)
+        res.status(500).json(result)
       })
     }
     else {

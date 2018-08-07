@@ -9,7 +9,7 @@ module.exports = {
     }
     if (!req.body.name) {
       result.message = "Please don't give blank name"
-      res.json(result)
+      res.status(412).json(result)
     }
     else {
       models.Color.create({
@@ -24,7 +24,7 @@ module.exports = {
           result.message = "Operation failed with error(s)"
           result.errors = err.errors
         }
-        res.json(result)
+        res.status(500).json(result)
       })
     }
   },
@@ -61,7 +61,7 @@ module.exports = {
       if (err.errors) {
         result.errors = err.errors
       }
-      res.json(result)
+      res.status(500).json(result)
     })
   },
 
@@ -72,7 +72,7 @@ module.exports = {
     }
     if (isNaN(req.params.colorId)) {
       result.message = "Color ID must be a number"
-      res.json(result)
+      res.status(412).json(result)
     }
     else {
       models.Color.findById(req.params.colorId)
@@ -83,7 +83,7 @@ module.exports = {
       })
       .catch(err=>{
         result.error = err
-        res.json(result)
+        res.status(500).json(result)
       })
     }
   },
@@ -95,11 +95,11 @@ module.exports = {
     }
     if (!req.body.name) {
       result.message = "Please don't give blank name"
-      res.json(result)
+      res.status(412).json(result)
     }
     else if (isNaN(req.body.id)) {
       result.message = "Color ID must be a number"
-      res.json(result)
+      res.status(412).json(result)
     }
     else {
       var changes = {
@@ -113,7 +113,7 @@ module.exports = {
       .then(color=>{
         if (color[0] == 0) { // if id not found, result will be: [0]
           result.message = "No color with ID " + req.body.id
-          res.json(result)
+          res.status(422).json(result)
         }
         else {
           result.success = true
@@ -126,7 +126,7 @@ module.exports = {
       })
       .catch(err=>{
         result.error = err
-        res.json(result)
+        res.status(500).json(result)
       })
     }
   },
@@ -138,11 +138,11 @@ module.exports = {
     }
     if (!req.body.id) {
       result.message = "Please specify the color ID to be deleted"
-      res.json(result)
+      res.status(412).json(result)
     }
     else if (isNaN(req.body.id)) {
       result.message = "Color ID must be a number"
-      res.json(result)
+      res.status(412).json(result)
     }
     else {
       models.Color.destroy({
@@ -159,8 +159,10 @@ module.exports = {
         if (err.name == "SequelizeForeignKeyConstraintError") {
           result.error = err.name
           result.message = "Color with id " + req.body.id + " is being used. Can't perform delete."
+        }else{
+          result.message=err.message
         }
-        res.json(result)
+        res.status(500).json(result)
       })
     }
   }

@@ -6,21 +6,26 @@ module.exports = {
       success: false,
       warehouse: null
     }
-    models.Warehouse.create({
-      name: req.body.name,
-      address: req.body.address
-    }).then(warehouse=>{
-      result.success = true
-      result.message='Create Success'
-      result.warehouse = warehouse
-      res.json(result)
-    }).catch(err=>{
-      console.log('Error when trying to create new warehouse : ', err)
-      if (err.errors) {
-        result.errors = err.errors
-      }
-      res.json(result)
-    })
+    if(req.body.name&&req.body.address){
+      models.Warehouse.create({
+        name: req.body.name,
+        address: req.body.address
+      }).then(warehouse=>{
+        result.success = true
+        result.message='Create Success'
+        result.warehouse = warehouse
+        res.json(result)
+      }).catch(err=>{
+        console.log('Error when trying to create new warehouse : ', err)
+        if (err.errors) {
+          result.errors = err.errors
+        }
+        res.status(500).json(result)
+      })
+    }else {
+      result.message = "Invalid Parameter"
+      res.status(412).json(result)
+    }
   },
   all: function (req,res) {
     var result={
@@ -37,7 +42,7 @@ module.exports = {
       if (err.errors) {
         result.errors = err.errors
       }
-      res.json(result)
+      res.status(500).json(result)
     })
   },
   detail: function(req,res){

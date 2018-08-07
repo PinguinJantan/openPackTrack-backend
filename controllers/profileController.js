@@ -1,26 +1,31 @@
 let models = require('../models')
 
 module.exports = {
-  create: function(req,res,next){
+  create: function(req,res){
     var result = {
       success : false
     }
-    models.Profile.create({
-      count: req.body.count,
-      cartonId: req.body.cartonId,
-      type: req.body.type
-    }).then(profile=>{
-      result.success= true
-      result.message='Create Success'
-      result.profile=profile
-      res.json(result)
-    }).catch(err=>{
-      console.log(err);
-      if(err.errors){
-        result.message=err.message
-      }
-      res.json(result)
-    })
+    if(req.body.count&&req.body.cartonId&&req.body.type){
+      models.Profile.create({
+        count: req.body.count,
+        cartonId: req.body.cartonId,
+        type: req.body.type
+      }).then(profile=>{
+        result.success= true
+        result.message='Create Success'
+        result.profile=profile
+        res.json(result)
+      }).catch(err=>{
+        console.log(err);
+        if(err.errors){
+          result.message=err.message
+        }
+        res.json(result)
+      })
+    } else {
+      result.message = "Invalid Parameter"
+      res.status(412).json(result)
+    }
   },
 
   all: function(req,res,next){
@@ -37,7 +42,7 @@ module.exports = {
       if (err.errors) {
         result.message = err.errors
       }
-      res.json(result)
+      res.status(500).json(result)
     })
   },
   detail: function(req,res){
@@ -91,17 +96,17 @@ module.exports = {
           .catch(err=>{
             console.log(err);
             result.message=err.message
-            res.json(result)
+            res.status(500).json(result)
           })
         }else{
           result.message='no profile with id '+ req.body.id
-          res.json(result)
+          res.status(412).json(result)
         }
       })
       .catch(err=>{
         console.log(err);
         result.message=err.message
-        res.json(result)
+        res.status(500).json(result)
       })
     }else{
       result.message='invalid Profile ID'
@@ -125,11 +130,11 @@ module.exports = {
             res.json(result)
           }).catch(err=>{
             result.message=err.message
-            res.json(result)
+            res.status(500).json(result)
           })
         }else{
           result.message = 'Profile with ID '+req.body.id+' not found'
-          res.json(result)
+          res.status(412).json(result)
         }
       })
     }else{

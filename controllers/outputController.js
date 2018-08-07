@@ -8,18 +8,24 @@ module.exports = {
       status: "ERROR",
       output: null
     }
-    models.Output.create({
-    deliveryOrderId: req.body.deliveryOrderId,
-    innerId: req.body.innerId
-    }).then(output=>{
-    result.success= true
-    result.status= "OK"
-    result.output= output
-    res.json(result)
-  }).catch(err=>{
-    console.log("Error when trying create new output: ",err);
-    res.json(result)
-  })
+    if (req.body.deliveryOrderId && req.body.innerId){
+      models.Output.create({
+      deliveryOrderId: req.body.deliveryOrderId,
+      innerId: req.body.innerId
+      }).then(output=>{
+      result.success= true
+      result.status= "OK"
+      result.output= output
+      res.json(result)
+    }).catch(err=>{
+      console.log("Error when trying create new output: ",err);
+      result.message=err.message
+      res.status(500).json(result)
+    })
+    }else {
+      result.message = "Invalid Parameter"
+      res.status(412).json(result)
+    }
   },
   all: function(req,res){
     var result={
@@ -38,7 +44,8 @@ module.exports = {
       res.json(result)
     }).catch(err=>{
       console.log("Error when trying show all output: ",err);
-      res.json(result)
+      result.message = err.message
+      res.status(500).json(result)
     })
   }
 
