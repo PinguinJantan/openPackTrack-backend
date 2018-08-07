@@ -3,26 +3,33 @@ const paginate = require('express-paginate');
 let sequelize = require('sequelize');
 let models = require('../models')
 let bulk = require('../modules/bulk')
+let customs = require('../modules/customs')
 
 module.exports = {
   // tambah item baru
-  create: function(req,res,next){
+  create: async function(req,res,next){
     var result = {
       success: false,
       status: "ERROR",
       item: null
     }
-    if(req.body.code&&req.body.sizeId&&req.body.skuId&&req.body.barcode){
+
+    if(req.body.code&&req.body.size&&req.body.skuId&&req.body.barcode){
+      var size = await customs.findOrCreate(
+        models.Size,
+        {name: req.body.size},
+        {name: req.body.size}
+      )
       models.Item.create({
         code: req.body.code,
-        sizeId: req.body.sizeId,
+        sizeId: size.id,
         skuId: req.body.skuId,
         barcode: req.body.barcode
       }).then(item=>{
         result.success = true
         result.status = "OK"
         result.item = item
-        res.json(result)
+        res.status(201).json(result)
       }).catch(err => {
         console.log('Error when trying to create new item : ', err);
         if (err.errors) {
@@ -524,7 +531,8 @@ module.exports = {
                           return {
                             code: itemEntry["Item Code"],
                             sizeId: thisSize[0].id,
-                            skuId: thisSku[0].id
+                            skuId: thisSku[0].id,
+                            barcode: itemEntry["Barcode"]
                           }
                         })
                         var itemCodes = items.map(item=>{

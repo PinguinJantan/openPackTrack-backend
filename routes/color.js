@@ -108,6 +108,38 @@ router.post('/create', colorController.create)
 router.get('/all', colorController.all)
 
 /**
+* @api {get} api/color/list List colors
+* @apiGroup Color
+* @apiUse useToken
+* @apiHeaderExample {json} Header-Example:
+*     {
+*       "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVzSW5NaW51dGVzIjoxNDQwLCJpYXQiOjE1MDcwMzQwNzJ9.je4md5GBuTSFGNivBaT3Ju7-yjVjkVS99WSIiwk7wA4",
+*     }
+* @apiSuccessExample {json} Success
+*     HTTP/1.1 200 OK
+*    {
+  *    "success": true,
+       "colors": [
+          {
+              "id": 1,
+              "name": "Black/White"
+          },
+          {
+              "id": 2,
+              "name": "Red"
+          }
+      ]
+*   }
+* @apiErrorExample {json} Internal Server Error
+*     HTTP/1.1 500 Internal Server Error
+*     {
+*       success: false,
+*       error: {}
+*      }
+**/
+router.get('/list', colorController.list)
+
+/**
  * @api {post} color/update update an exisiting color
  * @apiGroup Color
  * @apiUse useToken

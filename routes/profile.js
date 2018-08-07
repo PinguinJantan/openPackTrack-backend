@@ -57,31 +57,40 @@ router.post('/create',profileController.create)
 *     }
 * @apiSuccessExample {json} Success
 *     HTTP/1.1 200 OK
-*    {
-  *    "success": true,
-       "profile": [
-          {
-              "id": 1,
-              "count": 10,
+*       {
+          "success": true,
+          "profiles": [
+            {
+              "id": 4,
+              "name": "Solid Super STAR",
+              "mixAmount": null,
               "type": "solid",
-              "createdAt": "2018-03-21T14:44:18.006Z",
-              "updatedAt": "2018-03-21T14:44:18.006Z"
-          },
-          {
-              "id": 2,
-              "count": 12,
-              "type": "mix",
-              "createdAt": "2018-03-21T14:45:37.969Z",
-              "updatedAt": "2018-03-21T14:45:37.969Z"
-          }
-      ]
-*   }
+              "createdAt": "2018-07-29T13:03:40.000Z",
+              "updatedAt": "2018-07-29T13:03:40.000Z",
+              "profileItem": [
+                {
+                  "itemId": 10310,
+                  "amount": 12,
+                  "item": {
+                    "skuId": 3308,
+                    "sizeId": 2,
+                    "sku": {
+                      "name": "SUPER STAR B JR"
+                    },
+                    "size": {
+                      "name": "31"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+*       }
 * @apiErrorExample {json} Internal Server Error
 *     HTTP/1.1 500 Internal Server Error
 *     {
 *       success: false,
-*       status: "ERROR",
-*       profile: null
+*       error: {}
 *      }
 **/
 router.get('/list',profileController.all)
@@ -137,10 +146,11 @@ router.post('/update', profileController.update)
 router.delete('/delete', profileController.delete)
 
 /**
- * @api {get} profile/?id=1 Detail profile
+ * @api {delete} profile/:id Detail profile
  * @apiGroup profile
  * @apiUse useToken
  *
+ * @apiParam {integer} id id profile
  * @apiUse successBoolean
  * @apiSuccess {Object} profile profile data
  * @apiSuccessExample {json} success example
@@ -154,12 +164,12 @@ router.delete('/delete', profileController.delete)
                  "updatedAt": "2018-03-21T14:44:18.006Z"
              },
  }
- * @apiErrorExample {json} not found
+ * @apiErrorExample {json} Internal Server Error
  {
     "success": false,
-    "message": "profile not found"
+    "message": "..."
 }
  */
-router.get('/', profileController.detail)
+router.get('/:id', profileController.detail)
 
 module.exports = router;

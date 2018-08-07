@@ -1,40 +1,62 @@
 const paginate = require('express-paginate')
 let sequelize = require('sequelize')
 let models = require('../models')
+let customs = require('../modules/customs')
 
 module.exports = {
-  create: function(req, res, next){
+  create: async function(req, res, next){
     var result = {
       success: false,
     }
-    if(req.body.code&&req.body.name&&req.body.categoryId&&req.body.colorId&&req.body.genderId){
-      models.Sku.create({
-        code: req.body.code,
-        name: req.body.name,
-        categoryId: req.body.categoryId,
-        colorId: req.body.colorId,
-        genderId: req.body.genderId
-      }).then(sku=>{
-        result.success = true
-        result.sku = sku
-        res.json(result)
-      }).catch(err => {
-        console.log('Error when trying to create new SKU : ', err);
-        result.errors = []
-        if (err.errors) {
-          result.errors = err.errors
-        }
-        else if(err.parent) {
-          if (err.parent.code) {
-            result.errors.push({code: err.parent.code, message: 'NOT NULL violation'})
-          }
-        }
-        res.status(500).json(result)
-      })
-    }else {
-      result.message = "Invalid Parameter"
-      res.status(412).json(result)
+
+    var category, color, gender = null
+    try {
+      category = await customs.findOrCreate(
+        models.Category,
+        {name: req.body.category},
+        {name: req.body.category}
+      )
+      console.log(category)
+      color = await customs.findOrCreate(
+        models.Color,
+        {name: req.body.color},
+        {name: req.body.color}
+      )
+      console.log(color)
+      gender = await customs.findOrCreate(
+        models.Gender,
+        {name: req.body.gender},
+        {name: req.body.gender}
+      )
+      console.log(gender)
     }
+    catch (err) {
+      res.json(err)
+      return
+    }
+    models.Sku.create({
+      code: req.body.code,
+      name: req.body.name,
+      categoryId: category.id,
+      colorId: color.id,
+      genderId: gender.id
+    }).then(sku=>{
+      result.success = true
+      result.sku = sku
+      res.json(result)
+    }).catch(err => {
+      console.log('Error when trying to create new SKU : ', err);
+      result.errors = []
+      if (err.errors) {
+        result.errors = err.errors
+      }
+      else if(err.parent) {
+        if (err.parent.code) {
+          result.errors.push({code: err.parent.code, message: 'NOT NULL violation'})
+        }
+      }
+      res.status(500).json(result)
+    })
   },
 
   // paginated all
@@ -103,7 +125,7 @@ module.exports = {
       success: false
     }
     models.Sku.findAll({
-      attributes: ["id", "name"]
+      attributes: ["id", "name", "code"]
     })
     .then(skus=>{
       result.success = true
@@ -167,7 +189,7 @@ module.exports = {
         else {
           result.errors = err
         }
-        res.json(result)
+        res.status(500).json(result)
       })
     }
     else {
@@ -200,7 +222,7 @@ module.exports = {
       })
       .catch(err=>{
         result.errors = err
-        res.json(result)
+        res.status(500).json(result)
       })
     }
     else {

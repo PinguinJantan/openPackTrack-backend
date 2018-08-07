@@ -13,9 +13,9 @@ router.use(aclMiddleware.isAllowedToAccess('item'))
  *
  * @apiParam {Number} code SKU code
  * @apiParam {String} name SKU name
- * @apiParam {Number} categoryId Category ID
- * @apiParam {Number} colorId Color ID
- * @apiParam {Number} genderId Gender ID
+ * @apiParam {Number} category Category
+ * @apiParam {Number} color Color
+ * @apiParam {Number} gender Gender
  * @apiUse successBoolean
  * @apiSuccess {Object} sku new SKU data
  * @apiSuccessExample {json} success example
