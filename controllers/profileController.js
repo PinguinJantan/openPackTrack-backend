@@ -1,6 +1,7 @@
 let models = require('../models')
 
 module.exports = {
+
   //TODO: sesuaikan dengan model baru
   create: async function(req,res,next){
     var result = {
@@ -95,7 +96,7 @@ module.exports = {
       if (err.errors) {
         result.error = err.errors
       }
-      res.json(result)
+      res.status(500).json(result)
     })
   },
   detail: function(req,res){
@@ -142,6 +143,7 @@ module.exports = {
     let result={
       success: false
     }
+
     // if(parseInt(req.body.id)== req.body.id){
     //   models.Profile.findById(req.body.id)
     //   .then(profile=>{
@@ -200,11 +202,11 @@ module.exports = {
             res.json(result)
           }).catch(err=>{
             result.message=err.message
-            res.json(result)
+            res.status(500).json(result)
           })
         }else{
           result.message = 'Profile with ID '+req.body.id+' not found'
-          res.json(result)
+          res.status(412).json(result)
         }
       })
     }else{

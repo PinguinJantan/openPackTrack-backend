@@ -13,6 +13,7 @@ module.exports = {
       status: "ERROR",
       item: null
     }
+
     if(req.body.code&&req.body.size&&req.body.skuId&&req.body.barcode){
       var size = await customs.findOrCreate(
         models.Size,
@@ -40,7 +41,6 @@ module.exports = {
       result.message = 'missing parameters'
       res.status(412).json(result)
     }
-
   },
 
   // ambil semua item
@@ -82,7 +82,7 @@ module.exports = {
       if (err.errors) {
         result.errors = err.errors
       }
-      res.json(result)
+      res.status(500).json(result)
     })
   },
 
@@ -193,7 +193,7 @@ module.exports = {
       if (err.errors) {
         result.errors = err.errors
       }
-      res.json(result)
+      res.status(500).json(result)
     })
   },
 
@@ -262,7 +262,7 @@ module.exports = {
       else {
         result.success = true
         result.message = "Item not found"
-        res.json(result)
+        res.status(412).json(result)
       }
     })
     .catch(err=>{
@@ -270,7 +270,7 @@ module.exports = {
       if (err.errors) {
         result.errors = err.errors
       }
-      res.json(result)
+      res.status(500).json(result)
     })
   },
 
@@ -307,17 +307,17 @@ module.exports = {
         else {
           result.status = "NOT FOUND"
           result.itemId = parseInt(req.body.id)
-          res.json(result)
+          res.status(412).json(result)
         }
       })
       .catch(err=>{
         result.errors = err
-        res.json(result)
+        res.status(500).json(result)
       })
     }
     else {
       result.message = "parameter kurang benar"
-      res.json(result)
+      res.status(422).json(result)
     }
   },
 
@@ -344,7 +344,7 @@ module.exports = {
         }
         else {
           result.status = "NOT FOUND"
-          res.json(result)
+          res.status(422).json(result)
         }
       })
       .catch(err=>{
@@ -354,7 +354,7 @@ module.exports = {
         else {
           result.errors = err
         }
-        res.json(result)
+        res.status(500).json(result)
       })
     }
   },
@@ -374,7 +374,6 @@ module.exports = {
     var result = {
       success: false
     }
-    console.log(req);
     if (req.file) {
       let fs = require('fs');
       let papa = require('papaparse');
@@ -674,7 +673,7 @@ module.exports = {
       else {
         result.errors = err
       }
-      res.json(result)
+      res.status(500).json(result)
     })
   }
 

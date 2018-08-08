@@ -12,22 +12,27 @@ module.exports = {
       status: "ERROR",
       carton: null
     }
-    models.Carton.create({
-      barcode: req.body.barcode,
-      warehouseId: req.body.warehouseId,
-      profileId: req.body.profileId
-    }).then(carton => {
-      result.success = true
-      result.status = "OK"
-      result.carton = carton
-      res.json(result)
-    }).catch(err => {
-      console.log('Error when trying to create new carton : ', err)
-      if (err.errors) {
-        result.errors = err.errors
-      }
-      res.json(result)
-    })
+    if (req.body.barcode && req.body.warehouseId && req.body.profileId){
+      models.Carton.create({
+        barcode: req.body.barcode,
+        warehouseId: req.body.warehouseId,
+        profileId: req.body.profileId
+      }).then(carton => {
+        result.success = true
+        result.status = "OK"
+        result.carton = carton
+        res.json(result)
+      }).catch(err => {
+        console.log('Error when trying to create new carton : ', err)
+        if (err.errors) {
+          result.errors = err.errors
+        }
+        res.status(500).json(result)
+      })
+    }else {
+      result.message = "Invalid Parameter"
+      res.status(412).json(result)
+    }
   },
   all: function(req, res) {
     var result = {
@@ -48,7 +53,6 @@ module.exports = {
       req.query.search = ''
     }
     var text = req.query.search
-    console.log(req.query);
     models.Carton.findAndCountAll({
         include: [{
             model: models.Profile,
@@ -107,7 +111,7 @@ module.exports = {
         if (err.message) {
           result.message = err.message
         }
-        res.json(result)
+        res.status(500).json(result)
       })
   },
 
@@ -137,7 +141,7 @@ module.exports = {
         } else {
           result.error = err
         }
-        res.json(result)
+        res.status(500).json(result)
       })
   },
 
@@ -165,7 +169,7 @@ module.exports = {
         } else {
           result.errors = err
         }
-        res.json(result)
+        res.status(500).json(result)
       })
   },
   repack: function(req, res) {
@@ -174,7 +178,7 @@ module.exports = {
     }
     if (req.body.barcode && req.body.warehouseId && req.body.profileId && req.body.repackCartonId) {
       models.sequelize.transaction({
-        deferrable: sequelize.Deferrable.SET_DEFERRED
+        deferrable: sequelize.Deferrable.SET_DEFERRED(['Inners_cartonId_fkey'])
       }).then(t=>{
         return models.Carton.create({
           barcode: req.body.barcode,
@@ -213,8 +217,11 @@ module.exports = {
               })
               console.log('disini4');
             } else {
-              return Promise.reject({message:'inner more than 12'})
+              return Promise.reject({message:'inner more than 12'}, {
+                transaction: t
+              })
             }
+            
           })
         })
       }).then(inners => {
@@ -224,7 +231,7 @@ module.exports = {
       }).catch((err) => {
         console.log(err);
         result.message = err.message
-        res.json(result)
+        res.status(500).json(result)
       })
     } else {
       result.message = 'required parameters'

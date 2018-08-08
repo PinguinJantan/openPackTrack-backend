@@ -53,33 +53,38 @@ module.exports = {
         warehouseId: null
       }
     }
-    models.User.create({
-      name: req.body.name,
-      email: req.body.email,
-      username: req.body.username,
-      warehouseId: req.body.warehouseId,
-      identityNumber: req.body.identityNumber,
-      password: passwordData.hash,
-      salt: passwordData.salt
-    }).then(user => {
-      result.success = true
-      result.status = "OK"
-      result.user.id = user.id
-      result.user.username = user.username
-      result.user.name = user.name
-      result.user.identityNumber = user.identityNumber
-      result.user.email = user.email
-      result.user.updatedAt = user.updatedAt
-      result.user.createdAt = user.createdAt
-      result.user.warehouseId = user.warehouseId
-      res.json(result)
-    }).catch(err => {
-      console.log('Error when trying to register : ', err);
-      if (err.errors) {
-        result.errors = err.errors
-      }
-      res.json(result)
-    })
+    if(req.body.name&&req.body.email&&req.body.username&&req.body.warehouseId&&req.body.identityNumber){
+      models.User.create({
+        name: req.body.name,
+        email: req.body.email,
+        username: req.body.username,
+        warehouseId: req.body.warehouseId,
+        identityNumber: req.body.identityNumber,
+        password: passwordData.hash,
+        salt: passwordData.salt
+      }).then(user => {
+        result.success = true
+        result.status = "OK"
+        result.user.id = user.id
+        result.user.username = user.username
+        result.user.name = user.name
+        result.user.identityNumber = user.identityNumber
+        result.user.email = user.email
+        result.user.updatedAt = user.updatedAt
+        result.user.createdAt = user.createdAt
+        result.user.warehouseId = user.warehouseId
+        res.json(result)
+      }).catch(err => {
+        console.log('Error when trying to register : ', err);
+        if (err.errors) {
+          result.errors = err.errors
+        }
+        res.status(400).json(result)
+      })
+    } else {
+      result.message = "Invalid Parameter"
+      res.status(412).json(result)
+    }
   },
 
   // masuk ke sistem sebagai suatu user
@@ -93,46 +98,50 @@ module.exports = {
         token: null
       }
     }
-    models.User.findOne({
-      where: {
-        username: req.body.username
-      },
-    }).then(user => {
-      // console.log(user);
-      if(!user){
-        result.success = false
-        result.status = "ERROR"
-        result.message = 'Authentication failed. User not found.'
-        res.json(result)
-      }else if (user) {
-        let reqPasswordData = hashPassword(req.body.password, user.salt);
-        if(user.password != reqPasswordData){
+    if(req.body.username&&req.body.password){
+      models.User.findOne({
+        where: {
+          username: req.body.username
+        },
+      }).then(user => {
+        // console.log(user);
+        if(!user){
           result.success = false
           result.status = "ERROR"
-          result.message = 'Authentication failed. Wrong password.'
-          res.json(result)
-        }else {
-          var secret = req.app.get('superSecret')
-          var token = jwt.sign({userId: user.id }, secret, { expiresIn: '1d'});
-          console.log(token);
-          result.success = true
-          result.status = "OK"
-          // result.message = 'Login success boskuh'
-          result.user.name = user.name
-          result.user.username = user.username
-          result.user.warehouseId = user.warehouseId
-          result.user.token = token
-          result.user.expiresAt = Math.floor((new Date).getTime() / 1000) + (60 * 60 * 24)
-          res.json(result)
+          result.message = 'Authentication failed. User not found.'
+          res.status(401).json(result)
+        }else if (user) {
+          let reqPasswordData = hashPassword(req.body.password, user.salt);
+          if(user.password != reqPasswordData){
+            result.success = false
+            result.status = "ERROR"
+            result.message = 'Authentication failed. Wrong password.'
+            res.status(401).json(result)
+          }else {
+            var secret = req.app.get('superSecret')
+            var token = jwt.sign({userId: user.id }, secret, { expiresIn: '1d'});
+            console.log(token);
+            result.success = true
+            result.status = "OK"
+            result.user.name = user.name
+            result.user.username = user.username
+            result.user.warehouseId = user.warehouseId
+            result.user.token = token
+            result.user.expiresAt = Math.floor((new Date).getTime() / 1000) + (60 * 60 * 24)
+            res.json(result)
+          }
         }
-      }
-    }).catch(err => {
-      console.log('Error when trying to login : ', err);
-      result.success = false
-      result.status = "ERROR"
-      result.message = err.message
-      res.json(result)
-    })
+      }).catch(err => {
+        console.log('Error when trying to login : ', err);
+        result.success = false
+        result.status = "ERROR"
+        result.message = err.message
+        res.status(500).json(result)
+      })
+    } else {
+      result.message = "Invalid Parameter"
+      res.status(412).json(result)
+    }
   },
 
   ping: function (req, res) {
