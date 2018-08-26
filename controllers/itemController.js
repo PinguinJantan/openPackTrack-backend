@@ -275,7 +275,7 @@ module.exports = {
   },
 
   // update sebuah item
-  update: function(req, res, next){
+  update: async function(req, res, next){
     var result = {
       success: false,
       status: "ERROR",
@@ -285,13 +285,20 @@ module.exports = {
     // catatan: parseInt("5aaa") = 5
     if (parseInt(req.body.id) == req.body.id
         && req.body.code
-        && req.body.sizeId
+        && req.body.barcode
+        && req.body.size
         && req.body.skuId) {
+      var size = customs.findOrCreate(
+        models.Size,
+        {name: req.body.size},
+        {name: req.body.size}
+      )
       models.Item.findById(req.body.id)
       .then(item=>{
         if (item) {
           item.code = req.body.code
-          item.sizeId = req.body.sizeId
+          item.barcode = req.body.barcode
+          item.sizeId = size.id
           item.skuId = req.body.skuId
           item.save().then(()=>{
             result.success = true
