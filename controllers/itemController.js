@@ -94,16 +94,34 @@ module.exports = {
       pagination: null,
       item: null
     }
-    var allowedSort = ['updatedAt', 'code', 'name']
-    if (allowedSort.indexOf(req.query.sortBy) == -1) {
-      req.query.sortBy = 'updatedAt'
-    }
+    var ordering = []
     var allowedDirection = ['ASC', 'DESC']
     if (req.query.sortDirection) {
       req.query.sortDirection = req.query.sortDirection.toUpperCase()
     }
     if (allowedDirection.indexOf(req.query.sortDirection) == -1) {
       req.query.sortDirection = 'ASC'
+    }
+    var allowedSort = ['updatedAt', 'code', 'sku.name', 'sku.code', 'sku.color', 'size']
+    if (allowedSort.indexOf(req.query.sortBy) == -1) {
+      ordering = [['code', req.query.sortDirection]]
+    }
+    else {
+      switch (req.query.sortBy) {
+        case 'sku.name':
+        case 'sku.code':
+          ordering = [[sequelize.col(req.query.sortBy), req.query.sortDirection]]
+          break
+        case 'sku.color':
+          ordering = [[sequelize.col('sku->color.name'), req.query.sortDirection]]
+          break
+        case 'size':
+          ordering = [[sequelize.col('size.name'), req.query.sortDirection]]
+          break
+        default:
+          ordering = [[req.query.sortBy, req.query.sortDirection]]
+          break
+      }
     }
     if (req.query.search == null) {
       req.query.search = ''
@@ -119,6 +137,7 @@ module.exports = {
           sequelize.where(sequelize.col('sku.name'), { $ilike: `%${text}%`}),
           sequelize.where(sequelize.col('Item.code'), { $ilike: `%${text}%`}),
           sequelize.where(sequelize.col('sku->color.name'), { $ilike: `%${text}%`}),
+          sequelize.where(sequelize.col('sku->category.name'), { $ilike: `%${text}%`}),
         ]
       },
       include: [
@@ -157,7 +176,7 @@ module.exports = {
       ],
       limit: req.query.limit,
       offset: req.skip,
-      order: [[req.query.sortBy, req.query.sortDirection]]
+      order: ordering
       }
     )
     .then(data=>{
