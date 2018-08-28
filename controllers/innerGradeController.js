@@ -7,20 +7,25 @@ module.exports = {
       status: "ERROR",
       innerGrade: null
     }
-    models.InnerGrade.create({
-      name: req.body.name
-    }).then(innerGrade=>{
-      result.success = true
-      result.status = "OK"
-      result.innerGrade = innerGrade
-      res.json(result)
-    }).catch(err=>{
-      console.log('Error when trying to create new innerGrade : ', err)
-      if (err.errors) {
-        result.errors = err.errors
-      }
-      res.json(result)
-    })
+    if (req.body.name){
+      models.InnerGrade.create({
+        name: req.body.name
+      }).then(innerGrade=>{
+        result.success = true
+        result.status = "OK"
+        result.innerGrade = innerGrade
+        res.json(result)
+      }).catch(err=>{
+        console.log('Error when trying to create new innerGrade : ', err)
+        if (err.errors) {
+          result.errors = err.errors
+        }
+        res.status(500).json(result)
+      })
+    }else {
+      result.message = "Invalid Parameter"
+      res.status(412).json(result)
+    }
   },
   all : function (req,res) {
     var result= {
@@ -36,6 +41,10 @@ module.exports = {
       res.json(result)
     }).catch(err=>{
       console.log("Error when trying to show all innerGrade: ", err);
+      if (err.errors) {
+        result.errors = err.errors
+      }
+      res.status(500).json(result)
     })
   },
   detail: function(req,res){
@@ -52,7 +61,7 @@ module.exports = {
         res.json(result)
       }).catch(err=>{
         result.errors=err.message
-        res.json(result)
+        res.status(500).json(result)
       })
     }else{
       result.message='required parameters'
@@ -76,7 +85,7 @@ module.exports = {
           }).catch((err) => {
             console.log(err);
             result.message=err.message
-            res.json(result)
+            res.status(500).json(result)
           })
       })
     }else{
@@ -99,11 +108,11 @@ module.exports = {
             res.json(result)
           }).catch(err=>{
             result.message=err.message
-            res.json(result)
+            res.status(500).json(result)
           })
         }else{
           result.message='warehouse with id '+req.body.id+'not found'
-          res.json(result)
+          res.status(412).json(result)
         }
       })
     }else{

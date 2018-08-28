@@ -9,7 +9,7 @@ module.exports = {
     }
     if (!req.body.name) {
       result.message = "Please don't give blank size"
-      res.json(result)
+      res.status(412).json(result)
     }
     else {
       models.Size.create({name: req.body.name})
@@ -36,8 +36,6 @@ module.exports = {
     }
     models.Size.findAll()
     .then(data=>{
-      console.log(data);
-      
       var sizeCount = data.length
       var sizes = data
       result.success = true
@@ -49,7 +47,7 @@ module.exports = {
       if (err.errors) {
         result.errors = err.errors
       }
-      res.json(result)
+      res.status(500).json(result)
     })
   },
 
@@ -78,7 +76,7 @@ module.exports = {
       .then(size=>{
         if (size[0] == 0) { // if id not found, result will be: [0]
           result.message = "No size with ID " + req.body.id
-          res.json(result)
+          res.status(422).json(result)
         }
         else {
           result.success = true
@@ -93,7 +91,7 @@ module.exports = {
         // todo: give a message
         // result.message = ""
         result.error = err
-        res.json(result)
+        res.status(500).json(result)
       })
     }
   },
@@ -105,11 +103,11 @@ module.exports = {
     }
     if (!req.body.id) {
       result.message = "Please specify the size ID to be deleted"
-      res.json(result)
+      res.status(412).json(result)
     }
     else if (isNaN(req.body.id)) {
       result.message = "Size ID must be a number"
-      res.json(result)
+      res.status(412).json(result)
     }
     else {
       models.Size.destroy({
@@ -127,7 +125,7 @@ module.exports = {
           result.error = err.name
           result.message = "Size with id " + req.body.id + " is being used. Can't perform delete."
         }
-        res.json(result)
+        res.status(500).json(result)
       })
     }
   },
@@ -139,7 +137,7 @@ module.exports = {
     }
     if (isNaN(req.params.sizeId)) {
       result.message = "Size ID must be a number"
-      res.json(result)
+      res.status(412).json(result)
     }
     else {
       models.Size.findById(req.params.sizeId)
@@ -151,7 +149,7 @@ module.exports = {
       .catch(err=>{
         // todo: add message
         result.error = err
-        res.json(result)
+        res.status(500).json(result)
       })
     }
   },
@@ -172,7 +170,7 @@ module.exports = {
     .catch(err=>{
       result.message = ""
       result.errors = err
-      res.json(result)
+      res.status(500).json(result)
     })
   },
 

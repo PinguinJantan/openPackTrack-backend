@@ -5,19 +5,24 @@ module.exports = {
     var result = {
       success : false
     }
-    models.Category.create({
-      name: req.body.name
-    }).then(category =>{
-      result.success = true
-      result.category = category
-      res.json(result)
-    }).catch(err=>{
-      console.log('Error when trying to create new item : ', err);
-      if (err.errors) {
-        result.errors = err.errors
-      }
-      res.json(result)
-    })
+    if(req.body.name){
+      models.Category.create({
+        name: req.body.name
+      }).then(category =>{
+        result.success = true
+        result.category = category
+        res.json(result)
+      }).catch(err=>{
+        console.log('Error when trying to create new item : ', err);
+        if (err.errors) {
+          result.errors = err.errors
+        }
+        res.status(500).json(result)
+      })
+    }else{
+       result.message = "invalid parameter"
+       res.status(412).json(result)
+    }
   },
 
   all: function(req,res,next){
@@ -34,7 +39,7 @@ module.exports = {
       if (err.errors) {
         result.message = err.errors
       }
-      res.json(result)
+      res.status(500).json(result)
     })
   },
 
@@ -54,7 +59,7 @@ module.exports = {
       })
       .catch(err=>{
         result.errors = err
-        res.json(result)
+        res.status(500).json(result)
       })
     }
     else {
@@ -84,13 +89,13 @@ module.exports = {
             else {
               result.errors = err
             }
-            res.json(result)
+            res.status(500).json(result)
           })
         }
         else {
           result.message = "no Category with id " + req.body.id
           result.itemId = parseInt(req.body.id)
-          res.json(result)
+          res.status(412).json(result)
         }
       })
       .catch(err=>{
@@ -100,7 +105,7 @@ module.exports = {
         else {
           result.errors = err
         }
-        res.json(result)
+        res.status(500).json(result)
       })
     }
     else {
@@ -128,17 +133,17 @@ module.exports = {
           .catch(err=>{
             if (err.name == "SequelizeForeignKeyConstraintError") {
               result.message = "Foreign Key constraint error"
-              res.json(result)
+              res.status(500).json(result)
             }
             else {
               result.errors = err
-              res.json(result)
+              res.status(500).json(result)
             }
           })
         }
         else {
           result.message = "Category not found"
-          res.json(result)
+          res.status(422).json(result)
         }
       })
       .catch(err=>{

@@ -8,6 +8,7 @@ module.exports = {
     var result = {
       success: false,
     }
+
     var category, color, gender = null
     try {
       category = await customs.findOrCreate(
@@ -114,7 +115,7 @@ module.exports = {
       if (err.errors) {
         result.errors = err.errors
       }
-      res.json(result)
+      res.status(500).json(result)
     })
   },
 
@@ -254,13 +255,13 @@ module.exports = {
             }
             else {
               result.errors = err
-              res.json(result)
+              res.status(500).json(result)
             }
           })
         }
         else {
           result.message = "SKU not found"
-          res.json(result)
+          res.status(422).json(result)
         }
       })
       .catch(err=>{

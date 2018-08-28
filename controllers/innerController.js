@@ -9,28 +9,33 @@ module.exports = {
       status: "ERROR",
       inner: null,
     }
-    let isInStok = parseInt(req.body.isInStok)
-
-    models.Inner.create({
-      barcode: req.body.barcode,
-      itemId: req.body.itemId,
-      cartonId: req.body.cartonId,
-      isInStok: isInStok,
-      gradeId: req.body.gradeId,
-      sourceId: req.body.sourceId
-    }).then(inner=>{
-      result.success = true
-      result.status = "OK"
-      result.inner = inner
-      res.json(result)
-    }).catch(err=>{
-      if (err.errors) {
-        result.errors = err.errors
-      }
-      result.message=err.message
-      res.json(result)
-      console.log('Error when trying to create new inner : ', err)
-    })
+    if(req.body.barcode&&req.body.itemId&&req.body.cartonId&&req.body.isInStok&&req.body.gradeId&&req.body.sourceId){
+      let isInStok = parseInt(req.body.isInStok)
+  
+      models.Inner.create({
+        barcode: req.body.barcode,
+        itemId: req.body.itemId,
+        cartonId: req.body.cartonId,
+        isInStok: isInStok,
+        gradeId: req.body.gradeId,
+        sourceId: req.body.sourceId
+      }).then(inner=>{
+        result.success = true
+        result.status = "OK"
+        result.inner = inner
+        res.json(result)
+      }).catch(err=>{
+        if (err.errors) {
+          result.errors = err.errors
+        }
+        result.message=err.message
+        res.status(500).json(result)
+        console.log('Error when trying to create new inner : ', err)
+      })
+    } else {
+      result.message = "invalid parameter"
+      res.status(412).json(result)
+    }
   },
 
   all: function (req,res) {
@@ -196,7 +201,7 @@ module.exports = {
       else {
         result.errors = err
       }
-      res.json(result)
+      res.status(500).json(result)
     })
   },
 
@@ -256,7 +261,7 @@ module.exports = {
       else {
         result.errors = err
       }
-      res.json(result)
+      res.status(500).json(result)
     })
   },
 
@@ -392,15 +397,14 @@ module.exports = {
           else{
             result.errors = err
           }
-          res.json(result)
+          res.status(500).json(result)
         })
       }
       catch(err){
         result.message = "Inner Barcodes must be a valid JSON array"
         res.status(412).json(result)
       }
-    }
-    else {
+    } else {
       result.message = "Invalid Parameter"
       res.status(412).json(result)
     }

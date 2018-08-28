@@ -7,20 +7,25 @@ module.exports = {
       status: "ERROR",
       innerDeliveryOrder: null
     }
-    models.InnerDeliveryOrder.create({
-      quantity: req.body.quantity,
-      innerId: req.body.innerId,
-      deliveryOrderId: req.body.deliveryOrderId
-    }).then(innerDeliveryOrder=>{
-      result.success= true
-      result.status= "OK"
-      result.innerDeliveryOrder= innerDeliveryOrder
-      res.json(result)
-    }).catch(err=>{
-      result.message=err.message
-      res.json(result)
-      console.log("Error when trying create new innerDeliveryOrder: ",err);
-    })
+    if (req.body.quantity && req.body.innerId && req.body.deliveryOrderId){
+      models.InnerDeliveryOrder.create({
+        quantity: req.body.quantity,
+        innerId: req.body.innerId,
+        deliveryOrderId: req.body.deliveryOrderId
+      }).then(innerDeliveryOrder=>{
+        result.success= true
+        result.status= "OK"
+        result.innerDeliveryOrder= innerDeliveryOrder
+        res.json(result)
+      }).catch(err=>{
+        result.message=err.message
+        res.status(500).json(result)
+        console.log("Error when trying create new innerDeliveryOrder: ",err);
+      })
+    } else {
+      result.message = "Invalid Parameter"
+      res.status(412).json(result)
+    }
   },
   all: function(req,res){
     var result={
@@ -39,7 +44,7 @@ module.exports = {
       res.json(result)
     }).catch(err=>{
       result.message=err.message
-      res.json(result)
+      res.status(500).json(result)
       console.log("Error when trying create new innerDeliveryOrder: ",err);
     })
   }

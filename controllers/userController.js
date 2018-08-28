@@ -126,7 +126,7 @@ module.exports = {
       else {
         result.errors = err
       }
-      res.json(result)
+      res.status(500).json(result)
     })
   },
 
@@ -174,7 +174,7 @@ module.exports = {
       }
       else {
         result.message = "User " + req.params.username + " not found"
-        res.json(result)
+        res.status(422).json(result)
       }
     })
   },
@@ -207,12 +207,12 @@ module.exports = {
         else {
           result.errors = err
         }
-        res.json(result)
+        res.status(500).json(result)
       })
     }
     else {
       result.message = 'no username provided'
-      res.json(result)
+      res.status(412).json(result)
     }
   },
 
@@ -247,12 +247,12 @@ module.exports = {
         else {
           result.errors = err
         }
-        res.json(result)
+        res.status(500).json(result)
       })
     }
     else {
       result.message = 'no username provided'
-      res.json(result)
+      res.status(412).json(result)
     }
   },
 
@@ -442,7 +442,7 @@ module.exports = {
         }
         else {
           result.message = "Resource " + req.params.resource + " not found or no access permission for " + req.params.roleName
-          res.json(result)
+          res.status(422).json(result)
         }
       }
     })
@@ -513,7 +513,7 @@ module.exports = {
           })
         }
         else {
-          res.json({
+          res.status(422).json({
             success: false,
             message: "User not found"
           })
@@ -521,7 +521,7 @@ module.exports = {
       })
     }
     else {
-      res.json({
+      res.status(412).json({
         success: false,
         message: "missing parameter(s)",
       })
@@ -569,7 +569,7 @@ module.exports = {
               }
             })
           } catch (e) {
-            res.json({
+            res.status(422).json({
               success: false,
               message: "wrong permission format"
             })
@@ -578,7 +578,7 @@ module.exports = {
       })
     }
     else {
-      res.json({
+      res.status(412).json({
         success: false,
         message: "incomplete inputs",
         data: {
@@ -609,7 +609,7 @@ module.exports = {
             })
           }
           else if (Object.keys(resources).length === 0) {
-            res.json({
+            res.status(422).json({
               success: false,
               message: "Role " + req.body.role + " not found."
             })
@@ -638,7 +638,7 @@ module.exports = {
                 }
               })
             } catch (e) {
-              res.json({
+              res.status(412).json({
                 success: false,
                 message: "wrong permission format"
               })
@@ -648,7 +648,7 @@ module.exports = {
       }
     }
     else {
-      res.json({
+      res.status(412).json({
         success: false,
         message: "incomplete inputs",
         data: {
@@ -665,7 +665,6 @@ module.exports = {
       success: false
     }
     var secret = req.app.get('superSecret')
-    console.log(req.decoded.userId)
     var token = jwt.sign({userId: req.decoded.userId }, secret, { expiresIn: '1d'});
     if (token) {
       result.success = true
