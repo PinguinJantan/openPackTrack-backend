@@ -353,6 +353,7 @@ module.exports = {
       status: "ERROR"
     }
     if (parseInt(req.body.id) == req.body.id) {
+      console.log(req.body.id);
       models.Item.findById(req.body.id)
       .then(item=>{
         if (item) {
@@ -365,23 +366,23 @@ module.exports = {
             res.json(result)
           })
           .catch(err=>{
-            res.json(err)
+            result.message = err.message
+            res.status(500).json(result)
           })
         }
         else {
           result.status = "NOT FOUND"
-          res.json(result)
+          res.status(404).json(result)
         }
       })
       .catch(err=>{
-        if (err.errors) {
-          result.errors = err.errors
-        }
-        else {
-          result.errors = err
-        }
+        result.message = err.message
         res.json(result)
       })
+    }
+    else {
+      result.message = 'Invalid ID'
+      res.status(400).json(result)
     }
   },
 
