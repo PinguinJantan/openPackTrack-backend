@@ -94,16 +94,34 @@ module.exports = {
       pagination: null,
       item: null
     }
-    var allowedSort = ['updatedAt', 'code', 'name']
-    if (allowedSort.indexOf(req.query.sortBy) == -1) {
-      req.query.sortBy = 'updatedAt'
-    }
+    var ordering = []
     var allowedDirection = ['ASC', 'DESC']
     if (req.query.sortDirection) {
       req.query.sortDirection = req.query.sortDirection.toUpperCase()
     }
     if (allowedDirection.indexOf(req.query.sortDirection) == -1) {
       req.query.sortDirection = 'ASC'
+    }
+    var allowedSort = ['updatedAt', 'code', 'sku.name', 'sku.code', 'sku.color', 'size']
+    if (allowedSort.indexOf(req.query.sortBy) == -1) {
+      ordering = [['code', req.query.sortDirection]]
+    }
+    else {
+      switch (req.query.sortBy) {
+        case 'sku.name':
+        case 'sku.code':
+          ordering = [[sequelize.col(req.query.sortBy), req.query.sortDirection]]
+          break
+        case 'sku.color':
+          ordering = [[sequelize.col('sku->color.name'), req.query.sortDirection]]
+          break
+        case 'size':
+          ordering = [[sequelize.col('size.name'), req.query.sortDirection]]
+          break
+        default:
+          ordering = [[req.query.sortBy, req.query.sortDirection]]
+          break
+      }
     }
     if (req.query.search == null) {
       req.query.search = ''
@@ -119,6 +137,7 @@ module.exports = {
           sequelize.where(sequelize.col('sku.name'), { $ilike: `%${text}%`}),
           sequelize.where(sequelize.col('Item.code'), { $ilike: `%${text}%`}),
           sequelize.where(sequelize.col('sku->color.name'), { $ilike: `%${text}%`}),
+          sequelize.where(sequelize.col('sku->category.name'), { $ilike: `%${text}%`}),
         ]
       },
       include: [
@@ -157,7 +176,7 @@ module.exports = {
       ],
       limit: req.query.limit,
       offset: req.skip,
-      order: [[req.query.sortBy, req.query.sortDirection]]
+      order: ordering
       }
     )
     .then(data=>{
@@ -275,7 +294,7 @@ module.exports = {
   },
 
   // update sebuah item
-  update: function(req, res, next){
+  update: async function(req, res, next){
     var result = {
       success: false,
       status: "ERROR",
@@ -285,13 +304,20 @@ module.exports = {
     // catatan: parseInt("5aaa") = 5
     if (parseInt(req.body.id) == req.body.id
         && req.body.code
-        && req.body.sizeId
+        && req.body.barcode
+        && req.body.size
         && req.body.skuId) {
+      var size = customs.findOrCreate(
+        models.Size,
+        {name: req.body.size},
+        {name: req.body.size}
+      )
       models.Item.findById(req.body.id)
       .then(item=>{
         if (item) {
           item.code = req.body.code
-          item.sizeId = req.body.sizeId
+          item.barcode = req.body.barcode
+          item.sizeId = size.id
           item.skuId = req.body.skuId
           item.save().then(()=>{
             result.success = true
@@ -327,6 +353,7 @@ module.exports = {
       status: "ERROR"
     }
     if (parseInt(req.body.id) == req.body.id) {
+      console.log(req.body.id);
       models.Item.findById(req.body.id)
       .then(item=>{
         if (item) {
@@ -339,23 +366,23 @@ module.exports = {
             res.json(result)
           })
           .catch(err=>{
-            res.json(err)
+            result.message = err.message
+            res.status(500).json(result)
           })
         }
         else {
           result.status = "NOT FOUND"
-          res.status(422).json(result)
+          res.status(404).json(result)
         }
       })
       .catch(err=>{
-        if (err.errors) {
-          result.errors = err.errors
-        }
-        else {
-          result.errors = err
-        }
+        result.message = err.message
         res.status(500).json(result)
       })
+    }
+    else {
+      result.message = 'Invalid ID'
+      res.status(400).json(result)
     }
   },
 
