@@ -352,9 +352,9 @@ module.exports = {
       success: false,
       status: "ERROR"
     }
-    if (parseInt(req.body.id) == req.body.id) {
-      console.log(req.body.id);
-      models.Item.findById(req.body.id)
+    if (parseInt(req.params.id) == req.params.id) {
+      console.log(req.params.id);
+      models.Item.findById(req.params.id)
       .then(item=>{
         if (item) {
           item.destroy()

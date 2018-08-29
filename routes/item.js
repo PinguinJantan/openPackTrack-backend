@@ -195,6 +195,6 @@ router.post('/update', itemController.update)
 
 router.post('/import', upload.single('ItemCSV'), itemController.import)
 
-router.delete('/delete', itemController.delete)
+router.delete('/delete/:id', itemController.delete)
 
 module.exports = router;
