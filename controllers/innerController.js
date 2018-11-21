@@ -278,21 +278,33 @@ module.exports = {
           if (!profile) {
             return Promise.reject({message: "Profile not found"})
           }
-          else if (profile.count != innerCodes.length) {
-            return Promise.reject({message: "Expected " + profile.count + " inners"})
+          else if (profile.type === 'mix') {
+            if (innerCodes.length != profile.mixAmount){
+              return Promise.reject({message: "Expected " + profile.count + " inners"})
+            }
+            return true
           }
           else {
-            var theSame = true
-            innerCodes.forEach(inner=>{
-              if (inner.itemCode !== innerCodes[0].itemCode) {
-                theSame = false
-              }
+            let count = 0
+            profile.profileItem.forEach(item => {
+              count += item.amount
             })
-            if (profile.type == 'solid' && !theSame) {
-              return Promise.reject({message: "Expected solid inners"})
+            if (innerCodes.length > count) {
+              return Promise.reject({ message: "Expected " + count + " inners" })
             }
             else {
-              return true
+              var theSame = true
+              innerCodes.forEach(inner => {
+                if (inner.itemCode !== innerCodes[0].itemCode) {
+                  theSame = false
+                }
+              })
+              if (profile.type == 'solid' && !theSame) {
+                return Promise.reject({ message: "Expected solid inners" })
+              }
+              else {
+                return true
+              }
             }
           }
         })

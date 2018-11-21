@@ -154,16 +154,67 @@ router.delete('/delete', profileController.delete)
  * @apiUse successBoolean
  * @apiSuccess {Object} profile profile data
  * @apiSuccessExample {json} success example
- {
-     "success": true,
-     "profile": {
-                 "id": 1,
-                 "count": 10,
-                 "type": "solid",
-                 "createdAt": "2018-03-21T14:44:18.006Z",
-                 "updatedAt": "2018-03-21T14:44:18.006Z"
-             },
- }
+{
+    "success": true,
+    "profile": {
+        "id": 17,
+        "name": "Assort 1",
+        "mixAmount": null,
+        "type": "assort",
+        "createdAt": "2018-08-05T14:03:13.689Z",
+        "updatedAt": "2018-08-05T14:03:13.689Z",
+        "profileItem": [
+            {
+                "id": 8,
+                "itemId": 10314,
+                "amount": 4,
+                "item": {
+                    "id": 10314,
+                    "code": "FGJ01SUPERB35",
+                    "sizeId": 133,
+                    "skuId": 3308,
+                    "barcode": "FGJ01SUPERB35",
+                    "sku": {
+                        "id": 3308,
+                        "code": "FGJ01SUPERB",
+                        "name": "SUPER STAR B JR",
+                        "categoryId": 13,
+                        "colorId": 23,
+                        "genderId": 3
+                    },
+                    "size": {
+                        "id": 133,
+                        "name": "35"
+                    }
+                }
+            },
+            {
+                "id": 7,
+                "itemId": 10310,
+                "amount": 8,
+                "item": {
+                    "id": 10310,
+                    "code": "FGJ01SUPERB31",
+                    "sizeId": 2,
+                    "skuId": 3308,
+                    "barcode": "FGJ01SUPERB31",
+                    "sku": {
+                        "id": 3308,
+                        "code": "FGJ01SUPERB",
+                        "name": "SUPER STAR B JR",
+                        "categoryId": 13,
+                        "colorId": 23,
+                        "genderId": 3
+                    },
+                    "size": {
+                        "id": 2,
+                        "name": "31"
+                    }
+                }
+            }
+        ]
+    }
+}
  * @apiErrorExample {json} Internal Server Error
  {
     "success": false,
