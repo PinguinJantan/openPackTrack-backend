@@ -10,6 +10,9 @@ module.exports = function(sequelize, DataTypes) {
     Item.hasMany(models.Inner,{foreignKey: 'itemId', as:'inner'})
     Item.belongsTo(models.Sku, {foreignKey: 'skuId', as: 'sku'})
     Item.belongsTo(models.Size, {foreignKey: 'sizeId', as: 'size'})
+    Item.hasMany(models.ItemDeliveryOrder, {
+  foreignKey: 'itemId'
+})
   }
   return Item;
 };
