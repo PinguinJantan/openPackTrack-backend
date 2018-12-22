@@ -273,7 +273,12 @@ module.exports = {
     if(req.body.cartonBarcode && req.body.innerCodes && parseInt(req.body.profileId) == req.body.profileId){
       try{
         var innerCodes = JSON.parse(req.body.innerCodes)
-        models.Profile.findById(req.body.profileId)
+        models.Profile.findById(req.body.profileId, {
+          include: [{
+            model: models.ProfileItem,
+            as: 'profileItem'
+          }]
+        })
         .then(profile=>{
           if (!profile) {
             return Promise.reject({message: "Profile not found"})
