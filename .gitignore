@@ -4,6 +4,9 @@ logs
 # apidoc
 doc
 
+# volume docker db
+data
+
 # Runtime data
 pids
 *.pid
