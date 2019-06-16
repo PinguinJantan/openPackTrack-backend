@@ -24,7 +24,7 @@ services:
       - ./data/mongo:/data/mongo
 
   postgres:
-    image: postgres:9.6.2-alpine
+    image: postgres:11-alpine
     ports:
         - 5432:5432
     environment:
