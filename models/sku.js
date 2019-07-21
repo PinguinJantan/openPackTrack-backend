@@ -6,7 +6,10 @@ module.exports = function(sequelize, DataTypes) {
     categoryId: DataTypes.INTEGER,
     colorId: DataTypes.INTEGER,
     genderId: DataTypes.INTEGER
-  }, {});
+  }, {
+    timestamps: true,
+    paranoid: true
+  });
   Sku.associate = function (models) {
     Sku.belongsTo(models.Category, {foreignKey: 'categoryId', as: 'category'})
     Sku.hasMany(models.Item, {foreignKey: 'skuId', as: 'sku'})

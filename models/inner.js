@@ -7,7 +7,10 @@ module.exports = function(sequelize, DataTypes) {
     isInStok: DataTypes.BOOLEAN,
     gradeId: DataTypes.INTEGER,
     sourceId: DataTypes.INTEGER
-  }, {});
+  }, {
+    timestamps: true,
+    paranoid: true,
+  });
   Inner.associate = function (models) {
     Inner.belongsTo(models.Item,{foreignKey: 'itemId', as: 'item'})
     Inner.belongsTo(models.Carton,{foreignKey: 'cartonId', as: 'carton'})

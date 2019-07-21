@@ -4,7 +4,10 @@ module.exports = function(sequelize, DataTypes) {
     barcode: DataTypes.STRING,
     profileId: DataTypes.INTEGER,
     warehouseId: DataTypes.INTEGER
-  }, {});
+  }, {
+    timestamps: true,
+    paranoid: true,
+  });
   Carton.associate = function (models) {
     Carton.belongsTo(models.Warehouse,{foreignKey: 'warehouseId',as: 'warehouse'})
     Carton.hasMany(models.Inner,{foreignKey: 'cartonId',as: 'inner'})
