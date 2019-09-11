@@ -26,9 +26,11 @@
     // ===
 
 let models = require('../models')
+const logger = require('./log');
 
 module.exports = {
-  findOrCreate: function(model, rows, attrs){
+  findOrCreate: function(model, rows, attrs, desc = ''){
+    console.log('rows', rows);
     return Promise.all(rows.map(row=>{
       return model.findOne({
         where: row,
@@ -36,7 +38,20 @@ module.exports = {
       })
       .then(data=>{
         if (!data) {
-          return model.create(row)
+          return model.create(row).then(created => {
+            const { createdAt, updatedAt, ...dataValues } = created.dataValues;
+            logger.logData(
+              {},
+              dataValues,
+              logger.operation.CREATE,
+              model.tableName,
+              dataValues.id,
+              desc || 'bulk findOrCreate',
+              null,
+              null,
+            );
+            return created;
+          })
         }
         else {
           return data.dataValues
@@ -44,7 +59,8 @@ module.exports = {
       })
     }))
   },
-  upsert: function(model, rows, keys, attrs){
+  upsert: function(model, rows, keys, attrs, desc = ''){
+    console.log('rows', rows);
     return Promise.all(rows.map((row, idx)=>{
       return model.findOne({
         where: keys[idx],
@@ -52,13 +68,42 @@ module.exports = {
       })
       .then(data=>{
         if (!data) {
-          return model.create(row)
+          return model.create(row).then(created => {
+            console.log('[created]', created);
+            const { createdAt, updatedAt, ...dataValues } = created.dataValues;
+            logger.logData(
+              {},
+              dataValues,
+              logger.operation.CREATE,
+              model.tableName,
+              dataValues.id,
+              desc || 'bulk upsert create',
+              null,
+              null,
+            );
+            return created;
+          })
         }
         else {
           return model.update(row, {
-            where: keys
+            where: keys,
+            returning: true,
           })
-          .then(affectedRow=>{
+          .then(([affectedRow, rows])=>{
+            rows.forEach(row => {
+              const { createdAt, updatedAt, ...dataValues } = row.dataValues;
+              const { createdAt: createdAt2, updatedAt: updatedAt2, ...prevValues } = data.dataValues;
+              logger.logData(
+                prevValues,
+                dataValues,
+                logger.operation.UPDATE,
+                model.tableName,
+                dataValues.id,
+                desc || 'bulk upsert update',
+                null,
+                null,
+              );
+            })
             return data.dataValues
           })
         }
@@ -66,7 +111,7 @@ module.exports = {
     }))
   },
 
-  itemUpsert: async function(model, rows, keys, attrs){
+  itemUpsert: async function(model, rows, keys, desc = ''){
     var transaction
     try {
       transaction = await models.sequelize.transaction()
@@ -79,7 +124,19 @@ module.exports = {
           })
           if (!rowData) {
             var rowCreated = await model.create(rows[i])
-          }else {
+            // log
+            const { createdAt, updatedAt, ...dataValues } = rowCreated.dataValues;
+            logger.logData(
+              {},
+              dataValues,
+              logger.operation.CREATE,
+              model.tableName,
+              dataValues.id,
+              desc || 'bulk upsert create',
+              null,
+              null,
+            );
+          } else {
             var keyForQuery = ""
             Object.keys(keys[i]).forEach(idx=>{
               keyForQuery += '"' + idx + '"=' + "'" + keys[i][idx] + "'"
@@ -87,8 +144,29 @@ module.exports = {
             var query = 'UPDATE "'+ model.getTableName() +'" SET "code" = ?, "sizeId" = ?, "skuId" = ?, "barcode" = ? WHERE ' + keyForQuery + ';'
             var rowUpdated = await models.sequelize.query(query, {
               replacements: [rows[i].code, rows[i].sizeId, rows[i].skuId, rows[i].barcode],
-              type: models.sequelize.QueryTypes.UPDATE
+              type: models.sequelize.QueryTypes.UPDATE,
+              model,
             })
+            const { createdAt, updatedAt, ...prevValues } = rowData.dataValues;
+            const dataValues = {
+              id: prevValues.id,
+              code: rows[i].code,
+              sizeId: rows[i].sizeId,
+              skuId: rows[i].skuId,
+              barcode: rows[i].barcode,
+            }
+            console.log(dataValues, 'prev', prevValues)
+            logger.logData(
+              prevValues,
+              dataValues,
+              logger.operation.UPDATE,
+              model.tableName,
+              dataValues.id,
+              desc || 'bulk upsert update',
+              null,
+              null,
+            );
+            console.log('upd', rowUpdated)
           }
         }catch (e) {
           errors.push(e)

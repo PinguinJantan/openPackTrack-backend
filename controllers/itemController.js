@@ -4,6 +4,7 @@ let sequelize = require('sequelize');
 let models = require('../models')
 let bulk = require('../modules/bulk')
 let customs = require('../modules/customs')
+const logger = require('../modules/log');
 
 module.exports = {
   // tambah item baru
@@ -26,6 +27,17 @@ module.exports = {
         skuId: req.body.skuId,
         barcode: req.body.barcode
       }).then(item=>{
+        const { dataValues } = item;
+        logger.logData(
+          {},
+          dataValues,
+          logger.operation.CREATE,
+          models.Item.tableName,
+          dataValues.id,
+          'add new',
+          null,
+          null,
+        )
         result.success = true
         result.status = "OK"
         result.item = item
@@ -307,7 +319,7 @@ module.exports = {
         && req.body.barcode
         && req.body.size
         && req.body.skuId) {
-      var size = customs.findOrCreate(
+      var size = await customs.findOrCreate(
         models.Size,
         {name: req.body.size},
         {name: req.body.size}
@@ -315,11 +327,23 @@ module.exports = {
       models.Item.findById(req.body.id)
       .then(item=>{
         if (item) {
+          const { updatedAt, createdAt, ...prevValues } = item.dataValues
           item.code = req.body.code
           item.barcode = req.body.barcode
           item.sizeId = size.id
           item.skuId = req.body.skuId
-          item.save().then(()=>{
+          item.save().then((savedItem)=>{
+            const { updatedAt, createdAt, ...dataValues } = savedItem.dataValues;
+            logger.logData(
+              prevValues,
+              dataValues,
+              logger.operation.UPDATE,
+              models.Item.tableName,
+              dataValues.id,
+              'edit',
+              null,
+              null,
+            )
             result.success = true
             result.status = "OK"
             result.item = item
@@ -357,8 +381,19 @@ module.exports = {
       models.Item.findById(req.params.id)
       .then(item=>{
         if (item) {
+          const { updatedAt, createdAt, ...dataValues } = item.dataValues
           item.destroy()
           .then(()=>{
+            logger.logData(
+              dataValues,
+              {},
+              logger.operation.DELETE,
+              models.Item.tableName,
+              dataValues.id,
+              'delete',
+              null,
+              null
+            )
             result.success = true
             result.status = "OK"
             result.message = "Item terhapus"
