@@ -16,13 +16,13 @@ let aclMiddleware = require('../acl/aclMiddleware');
 
 /**
  * @apiDefine useSortDir
- * @apiParam {String} [sortDirection=ASC] sort in ascending or descending. Available: `ASC` and `DESC`
+ * @apiParam (Query string) {String} [sortDirection=ASC] sort in ascending or descending. Available: `ASC` and `DESC`
  */
 
 /**
  * @apiDefine paginationParams
- * @apiParam {Number} [limit=10] limit size object per page
- * @apiParam {Number} [page=1] number of page to display
+ * @apiParam (Query string) {Number} [limit=10] limit size object per page
+ * @apiParam (Query string) {Number} [page=1] number of page to display
  *
  * @apiSuccess {Object} pagination Pagination detail
  */
