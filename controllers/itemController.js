@@ -460,7 +460,7 @@ module.exports = {
           })
           // todo: finish this
           // ALTER SEQUENCE "Sizes_id_seq" RESTART WITH 21;
-          bulk.findOrCreate(models.Size, sizesObjects, ["id", "name"])
+          bulk.findOrCreate(models.Size, sizesObjects, ["id", "name"], 'import from file')
           .then(sizeInstances=>{
             // todo: colors
             var colors = csvResults.data.map((item, idx, array)=>{
@@ -476,7 +476,7 @@ module.exports = {
             var colorsObjects = uniqueColorsArray.map(c=>{
               return {name: c}
             })
-            bulk.findOrCreate(models.Color, colorsObjects, ["id", "name"])
+            bulk.findOrCreate(models.Color, colorsObjects, ["id", "name"], 'import from file')
             .then(colorInstances=>{
               var categories = csvResults.data.map((item, idx, array)=>{
                 if(item["Kategori Code"]){
@@ -491,7 +491,7 @@ module.exports = {
               var categoryObjects = uniqueCategoriesArray.map(c=>{
                 return {name: c}
               })
-              bulk.findOrCreate(models.Category, categoryObjects, ["id", "name"])
+              bulk.findOrCreate(models.Category, categoryObjects, ["id", "name"], 'import from file')
               .then(categoryInstances=>{
                 // todo: sku
                 // https://stackoverflow.com/questions/18773778/create-array-of-unique-objects-by-property
@@ -552,7 +552,7 @@ module.exports = {
                     var skuCodes = skus.map(sku=>{
                       return {code: sku.code}
                     })
-                    bulk.upsert(models.Sku, skus, skuCodes, ["id", "code"])
+                    bulk.upsert(models.Sku, skus, skuCodes, ["id", "code"], 'import from file')
                     .then(skuInstances=>{
                       var uniqueFlags = {}
                       var anyItemEmpty = false
@@ -600,7 +600,7 @@ module.exports = {
                         var itemCodes = items.map(item=>{
                           return {code: item.code}
                         })
-                        bulk.itemUpsert(models.Item, items, itemCodes)
+                        bulk.itemUpsert(models.Item, items, itemCodes, 'import from file')
                         .then(rowProcessed=>{
                           result.success = true
                           result.message = "Imported"
