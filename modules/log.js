@@ -1,5 +1,14 @@
 let models = require('../models');
 
+const isNullOrUndefinedOrNaN = (value) => {
+    if (typeof value === 'null' ||
+        typeof value === 'undefined' ||
+        Number.isNaN(value)) {
+            return true;
+        }
+    return false;
+}
+
 const getJSONDiff = (prev = {}, next = {}) => {
     const diffPrev = {};
     const diffNext = {};
@@ -12,8 +21,26 @@ const getJSONDiff = (prev = {}, next = {}) => {
                 !Array.isArray(next[i]) ||
                 !(JSON.stringify(next[i]) == JSON.stringify(prev[i]))
             ){
-                if (prev[i]) diffPrev[i] = prev[i];
-                if (next[i]) diffNext[i] = next[i];
+                if (!isNullOrUndefinedOrNaN(prev[i]) || !isNullOrUndefinedOrNaN(next[i])
+                ) {
+                    diffPrev[i] = !isNullOrUndefinedOrNaN(prev[i]) ? prev[i] : null;
+                    diffNext[i] = !isNullOrUndefinedOrNaN(next[i]) ? next[i] : null;
+                }
+            }
+        }
+    }
+    for(let i in prev) {
+        if(!next.hasOwnProperty(i) || prev[i] !== next[i]) {
+            if(
+                !Array.isArray(prev[i]) ||
+                !(JSON.stringify(prev[i]) == JSON.stringify(next[i]))
+            ){
+                if ((typeof prev[i] !== 'null') || typeof prev[i] !== 'undefined' || !Number.isNaN(prev[i]) ||
+                    (typeof next[i] !== 'null') || typeof next[i] !== 'undefined' || !Number.isNaN(next[i])
+                ) {
+                    diffPrev[i] = !isNullOrUndefinedOrNaN(prev[i]) ? prev[i] : null;
+                    diffNext[i] = !isNullOrUndefinedOrNaN(next[i]) ? next[i] : null;
+                }
             }
         }
     }
@@ -25,10 +52,6 @@ exports.operation = {
     CREATE: 'create',
     UPDATE: 'update',
     DELETE: 'delete',
-}
-
-exports.resource = {
-    ITEM: 'item',
 }
 
 exports.getJSONDiff = getJSONDiff;

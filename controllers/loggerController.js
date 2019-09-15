@@ -25,21 +25,27 @@ module.exports = {
         if (allowedSort.indexOf(sortBy) < 0) sortBy = allowedSort[0];
         if (allowedDirection.indexOf(sortDirection) < 0) sortDirection = allowedDirection[0];
         const ordering = [[sortBy, sortDirection]];
-        let resourceFilter = [];
-        if (resource || resourceID) {
-            resourceFilter = {
-                $and: [
-                    sequelize.where(
-                        sequelize.fn('lower', sequelize.col('resource')),
-                        resource.toLowerCase(),
-                    ),
-                    sequelize.where(
-                        sequelize.col('resourceID'),
-                        parseInt(resourceID),
-                    ),
-                ]
-            }
+        let conditions = [];
+        if (resource) {
+            conditions = [
+                sequelize.where(
+                    sequelize.fn('lower', sequelize.col('resource')),
+                    resource.toLowerCase(),
+                ),
+            ];
         }
+        if (resource && parseInt(resourceID)) {
+            conditions = [
+                ...conditions,
+                sequelize.where(
+                    sequelize.col('resourceID'),
+                    parseInt(resourceID),
+                ),
+            ]
+        }
+        const resourceFilter = conditions.length > 0 ? {
+            $and: [...conditions],
+        } : {};
         models.Log.findAndCountAll({
             logging: console.log,
             where: {
