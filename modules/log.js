@@ -35,8 +35,7 @@ const getJSONDiff = (prev = {}, next = {}) => {
                 !Array.isArray(prev[i]) ||
                 !(JSON.stringify(prev[i]) == JSON.stringify(next[i]))
             ){
-                if ((typeof prev[i] !== 'null') || typeof prev[i] !== 'undefined' || !Number.isNaN(prev[i]) ||
-                    (typeof next[i] !== 'null') || typeof next[i] !== 'undefined' || !Number.isNaN(next[i])
+                if (!isNullOrUndefinedOrNaN(prev[i]) || !isNullOrUndefinedOrNaN(next[i])
                 ) {
                     diffPrev[i] = !isNullOrUndefinedOrNaN(prev[i]) ? prev[i] : null;
                     diffNext[i] = !isNullOrUndefinedOrNaN(next[i]) ? next[i] : null;
