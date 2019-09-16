@@ -9,7 +9,6 @@ module.exports = function(sequelize, DataTypes) {
     paranoid: true,
   });
   Carton.associate = function (models) {
-    Carton.belongsTo(models.Warehouse,{foreignKey: 'warehouseId',as: 'warehouse'})
     Carton.hasMany(models.Inner,{foreignKey: 'cartonId',as: 'inner'})
     Carton.belongsTo(models.Profile,{foreignKey: 'profileId',as: 'profile'})
   }
