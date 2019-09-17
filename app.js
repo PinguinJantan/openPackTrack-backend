@@ -31,6 +31,7 @@ var warehouse = require('./routes/warehouse');
 var carton = require('./routes/carton');
 var innerGrade = require('./routes/innergrade');
 var innerSource = require('./routes/innersource');
+const logRoute = require('./routes/logger');
 var config = require('./config/config');
 var cors = require('cors')
 
@@ -147,6 +148,7 @@ app.use('/api/carton', carton);
 app.use('/api/retur', retur);
 app.use('/api/output', output);
 app.use('/api/deliveryorder', deliveryOrder);
+app.use('/api/log', logRoute);
 app.use('/auth', auth);
 
 // catch 404 and forward to error handler

@@ -4,6 +4,7 @@ let sequelize = require('sequelize');
 let models = require('../models')
 let bulk = require('../modules/bulk')
 let customs = require('../modules/customs')
+const logger = require('../modules/log');
 
 module.exports = {
   // tambah item baru
@@ -26,6 +27,17 @@ module.exports = {
         skuId: req.body.skuId,
         barcode: req.body.barcode
       }).then(item=>{
+        const { dataValues } = item;
+        logger.logData(
+          {},
+          dataValues,
+          logger.operation.CREATE,
+          models.Item.tableName,
+          dataValues.id,
+          'add new',
+          null,
+          null,
+        )
         result.success = true
         result.status = "OK"
         result.item = item
@@ -307,7 +319,7 @@ module.exports = {
         && req.body.barcode
         && req.body.size
         && req.body.skuId) {
-      var size = customs.findOrCreate(
+      var size = await customs.findOrCreate(
         models.Size,
         {name: req.body.size},
         {name: req.body.size}
@@ -315,11 +327,23 @@ module.exports = {
       models.Item.findById(req.body.id)
       .then(item=>{
         if (item) {
+          const { updatedAt, createdAt, ...prevValues } = item.dataValues
           item.code = req.body.code
           item.barcode = req.body.barcode
           item.sizeId = size.id
           item.skuId = req.body.skuId
-          item.save().then(()=>{
+          item.save().then((savedItem)=>{
+            const { updatedAt, createdAt, ...dataValues } = savedItem.dataValues;
+            logger.logData(
+              prevValues,
+              dataValues,
+              logger.operation.UPDATE,
+              models.Item.tableName,
+              dataValues.id,
+              'edit',
+              null,
+              null,
+            )
             result.success = true
             result.status = "OK"
             result.item = item
@@ -357,8 +381,19 @@ module.exports = {
       models.Item.findById(req.params.id)
       .then(item=>{
         if (item) {
+          const { updatedAt, createdAt, ...dataValues } = item.dataValues
           item.destroy()
           .then(()=>{
+            logger.logData(
+              dataValues,
+              {},
+              logger.operation.DELETE,
+              models.Item.tableName,
+              dataValues.id,
+              'delete',
+              null,
+              null
+            )
             result.success = true
             result.status = "OK"
             result.message = "Item terhapus"
@@ -425,7 +460,7 @@ module.exports = {
           })
           // todo: finish this
           // ALTER SEQUENCE "Sizes_id_seq" RESTART WITH 21;
-          bulk.findOrCreate(models.Size, sizesObjects, ["id", "name"])
+          bulk.findOrCreate(models.Size, sizesObjects, ["id", "name"], 'import from file')
           .then(sizeInstances=>{
             // todo: colors
             var colors = csvResults.data.map((item, idx, array)=>{
@@ -441,7 +476,7 @@ module.exports = {
             var colorsObjects = uniqueColorsArray.map(c=>{
               return {name: c}
             })
-            bulk.findOrCreate(models.Color, colorsObjects, ["id", "name"])
+            bulk.findOrCreate(models.Color, colorsObjects, ["id", "name"], 'import from file')
             .then(colorInstances=>{
               var categories = csvResults.data.map((item, idx, array)=>{
                 if(item["Kategori Code"]){
@@ -456,7 +491,7 @@ module.exports = {
               var categoryObjects = uniqueCategoriesArray.map(c=>{
                 return {name: c}
               })
-              bulk.findOrCreate(models.Category, categoryObjects, ["id", "name"])
+              bulk.findOrCreate(models.Category, categoryObjects, ["id", "name"], 'import from file')
               .then(categoryInstances=>{
                 // todo: sku
                 // https://stackoverflow.com/questions/18773778/create-array-of-unique-objects-by-property
@@ -517,7 +552,7 @@ module.exports = {
                     var skuCodes = skus.map(sku=>{
                       return {code: sku.code}
                     })
-                    bulk.upsert(models.Sku, skus, skuCodes, ["id", "code"])
+                    bulk.upsert(models.Sku, skus, skuCodes, ["id", "code"], 'import from file')
                     .then(skuInstances=>{
                       var uniqueFlags = {}
                       var anyItemEmpty = false
@@ -565,7 +600,7 @@ module.exports = {
                         var itemCodes = items.map(item=>{
                           return {code: item.code}
                         })
-                        bulk.itemUpsert(models.Item, items, itemCodes)
+                        bulk.itemUpsert(models.Item, items, itemCodes, 'import from file')
                         .then(rowProcessed=>{
                           result.success = true
                           result.message = "Imported"
